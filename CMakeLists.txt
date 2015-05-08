@@ -69,6 +69,7 @@ set(qtExtensionsSources
     util/qtJson.cpp
     util/qtPrioritizedMenuProxy.cpp
     util/qtPrioritizedToolBarProxy.cpp
+    util/qtProcess.cpp
     util/qtScopedSettingGroup.cpp
     util/qtSettings.cpp
     util/qtStatusForwarder.cpp
@@ -158,6 +159,7 @@ set(qtExtensionsInstallHeaders
     util/qtJson.h
     util/qtPrioritizedMenuProxy.h
     util/qtPrioritizedToolBarProxy.h
+    util/qtProcess.h
     util/qtRand.h
     util/qtScopedSettingGroup.h
     util/qtSettings.h
@@ -340,6 +342,7 @@ set(qtExtensionsWrapObjects
     qtDockController
     qtPrioritizedMenuProxy
     qtPrioritizedToolBarProxy
+    qtProcess
     qtScopedSettingGroup
     qtStatusForwarder
     qtStatusManager
