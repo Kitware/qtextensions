@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -332,55 +332,65 @@
 #define QTE_DECLARE_PUBLIC_PTR(class_name) \
   class_name* const q_ptr;
 
-/// Get pointer to mutable private class.
+/// Get pointer to private class.
 ///
 /// This declares a local variable \c d, which is a pointer to the private
-/// class of \p class_name. The pointer allows the private class to be
-/// modified, but is itself immutable (that is, cannot be reassigned).
+/// class of the caller. The pointer itself is immutable (that is, cannot be
+/// reassigned).
 ///
-/// This cannot normally be used in \c const members. While it is possible to
-/// work around this limitation by prefixing \p class_name with \c const, using
-/// #QTE_D_CONST instead is preferred.
-#define QTE_D(class_name)         class_name##Private* const d = d_func()
+/// \note
+///   For historic reasons, this macro accepts optional arguments (which are
+///   ignored). The modern version uses \c auto to deduce the type of \c d. New
+///   users should omit parameters.
+#define QTE_D(...) auto* const d = d_func()
 
-/// Get pointer to immutable private class.
+/// Get pointer to private class.
 ///
-/// This declares a local variable \c d, which is a pointer to the private
-/// class of \p class_name. Both the pointer and its referent are immutable.
-/// This should be used instead of #QTE_D in \c const members and/or when you
-/// wish to avoid unintentional modification of the private class.
-#define QTE_D_CONST(class_name)   const class_name##Private* const d = d_func()
+/// \deprecated
+///   This macro exists for historic reasons (in the bad days when the user had
+///   to explicitly specify the class name and whether or not it needed to be
+///   \c const qualified). New users should use #QTE_D() (with no argument)
+///   instead.
+#define QTE_D_CONST(...) QTE_D()
 
 /// Get pointer to shared (immutable) data class.
 ///
-/// This declares a local variable \c d, which is a pointer to the data
-/// class of an implicitly shared class \p class_name. Neither the pointer nor
-/// the data class may be modified. The referenced data class may be shared
-/// with other instances.
-#define QTE_D_SHARED(class_name)  const class_name##Data* const d = d_func()
+/// This declares a local variable \c d, which is a pointer to the data class
+/// of a calling implicitly shared class. Neither the pointer nor the data
+/// class may be modified. The referenced data class may be shared with other
+/// instances.
+///
+/// \note
+///   For historic reasons, this macro accepts optional arguments (which are
+///   ignored). The modern version uses \c auto to deduce the type of \c d. New
+///   users should omit parameters.
+#define QTE_D_SHARED(...) const auto* const d = d_func()
 
 /// Get pointer to mutable data class.
 ///
-/// This declares a local variable \c d, which is a pointer to the data
-/// class of an implicitly shared class \p class_name. The pointer allows the
-/// data class to be modified, but is itself immutable (that is, cannot be
-/// reassigned).
+/// This declares a local variable \c d, which is a pointer to the data class
+/// of a calling implicitly shared class. The pointer allows the data class to
+/// be modified, but is itself immutable (that is, cannot be reassigned).
 ///
 /// Before returning, the data pointer is explicitly detached; that is, if it
 /// was shared with any other instances, a copy is made to ensure that the
 /// returned pointer is not shared. This is intended to be used by classes that
 /// use explicitly managed data pointers (i.e. declared with
 /// #QTE_DECLARE_SHARED_EPTR). For implicitly managed data pointers, it is
-/// functionally equivalent to #QTE_D_SHARED, but may be marginally less
+/// functionally equivalent to #QTE_D_MUTABLE, but may be marginally less
 /// efficient.
-#define QTE_D_DETACH(class_name)  class_name##Data* const d = d_func(true)
+///
+/// \note
+///   For historic reasons, this macro accepts optional arguments (which are
+///   ignored). The modern version uses \c auto to deduce the type of \c d. New
+///   users should omit parameters.
+#define QTE_D_DETACH(...) auto* const d = d_func(true)
 
 /// Get pointer to mutable data class.
 ///
-/// This declares a local variable \c d, which is a pointer to the data
-/// class of an implicitly shared class \p class_name. The pointer allows the
-/// data class to be modified, but is itself immutable (that is, cannot be
-/// reassigned).
+/// This declares a local variable \c d, which is a pointer to the data class
+/// of a calling implicitly shared class. The pointer allows the data class to
+/// be modified, but is itself immutable (that is, cannot be reassigned).
 ///
 /// If the data class pointer is implicitly managed (i.e. was declared with
 /// #QTE_DECLARE_SHARED_PTR), the referenced data class is detached; that is,
@@ -389,26 +399,33 @@
 /// is explicitly managed, it is possible that the data class is shared with
 /// other instances. Use #QTE_D_DETACH when dealing with an explicitly managed
 /// data pointer when a non-shared data instance is required.
-#define QTE_D_MUTABLE(class_name) class_name##Data* const d = d_func(false)
+///
+/// \note
+///   For historic reasons, this macro accepts optional arguments (which are
+///   ignored). The modern version uses \c auto to deduce the type of \c d. New
+///   users should omit parameters.
+#define QTE_D_MUTABLE(...) auto* const d = d_func(false)
 
-/// Get pointer to mutable public class.
+/// Get pointer to public class.
 ///
 /// This declares a local variable \c q, which is a pointer to the public class
-/// \p class_name of a private class. The pointer allows the public class to be
-/// modified, but is itself immutable (that is, cannot be reassigned).
+/// of the caller. The pointer itself is immutable (that is, cannot be
+/// reassigned).
 ///
-/// This cannot normally be used in \c const members. While it is possible to
-/// work around this limitation by prefixing \p class_name with \c const, using
-/// #QTE_Q_CONST instead is preferred.
-#define QTE_Q(class_name)         class_name* const q = q_func()
+/// \note
+///   For historic reasons, this macro accepts optional arguments (which are
+///   ignored). The modern version uses \c auto to deduce the type of \c q. New
+///   users should omit parameters.
+#define QTE_Q(...) auto* const q = q_func()
 
-/// Get pointer to immutable public class.
+/// Get pointer to public class.
 ///
-/// This declares a local variable \c q, which is a pointer to the public class
-/// \p class_name of a private class. Both the pointer and its referent are
-/// immutable. This should be used instead of #QTE_Q in \c const members and/or
-/// when you wish to avoid unintentional modification of the public class.
-#define QTE_Q_CONST(class_name)   const class_name* const q = q_func()
+/// \deprecated
+///   This macro exists for historic reasons (in the bad days when the user had
+///   to explicitly specify the class name and whether or not it needed to be
+///   \c const qualified). New users should use #QTE_D() (with no argument)
+///   instead.
+#define QTE_Q_CONST(...) QTE_Q()
 
 /// Alias for #foreach_child.
 ///
