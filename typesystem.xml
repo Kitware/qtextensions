@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<typesystem package="@TYPESYSTEM_NAME@">
+
+  @EXTRA_TYPESYSTEMS@
+
+  <!-- Namespaces -->
+  <namespace-type name="qtUtil">
+    <enum-type name="SeparatorBehaviorFlag" flags="SeparatorBehavior"/>
+  </namespace-type>
+
+  <namespace-type name="qtColorUtil"/>
+  <namespace-type name="qtJson"/>
+  <namespace-type name="qtDom"/>
+
+  <!-- qtRand.h -->
+  <function signature="qtRandD()"/>
+  <function signature="qtRand(int)"/>
+  <function signature="qtRand(int,int)"/>
+
+  <!-- Object types in Core -->
+  <object-type name="qtCliArgs">
+    <enum-type name="ParseOption" flags="ParseOptions"/>
+    <modify-function signature="qtCliArgs(int,char**)" access="private"/>
+    <add-function signature="qtCliArgs(PySequence)">
+      <inject-code>
+        int tmp_argc;
+        char** tmp_argv = 0;
+        if (Shiboken::sequenceToArgcArgv(%1, &amp;tmp_argc, &amp;tmp_argv, 0))
+          {
+          %0 = new %CPPTYPE(tmp_argc, tmp_argv);
+          }
+        delete[] tmp_argv;
+      </inject-code>
+    </add-function>
+  </object-type>
+
+  <object-type name="qtCliOption">
+    <enum-type name="Flag" flags="Flags"/>
+  </object-type>
+
+  <!-- Object types in Util -->
+  <value-type name="qtGradient">
+    <value-type name="Stop"/>
+    <enum-type name="InterpolationFlag" flags="InterpolationMode"/>
+    <enum-type name="NormalizeMode"/>
+    <inject-code class="target" position="end">
+      #define ADD_SPREAD_ENUM(name) \
+        if (!Shiboken::Enum::createScopedEnumItem( \
+               SbkPySide_QtGuiTypes[SBK_QGRADIENT_SPREAD_IDX], \
+               &amp;Sbk_qtGradient_Type, #name, (long)QGradient::name)) \
+          return
+      ADD_SPREAD_ENUM(PadSpread);
+      ADD_SPREAD_ENUM(RepeatSpread);
+      ADD_SPREAD_ENUM(ReflectSpread);
+    </inject-code>
+  </value-type>
+
+  <interface-type name="qtAbstractSetting"/>
+  <object-type name="qtSettings">
+    <enum-type name="ScopeFlag" flags="Scope"/>
+  </object-type>
+
+  <object-type name="qtUiState">
+    <interface-type name="AbstractItem"/>
+  </object-type>
+
+  <!-- Object types in IO -->
+  <object-type name="qtKstReader">
+    <inject-code class="native" position="beginning">
+      QRegExp defaultSeparator() { return qtKstReader::defaultSeparator(); }
+      QRegExp defaultTerminator() { return qtKstReader::defaultTerminator(); }
+    </inject-code>
+  </object-type>
+
+  <!-- Object types in Widgets -->
+  <object-type name="qtDoubleSlider">
+    <enum-type name="QuantizeMode"/>
+  </object-type>
+
+  <object-type name="qtDrawer">
+    <enum-type name="ExpanderPolicy"/>
+  </object-type>
+
+  <object-type name="qtSqueezedLabel">
+    <enum-type name="ElideFlag" flags="ElideMode"/>
+    <enum-type name="SetTextFlag" flags="SetTextMode"/>
+    <enum-type name="SetToolTipFlag" flags="SetToolTipMode"/>
+  </object-type>
+
+  <!-- Object types in Dialogs -->
+  <object-type name="qtConfirmationDialog">
+    <enum-type name="AskPreferenceScope"/>
+  </object-type>
+
+  <object-type name="qtDoubleInputDialog">
+    <modify-function signature="getDouble(QWidget*,QString,QString,double,double,double,bool*,QFlags&lt;Qt::WindowType&gt;)">
+      <modify-argument index="7">
+        <remove-argument/>
+      </modify-argument>
+      <modify-argument index="return">
+        <replace-type modified-type="(int, bool ok)"/>
+      </modify-argument>
+      <inject-code class="target" position="beginning">
+        bool ok_;
+        %BEGIN_ALLOW_THREADS
+        %RETURN_TYPE retval_ =
+          %CPPSELF.%FUNCTION_NAME(%1, %2, %3, %4, %5, %6, &amp;ok_, %8);
+        %END_ALLOW_THREADS
+        <insert-template name="tuple_retval_ok"/>
+      </inject-code>
+    </modify-function>
+    <modify-function signature="getDouble(QWidget*,QString,QString,double,double,double,int,double,bool*,QFlags&lt;Qt::WindowType&gt;)">
+      <modify-argument index="9">
+        <remove-argument/>
+      </modify-argument>
+      <modify-argument index="return">
+        <replace-type modified-type="(int, bool ok)"/>
+      </modify-argument>
+      <inject-code class="target" position="beginning">
+        bool ok_;
+        %BEGIN_ALLOW_THREADS
+        %RETURN_TYPE retval_ =
+          %CPPSELF.%FUNCTION_NAME(%1, %2, %3, %4, %5, %6, %7, %8, &amp;ok_,
+                                  %10);
+        %END_ALLOW_THREADS
+        <insert-template name="tuple_retval_ok"/>
+      </inject-code>
+    </modify-function>
+    <modify-function signature="getDouble(QWidget*,QString,QString,double,double,double,QString,int,double,bool*,QFlags&lt;Qt::WindowType&gt;)">
+      <modify-argument index="10">
+        <remove-argument/>
+      </modify-argument>
+      <modify-argument index="return">
+        <replace-type modified-type="(int, bool ok)"/>
+      </modify-argument>
+      <inject-code class="target" position="beginning">
+        bool ok_;
+        %BEGIN_ALLOW_THREADS
+        %RETURN_TYPE retval_ =
+          %CPPSELF.%FUNCTION_NAME(%1, %2, %3, %4, %5, %6, %7, %8, %9, &amp;ok_,
+                                  %11);
+        %END_ALLOW_THREADS
+        <insert-template name="tuple_retval_ok"/>
+      </inject-code>
+    </modify-function>
+  </object-type>
+
+  <!-- Object types declared in CMakeLists.txt -->
+  @EXTRA_OBJECTS@
+
+  <!-- qtAm macro -->
+  <inject-code class="native" position="beginning">
+    PyObject* moduleQtExtensions;
+  </inject-code>
+  <inject-code class="target" position="end">
+    // Initialize qtAm object.
+    if (qtAm)
+      {
+      PyObject* pyQtAm = %CONVERTTOPYTHON[qtActionManager*](qtAm);
+      Py_INCREF(pyQtAm);
+      PyModule_AddObject(module, "qtAm", pyQtAm);
+      }
+    else
+      {
+      Py_INCREF(Py_None);
+      PyModule_AddObject(module, "qApp", Py_None);
+      }
+    moduleQtExtensions = module;
+  </inject-code>
+
+</typesystem>

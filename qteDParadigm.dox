@@ -1,0 +1,340 @@
+/*ckwg +5
+ * Copyright 2012 by Kitware, Inc. All Rights Reserved. Please refer to
+ * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
+ * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
+ */
+
+/**
+\page QTE_D QtExtensions' D-Pointer Paradigm
+
+\section qte_d_overview Overview
+
+An implementation pointer provides a way to separate implementation details
+from a class's public API. This provides a number of advantages, but the
+following two are of particular interest:
+
+<ul>
+  <li><b>ABI compatibility and reduced compile time</b></li>
+  <li style="list-style-type: none">
+    By storing your class's member variables in a private structure/class with
+    only a pointer to these details in the class's ABI, members may be added
+    or removed without changing your class's ABI, which would require users of
+    your class to be recompiled; not only because the build tool sees a
+    modified header, but because <code>sizeof(YourClass)</code> may have
+    changed.
+  </li>
+</ul>
+<ul>
+  <li><b>Hide implementation details from users</b></li>
+  <li style="list-style-type: none">
+    Rather than relying on access specifiers, implementation details can be
+    moved out of the header entirely. In some cases, this will reduce the
+    headers or forward declarations required in your class's public header.
+  </li>
+</ul>
+
+Additionally, using a private data structure for data storage is an integral
+part of \ref implicit-sharing, which is provided by %Qt and used extensively
+therein. QtExtensions not only also makes use of this excellent system, but
+provides macros to make it easier to use, which are closely related to its
+D-pointer system.
+
+This provides a starting point for further discussion of QtExtensions' system.
+The concept of an implementation pointer is sufficiently well known and covered
+in detail elsewhere, such that further discussion of the general principles is
+unnecessary. The reader is encouraged to seek other resources as desired.
+
+\par Why extend Qt?
+
+The system used by QtExtensions is based on the system used by %Qt, but with
+one major (and important) different; %Qt's system, although the macros are
+generally available, is undocumented and therefore intended to be "for internal
+use only" and "subject to change". This was the original reason for creating a
+new system for QtExtensions.
+
+Since then, some further enhancements have been made, providing additional
+functionality above and beyond what is in %Qt.
+
+\internal
+
+\subsection qte_d_policies Policies
+
+All non-trivial classes in the \c qtExtensions and \c qtVgWidgets modules
+should use this system. For this purpose, "trivial" is defined as any class
+that does not have a pointer to a class-private data structure, and should
+generally imply few if any (oftentimes, exactly one) member variables, and/or
+one which needs to behave as much like POD as possible. It is desirable for
+application classes to use this system as well, especially those derived from
+%Qt classes.
+
+Classes that are data containers should usually implement \ref implicit-sharing
+unless the cost of a copy is very low, or the meaning of a copy is special
+(e.g. qtStatusSource). Classes that are not copyable (including most widgets)
+should disable copying by expanding #QTE_DISABLE_COPY after declaring private
+access. Do so <i>even if your base class is non-copyable</i>, as this produces
+a better error message in case of an attempt to copy/assign the class
+(especially in C++11 mode).
+
+\endinternal
+
+\section qte_d_usage Usage
+
+The %Qt and QtExtensions d-pointer systems are based on three steps:
+<ol>
+  <li>Declare the d-pointer as a member of the class.</li>
+  <li>Declare and implement accessor functions.</li>
+  <li>Wrap access to the class's implementation via the accessor function.</li>
+</ol>
+
+The first is, obviously, a prerequisite of any similar system. The others
+represent a means of allowing the implementation to be subclassed. This can be
+useful for implementing abstract classes, especially when the implementation
+has an interface whose externals can be well defined, but whose internals may
+differ.
+
+\subsection qte_d_usage_common_case Common Case
+
+The QtExtensions macros all take the base class name, and will automatically
+translate to the implementation class name, which is of the form
+\c MyClassPrivate (for public class \c MyClass). Usually you will need to
+forward declare this in your class's public header.
+
+The d-pointer accessor functions should be declared with private access, using
+the macro #QTE_DECLARE_PRIVATE(\c MyClass). Derived classes that require access
+to \c d, but do not have their own implementation subclassed from
+\c MyClassPrivate, may redeclare the accessors using the base class name. The
+d-pointer itself should be declared with one of the macros described below. The
+access for the d-pointer should be either private (if the implementation may
+not be subclassed) or protected. Declaring the d-pointer protected is
+suggested, even if the implementation is not available to subclasses, as
+absence of the implementation definition will prevent use, and this makes it
+slightly easier to permit subclassed implementations in the future.
+
+%Qt uses \c reinterpret_cast to convert from the base class's \c d_ptr to the
+implementation instance used by subclasses. However, this places restrictions
+on subclassing (namely, that the subclassed implementation must subclass from
+the base implementation first, which can prevent the implementation subclassing
+QObject). Since some users of the system were not able to easily satisfy these
+restrictions, QtExtensions instead uses \c static_cast. This has the advantage
+of being safer, and also allowing more flexibility when subclassing an
+implementation. The down side is that it prevents forward definition of the
+accessor functions.
+
+QtExtensions works around this problem by requiring separate definition of the
+accessor functions in an appropriate scope. This is done via the macro
+#QTE_IMPLEMENT_D_FUNC(\c MyClass), placed in the class's definition file (e.g.
+\c MyClass.cpp) at the earliest possible location. For base classes, this is
+typically immediately following the list of <code>\#include</code>'s. For
+derived classes, it may need to follow the (non-forward) declaration of the
+implementation class, when located in the class's definition file.
+
+\subsubsection qte_d_flavors D-pointer Flavors
+
+<dl>
+  <dt>#QTE_DECLARE_PRIVATE_PTR</dt>
+  <dd>
+    This declares \c d_ptr as a basic, immutable pointer
+    (<code>MyClassPrivate * const d_ptr</code>), and is used in classes that
+    do not implement shared data. The pointer must be assigned in the
+    constructor and deleted in the destructor.
+  </dd>
+</dl><dl>
+  <dt>#QTE_DECLARE_PRIVATE_RPTR</dt>
+  <dd>
+    This declares \c d_ptr as an immutable QScopedPointer
+    (<code>QScopedPointer\<MyClassPrivate\> const d_ptr</code>). It is similar
+    to PTR, but requires that \c \<QScopedPointer\> be included. The pointer
+    must be assigned in the constructor; deletion is handled automatically by
+    QScopedPointer. This is the preferred method for most uses.
+  </dd>
+</dl><dl>
+  <dt>#QTE_DECLARE_PRIVATE_MPTR</dt>
+  <dd>
+    This declares \c d_ptr as a mutable pointer
+    (<code>MyClassPrivate * d_ptr</code>). Many users create a private instance
+    in their constructor, and do not need to (and generally \em should not)
+    ever assign a different instance to their d-pointer. In cases where this is
+    necessary (usually non-shared classes with assignment operators, or
+    assignment-like operations), this replaces PTR.
+  </dd>
+</dl><dl>
+  <dt>#QTE_DECLARE_PRIVATE_MRPTR</dt>
+  <dd>
+    This declares \c d_ptr as a mutable QScopedPointer
+    (<code>QScopedPointer\<MyClassPrivate\> d_ptr</code>). It is similar to
+    MPTR, but requires that \c \<QScopedPointer\> be included. Deletion is
+    handled automatically by QScopedPointer. This replaces RPTR where MPTR
+    replaces PTR.
+  </dd>
+</dl><dl>
+  <dt>#QTE_DECLARE_PRIVATE_SPTR</dt>
+  <dd>
+    This declares \c d_ptr as a QSharedPointer
+    (<code>QSharedPointer\<MyClassPrivate\> d_ptr</code>). The pointer is
+    mutable, as use of a shared pointer typically implies an assignment
+    operator which will modify \c d_ptr. The implementation instance is deleted
+    when all referenced to it have been released. See \ref qte_d_advanced for
+    examples of when using a QSharedPointer for the d-pointer might be
+    appropriate.
+  </dd>
+</dl>
+
+\subsubsection qte_d_common_access Accessing the D-pointer
+
+Access to the d-pointer is obtained via the accessor function. For convenience,
+and to avoid multiple calls to the accessor function, it is typical to use one
+of two macros to store the pointer to the implementation in the immutable local
+variable \c d.
+
+\par Example:
+\code{.cpp}
+int MyClass::value() const
+{
+  QTE_D_CONST(MyClass);
+  return d->value;
+}
+\endcode
+
+The two macros are #QTE_D and (as above) #QTE_D_CONST. The latter is used to
+retrieve a pointer to an immutable implementation, which is required in
+\c const member functions; the pointer from the former gives a mutable
+implementation.
+
+\subsection qte_d_implicitly_shared Implicitly Shared Classes
+
+The most convenient way to add \ref implicit-sharing to a class is to store its
+shared data in an implementation class which is derived from QSharedData and
+implements a copy constructor (in some cases, the default copy constructor may
+suffice). The shared data is then accessed in much the same manner as a private
+implementation, and generally replaces the private implementation. The public
+class will have no data members except the QSharedDataPointer, and can use a
+default copy constructor and assignment operator.
+
+To declare the pointer to the shared data, replace
+#QTE_DECLARE_PRIVATE(\c MyClass) with #QTE_DECLARE_SHARED(\c MyClass), and use
+one of the following macros to declare the pointer to the shared data:
+
+\li #QTE_DECLARE_SHARED_PTR(\c MyClass), to declare the pointer as a
+    QSharedDataPointer.
+\li #QTE_DECLARE_SHARED_EPTR(\c MyClass), to declare the pointer as a
+    QExplicitlySharedDataPointer.
+
+The former will automatically create a private copy of the shared data (by
+calling <code>d_ptr.detach()</code>) whenever the pointer is accessed in a
+non-\c const manner. The latter will only create a copy when detach() is called
+explicitly (hence "explicit" in the name). In most cases, however, you will use
+the <code>QTE_D_<i>access-type</i></code> macros, such that \c d_func will take
+the appropriate action for you. Keep in mind that explicit sharing doesn't mean
+your class can't be implicitly shared, just that the sharing is explicit to you
+as the class writer; it need not be explicit to your users.
+
+\note The name of the internal class for an implicitly shared class is of the
+      form \c MyClassData rather than \c MyClassPrivate.
+
+\subsubsection qte_d_shared_access Accessing the D-pointer
+
+Accessing the shared data is done via accessor function, in very much the same
+way as non-shared classes. Due to the different name of the private class, and
+slightly increased complexity of sharing data, there are three accessor macros
+used by implicitly shared classes:
+
+\li #QTE_D_SHARED is equivalent to #QTE_D_CONST, and gives an immutable view of
+    the shared data without creating a copy.
+\li #QTE_D_MUTABLE gives a mutable (writable) view of the shared data.
+    \n If using QSharedDataPointer, a copy will be made automatically. If using
+    QExplicitlySharedDataPointer, no copy will be made. In the former case, you
+    will generally want to use this accessor. In the latter, you should only
+    use this accessor in special circumstances where it is okay to have a
+    writable but potentially shared pointer to the data.
+\li #QTE_D_DETACH gives a mutable (writable), private view of the shared data.
+    \n This accessor explicitly calls detach(), so the pointer is guaranteed to
+    point to a private instance of the data. It is usually necessary only when
+    using QExplicitlySharedDataPointer.
+
+\subsection qte_d_public Reverse Access
+
+In some cases it is useful for the private implementation to have access to the
+public class instance. This is especially useful if portions of your
+implementation code live in the implementation class, but need to access the
+public class (for example, to emit signals or to invoke virtual methods). This
+is done with a "q-pointer", which is very similar to a d-pointer in reverse.
+
+#QTE_DECLARE_PUBLIC and #QTE_DECLARE_PUBLIC_PTR are used in much the same
+manner as #QTE_DECLARE_PRIVATE and #QTE_DECLARE_PRIVATE_PTR, and should be
+placed at corresponding access levels (that is, private and protected,
+respectively). The main difference here is that #QTE_DECLARE_PUBLIC(\c MyClass)
+will also implement the accessor functions, as the definition of the public
+class is typically known when the implementation class is defined. Since the
+public class owns the implementation instance, rather than the other way
+around, \c q_ptr is always a bare pointer (<code>MyClass * const q_ptr</code>)
+and does not need to be deleted, although it does need to be initialized in the
+constructor.
+
+The accessor macros #QTE_Q and #QTE_Q_CONST are semantically equivalent to
+#QTE_D and #QTE_D_CONST, respectively.
+
+Subclassable implementations can also use this technique, keeping in mind that
+the base implementation will only be able to access the corresponding base
+public class. The implementation subclass will be able to access its
+corresponding public subclass in the same way the public subclass can access
+the implementation subclass. In general, only the root implementation class
+should declare the q-pointer.
+
+For obvious reasons, implicitly shared classes, or classes otherwise using a
+shared implementation, usually cannot use this technique.
+
+\subsection qte_d_advanced Advanced Usage
+
+\subsubsection qte_d_shared_explicit Explicitly Shared Classes
+
+Although explicit sharing can be implemented using QSharedData with explicit
+management of the data pointer, this is not the only option. In the case where
+it is desired that all copies of a class refer to the same (mutable) underlying
+data, the implementation can be shared. This is a case for using a shared
+pointer to a mutable implementation, which is done with
+#QTE_DECLARE_PRIVATE_SPTR (accessor functions are declared normally).
+
+Bear in mind that access to shared data is not magically protected. When
+writing a shared data class with multiple instances referring to the same
+writable view (that is, where writes made to object A by thread X should be
+visible via object B in thread Y), you must provide your own access protection
+of both reads and writes. The inherent thread safety of QSharedData only
+applies to copy-on-write access.
+
+The same technique could also be used to implement "write once" classes, where
+the class is not read-only as such and where all copies of a class must refer
+to the same implementation object, but where it is acceptable to impose write
+restrictions either after a copy has been made, or if any copies exist.
+
+\subsubsection qte_d_shared_immutable Implicitly Shared Immutable Classes
+
+In cases where implicit sharing is desired (because a copy would be expensive),
+but the class is immutable, sharing can be achieved by using a QSharedPointer
+to hold the implementation pointer, similar to the case of explicitly shared
+classes (above). This only works if users are not permitted to modify the
+class, and implies that the d-pointer target should be
+<code>const</code>-decorated. Such classes are usually created from other
+classes. An example would be a read-only view into a class, where the
+implementation of the view is sufficiently complex to warrant sharing
+(especially if it is expected that many copies of the view will be made, for
+example if it will be passed through signals/slots across threads).
+
+When creating such a class, there are three rules:
+
+<ol>
+  <li>
+    The d-pointer target should be declared immutable
+    (#QTE_DECLARE_PRIVATE_SPTR(<code>const MyClass</code>).
+  </li>
+  <li>
+    Replace #QTE_DECLARE_PRIVATE with #QTE_DECLARE_PRIVATE_CONST; this will add
+    the appropriate decoration and omit the non-\c const accessor.
+  </li>
+  <li>
+    Correspondingly, replace #QTE_IMPLEMENT_D_FUNC with
+    #QTE_IMPLEMENT_D_FUNC_CONST.
+  </li>
+</ol>
+
+*/
+// kate: hl c++

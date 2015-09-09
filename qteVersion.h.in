@@ -1,0 +1,6 @@
+#ifndef qt_Version_H
+#define qt_Version_H
+
+#define QTE_VERSION_STR "@QTE_VERSION_STR@"
+
+#endif

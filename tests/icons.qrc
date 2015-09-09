@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="icons">
+    <file alias="add">add.png</file>
+    <file alias="add-before">add-before.png</file>
+    <file alias="add-child">add-child.png</file>
+    <file alias="remove">remove.png</file>
+    <file alias="clear">clear.png</file>
+  </qresource>
+</RCC>

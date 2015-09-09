@@ -1,0 +1,14 @@
+/* Different style for brief documentation of \page's */
+div.contents div.textblock:first-child p:first-of-type {
+  border-top: 1px solid #c4cfe5;
+  border-bottom: 1px solid #c4cfe5;
+  background-color: #fbfcfd;
+  color: #596d97;
+  font-style: italic;
+  padding: 4px;
+}
+
+abbr {
+  color: #596d97;
+  cursor: help;
+}
