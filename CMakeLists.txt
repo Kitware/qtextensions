@@ -253,10 +253,20 @@ else()
   set(ONCE_THREAD_LIBRARY -lpthread)
 endif()
 
-target_include_directories(${PROJECT_NAME} SYSTEM
-  INTERFACE
+target_include_directories(${PROJECT_NAME} SYSTEM INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+  $<INSTALL_INTERFACE:include/QtE>
+)
+qte_library_include_interface(${PROJECT_NAME} include/QtE
+  core
+  dialogs
+  dom
+  io
+  itemviews
+  sax
+  util
+  widgets
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -264,8 +274,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_link_libraries(${PROJECT_NAME}
-  PRIVATE
+  PUBLIC
   ${QT_LIBRARIES}
+  PRIVATE
   ${ONCE_THREAD_LIBRARY}
 )
 

@@ -6,6 +6,19 @@ function(qte_shift_arg variable value)
 endfunction()
 
 #------------------------------------------------------------------------------
+function(qte_library_include_interface target install_prefix)
+  if (NOT install_prefix MATCHES "|.*/")
+    set(install_prefix "${install_prefix}/")
+  endif()
+  foreach(path ${ARGN})
+    target_include_directories(${target} SYSTEM INTERFACE
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${path}>
+      $<INSTALL_INTERFACE:${install_prefix}${path}>
+    )
+  endforeach()
+endfunction()
+
+#------------------------------------------------------------------------------
 # Mark target(s) for export
 function(qte_export_targets)
   set_property(GLOBAL APPEND PROPERTY ${PROJECT_NAME}_EXPORT_TARGETS ${ARGN})
