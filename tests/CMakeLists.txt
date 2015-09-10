@@ -32,7 +32,7 @@ qte_add_test(testThrobber           INTERACTIVE TestThrobber.cpp)
 
 # Automated tests
 qte_add_test(qtExtensions-Kst testKst
-             SOURCES TestKst.cpp ../IO/qtKstParser.cpp
+             SOURCES TestKst.cpp ../io/qtKstParser.cpp
              ARGS ${CMAKE_CURRENT_SOURCE_DIR}/testdata.kst
 )
 

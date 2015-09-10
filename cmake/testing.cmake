@@ -62,6 +62,8 @@ endfunction()
 
 ###############################################################################
 
+option(BUILD_TESTING "Build tests" OFF)
+
 # Enable testing?
 if(BUILD_TESTING)
   enable_testing()
