@@ -6,6 +6,8 @@ cmake_dependent_option(QTE_INSTALL_DOCUMENTATION
   "QTE_BUILD_DOCUMENTATION" OFF
 )
 
+set(QTE_DOCUMENTATION_RESOURCES ${CMAKE_CURRENT_LIST_DIR})
+
 if(QTE_BUILD_DOCUMENTATION)
   find_package(Doxygen REQUIRED)
   add_custom_target(doc)
@@ -21,7 +23,7 @@ if(QTE_BUILD_DOCUMENTATION)
   )
 
   set(QT4_EXTRA_TAG_FILE
-    "${CMAKE_BINARY_DIR}/doc/sdk/qt4-extra.tag" CACHE INTERNAL
+    "${CMAKE_BINARY_DIR}/doc/qt4-extra.tag" CACHE INTERNAL
     "Location of generated file containing additional Doxygen tags for Qt4"
     FORCE
   )
@@ -36,7 +38,7 @@ function(qte_add_documentation name input_dir)
     set(tag_files)
     set(tag_targets)
 
-    set(doc_root "${CMAKE_BINARY_DIR}/doc/sdk")
+    set(doc_root "${CMAKE_BINARY_DIR}/doc")
     foreach(tag ${ARGN})
       if("x_${tag}" MATCHES "^x_[Qq][Tt]4?$")
         if(QT4_TAG_FILE)
@@ -72,9 +74,9 @@ function(qte_add_documentation name input_dir)
     string(REPLACE ";" " " DOXYGEN_INCLUDE_PATHS "${DOXYGEN_INCLUDE_PATHS}")
 
     set(doc_dir "${doc_root}/${name}")
-    set(doxyfile_template "${CMAKE_CURRENT_LIST_DIR}/Doxyfile.in")
+    set(doxyfile_template "${QTE_DOCUMENTATION_RESOURCES}/Doxyfile.in")
     set(doxyfile "${doc_dir}/Doxyfile")
-    set(doc_css "${CMAKE_CURRENT_LIST_DIR}/qte-dox.css")
+    set(doc_css "${QTE_DOCUMENTATION_RESOURCES}/qte-dox.css")
 
     add_custom_command(
       OUTPUT "${doc_dir}"
@@ -93,7 +95,7 @@ function(qte_add_documentation name input_dir)
               -D "DOXYGEN_EXCLUDE_PATTERNS=${DOXYGEN_EXCLUDE_PATTERNS}"
               -D "DOXYGEN_INCLUDE_PATHS=${DOXYGEN_INCLUDE_PATHS}"
               -D "DOXYGEN_EXTRA_STYLESHEET=${doc_css}"
-              -P "${CMAKE_CURRENT_LIST_DIR}/doxygen-script.cmake"
+              -P "${QTE_DOCUMENTATION_RESOURCES}/doxygen-script.cmake"
       DEPENDS "${doc_dir}" "${doxyfile_template}"
       WORKING_DIRECTORY "${doc_dir}"
       COMMENT "Generating Doxyfile for ${name}"
@@ -133,7 +135,7 @@ function(qte_add_documentation name input_dir)
 
       if(QTE_INSTALL_DOCUMENTATION)
         install(FILES "${qch_file}"
-          DESTINATION "share/doc/qtExtensions-${QTE_VERSION_STR}/sdk"
+          DESTINATION "share/doc/qtExtensions-${QTE_VERSION_STR}"
           COMPONENT Documentation
         )
       endif()
