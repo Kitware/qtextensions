@@ -350,6 +350,12 @@ qte_wrap_library(${PROJECT_NAME}
 
 # Create package configuration files
 configure_file(
+  cmake/modules/UseQtExtensions.cmake
+  "${${PROJECT_NAME}_BINARY_DIR}/UseQtExtensions.cmake"
+  COPYONLY
+)
+
+configure_file(
   cmake/${PROJECT_NAME}Config.cmake.in
   "${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
   @ONLY
