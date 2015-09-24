@@ -23,15 +23,18 @@ function(qte_add_cxx_flags_priority)
   foreach(flag ${ARGN})
     list(FIND initial_flags ${flag} FLAG_INDEX)
     if(NOT FLAG_INDEX EQUAL -1)
+      set(ADDED_FLAG "${flag}" PARENT_SCOPE)
       return()
     endif()
     string(REGEX REPLACE "[^a-zA-Z0-9]" "_" varname "${flag}")
     check_cxx_compiler_flag("${flag}" CMAKE_CXX_COMPILER_SUPPORTS_${varname})
     if(CMAKE_CXX_COMPILER_SUPPORTS_${varname})
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}" PARENT_SCOPE)
+      set(ADDED_FLAG "${flag}" PARENT_SCOPE)
       return()
     endif()
   endforeach()
+  set(ADDED_FLAG "" PARENT_SCOPE)
 endfunction()
 
 #------------------------------------------------------------------------------
@@ -68,6 +71,7 @@ if(NOT MSVC)
   # Determine what flags (if any) are needed for required C++ language support
   # Note: MSVC always uses latest known C++ extensions
   qte_add_cxx_flags_priority(-std=c++11 -std=c++0x)
+  set(QTE_REQUIRED_CXX_FLAGS "${ADDED_FLAG}" CACHE INTERNAL "")
 
   # Turn on extra warnings if requested
   option(QTE_EXTRA_WARNINGS "Enable extra warnings" ON)
