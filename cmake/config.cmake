@@ -70,8 +70,8 @@ if(NOT MSVC)
   qte_add_cxx_flags_priority(-std=c++11 -std=c++0x)
 
   # Turn on extra warnings if requested
-  option(VISGUI_EXTRA_WARNINGS "Enable extra warnings" ON)
-  if(VISGUI_EXTRA_WARNINGS)
+  option(QTE_EXTRA_WARNINGS "Enable extra warnings" ON)
+  if(QTE_EXTRA_WARNINGS)
     qte_add_cxx_flags(
       -Wall -Wextra -Wunused -Wuninitialized -Wctor-dtor-privacy
       -Wcast-align -Wlogical-op -Wpointer-arith
