@@ -23,39 +23,6 @@
 #  define QTE_OVERRIDE override
 #  define QTE_CONSTEXPR constexpr
 
-/// Declare a class non-copyable.
-///
-/// This macro is used to make a class non-copyable. Where supported by the
-/// compiler (C++11), it delete the default copy constructor and assignment
-/// operator. Otherwise, it is a synonym for Q_DISABLE_COPY, which provides
-/// explicit declarations with the expectation that they are never implemented.
-///
-/// This macro should be used in a private access section.
-///
-/// \param class_name Name of the class in which the macro is used.
-///
-/// \par Example:
-/// \code{.cpp}
-/// class Foo
-/// {
-/// public:
-///   ...
-/// private:
-///   QTE_DISABLE_COPY(Foo)
-/// };
-/// \endcode
-///
-/// \note Although the compiler will not generate a default copy constructor
-///       and assignment if the base class does not provide public versions of
-///       the same, it is recommended that you use this macro for \em all
-///       non-copyable classes, even if they are implicitly non-copyable due to
-///       a non-copyable base class. Doing so produces better error messages
-///       when trying to copy or assign such a class, and makes it more obvious
-///       to users that your class is not intended to be copyable.
-#  define QTE_DISABLE_COPY(class_name) \
-  class_name(const class_name&) = delete; \
-  class_name& operator=(const class_name&) = delete; \
-
 /// Declare a private singleton.
 ///
 /// This macro declares a private singleton instance. The singleton is created
@@ -130,7 +97,6 @@
 
 #  define QTE_OVERRIDE
 #  define QTE_CONSTEXPR const
-#  define QTE_DISABLE_COPY(class_name) Q_DISABLE_COPY(class_name)
 
 #  define QTE_PRIVATE_SINGLETON(type, name) \
   namespace { Q_GLOBAL_STATIC(type, name) }
@@ -138,6 +104,35 @@
   namespace { Q_GLOBAL_STATIC_WITH_ARGS(type, name, args) }
 
 #endif
+
+/// Declare a class non-copyable.
+///
+/// This macro is used to make a class non-copyable, by explicitly deleting the
+/// copy constructor and assignment operator.
+///
+/// \param class_name Name of the class in which the macro is used.
+///
+/// \par Example:
+/// \code{.cpp}
+/// class Foo
+/// {
+/// public:
+///   ...
+/// private:
+///   QTE_DISABLE_COPY(Foo)
+/// };
+/// \endcode
+///
+/// \note Although the compiler will not generate a default copy constructor
+///       and assignment if the base class does not provide public versions of
+///       the same, it is recommended that you use this macro for \em all
+///       non-copyable classes, even if they are implicitly non-copyable due to
+///       a non-copyable base class. Doing so produces better error messages
+///       when trying to copy or assign such a class, and makes it more obvious
+///       to users that your class is not intended to be copyable.
+#  define QTE_DISABLE_COPY(class_name) \
+  class_name(const class_name&) = delete; \
+  class_name& operator=(const class_name&) = delete; \
 
 /// Implement constant d-function with aliased name of private class.
 ///
