@@ -31,7 +31,7 @@ inline double trunc(double a)
 /// be returned as-is (preserving the sign bit), as will NaN's. Small values,
 /// including denormalized numbers, will return ±1.0.
 inline float qtSign(float a)
-{ return (qIsNaN(a) ? a : a > 0.0 ? 1.0 : a < 0.0 ? -1.0 : a); }
+{ return (qIsNaN(a) ? a : a > 0.0f ? 1.0f : a < 0.0f ? -1.0f : a); }
 
 /// \copydoc qtSign(float)
 inline double qtSign(double a)

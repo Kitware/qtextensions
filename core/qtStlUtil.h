@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -38,7 +38,7 @@ inline QUrl qtUrl(const std::string& ss)
 inline std::string stdString(const QString& qs)
 {
   const QByteArray data = qs.toLocal8Bit();
-  return std::string(data.constData(), data.size());
+  return std::string(data.constData(), static_cast<size_t>(data.size()));
 }
 
 //-----------------------------------------------------------------------------
@@ -48,7 +48,7 @@ extern QTE_EXPORT std::string stdString(const QStringRef& qs);
 inline std::string stdString(const QStringRef& qs)
 {
   const QByteArray data = qs.toLocal8Bit();
-  return std::string(data.constData(), data.size());
+  return std::string(data.constData(), static_cast<size_t>(data.size()));
 }
 #endif
 
@@ -56,7 +56,7 @@ inline std::string stdString(const QStringRef& qs)
 inline std::string stdString(const QUrl& qu)
 {
   const QByteArray data = qu.toEncoded();
-  return std::string(data.constData(), data.size());
+  return std::string(data.constData(), static_cast<size_t>(data.size()));
 }
 
 //-----------------------------------------------------------------------------
