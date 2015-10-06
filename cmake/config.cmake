@@ -49,7 +49,7 @@ endfunction()
 #------------------------------------------------------------------------------
 # Test for required C++ feature
 function(qte_test_cxx_feature feature message)
-  qte_verbose_try_compile(${feature}_WORKS ${feature}.cxx "${message}")
+  qte_verbose_try_compile(${feature}_WORKS ${feature}.cpp "${message}")
   if(NOT ${feature}_WORKS)
     message(FATAL_ERROR
       "A required compiler feature is missing. "
