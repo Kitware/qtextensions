@@ -184,6 +184,7 @@ set(qtExtensionsInstallHeaders
     util/qtStatusNotifier.h
     util/qtStatusSource.h
     util/qtUiState.h
+    util/qtUiStateItem.h
     util/qtUtilNamespace.h
     # IO
     io/qtKstReader.h
