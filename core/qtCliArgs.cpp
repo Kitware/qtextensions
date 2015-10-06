@@ -788,7 +788,7 @@ QString qtCliArgs::joinWrapped(QStringList words, int indent, int prefixSize)
     {
     columns = 80;
     }
-#ifdef _WIN32
+#ifdef Q_OS_WIN
   // Unlike better terminals, the Windows default console does not suppress a
   // newline following a full line of text, which results in spurious blank
   // lines; suppress this by not using the last column for text
