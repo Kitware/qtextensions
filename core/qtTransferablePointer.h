@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -49,7 +49,7 @@
 /// once it has been handed off, and that the qtTransferablePointer seen by the
 /// receiving thread is not accessed in any way (again, by the original thread)
 /// once it becomes visible to the receiving thread.
-template <typename T, typename Cleanup = QScopedPointerDeleter<T> >
+template <typename T, typename Cleanup = QScopedPointerDeleter<T>>
 class qtTransferablePointer : public QScopedPointer<T, Cleanup>
 {
 public:

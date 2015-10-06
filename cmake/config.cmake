@@ -101,3 +101,5 @@ qte_test_cxx_feature(
   auto "compiler supports 'auto' as a type declaration")
 qte_test_cxx_feature(
   defaulted-ctor "compiler supports explicitly defaulted constructors")
+qte_test_cxx_feature(
+  nested-template "compiler does not require space between template '>'s")

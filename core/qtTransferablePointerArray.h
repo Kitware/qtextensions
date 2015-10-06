@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -73,10 +73,10 @@ struct qtTransferablePointerArrayDeleter
 /// qtTransferablePointerArray seen by the receiving thread is not accessed in
 /// any way (again, by the original thread) once it becomes visible to the
 /// receiving thread.
-template <typename T, typename Cleanup = QScopedPointerDeleter<T> >
+template <typename T, typename Cleanup = QScopedPointerDeleter<T>>
 class qtTransferablePointerArray
   : public QScopedPointer <QList<T*>,
-                           qtTransferablePointerArrayDeleter<T, Cleanup> >
+                           qtTransferablePointerArrayDeleter<T, Cleanup>>
 {
 protected:
   typedef qtTransferablePointerArrayDeleter<T, Cleanup> Deleter;
@@ -176,7 +176,7 @@ public:
       return QList<T*>();
       }
 
-    QScopedPointer<QList<T*> > p(this->BaseClass::take());
+    QScopedPointer<QList<T*>> p(this->BaseClass::take());
     return *p.data();
     }
 
