@@ -1,11 +1,13 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
 
 #ifndef __TestSqueezedLabel_h
 #define __TestSqueezedLabel_h
+
+#include "../core/qtGlobal.h"
 
 #include <QWidget>
 
@@ -33,7 +35,7 @@ protected:
   QCheckBox* elideStart, *elideEnd, *elideFade;
 
 private:
-  Q_DISABLE_COPY(TestSqueezedLabelWidget)
+  QTE_DISABLE_COPY(TestSqueezedLabelWidget)
 };
 
 #endif

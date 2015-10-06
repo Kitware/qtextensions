@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -33,7 +33,7 @@ protected:
   ValueType oldValue;
 
 private:
-  Q_DISABLE_COPY(qtGenericScopedValueChange)
+  QTE_DISABLE_COPY(qtGenericScopedValueChange)
 };
 
 // Generic class template acting on a POD reference
@@ -53,7 +53,7 @@ protected:
   ValueType oldValue;
 
 private:
-  Q_DISABLE_COPY(qtScopedValueChange)
+  QTE_DISABLE_COPY(qtScopedValueChange)
 };
 
 // Generic class template with fixed value
@@ -69,7 +69,7 @@ public:
   ~qtGenericScopedValueFixedChange() {}
 
 private:
-  Q_DISABLE_COPY(qtGenericScopedValueFixedChange)
+  QTE_DISABLE_COPY(qtGenericScopedValueFixedChange)
 };
 
 // Generic class for QObject properties
@@ -95,7 +95,7 @@ protected:
   QVariant oldValue;
 
 private:
-  Q_DISABLE_COPY(qtScopedPropertyChange)
+  QTE_DISABLE_COPY(qtScopedPropertyChange)
 };
 
 // Generic class to block QObject signals
@@ -113,7 +113,7 @@ protected:
   bool oldValue;
 
 private:
-  Q_DISABLE_COPY(qtScopedBlockSignals)
+  QTE_DISABLE_COPY(qtScopedBlockSignals)
 };
 
 // Helper for QWidget updating
