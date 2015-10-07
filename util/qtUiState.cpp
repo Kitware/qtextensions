@@ -1,10 +1,11 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
 
 #include "qtUiState.h"
+#include "qtUiStateItem.h"
 
 #include <QAbstractButton>
 #include <QAction>
@@ -31,7 +32,6 @@ QTE_IMPLEMENT_D_FUNC(qtUiState)
 class qtUiStatePrivate
 {
 public:
-  template <typename T, typename O> class Item;
   template <typename O> class StateItem;
 
   qtUiStatePrivate(QSettings* s) : store(s ? s : new QSettings) {}
@@ -140,81 +140,6 @@ void qtUiStatePrivate::restore(const QStringList& keys) const
 }
 
 //END qtUiStatePrivate
-
-///////////////////////////////////////////////////////////////////////////////
-
-//BEGIN qtUiStatePrivate::Item
-
-//-----------------------------------------------------------------------------
-template <typename T, typename O>
-class qtUiStatePrivate::Item : public qtUiState::AbstractItem
-{
-public:
-  typedef T(O::*ReadMethod)() const;
-  typedef void (O::*WriteRefMethod)(const T&);
-  typedef void (O::*WriteValMethod)(T);
-
-  Item(O*, ReadMethod, WriteRefMethod);
-  Item(O*, ReadMethod, WriteValMethod);
-
-  virtual QVariant value() const;
-  virtual void setValue(const QVariant&);
-
-protected:
-  QWeakPointer<O> object;
-  const ReadMethod read;
-  const WriteRefMethod writeRef;
-  const WriteValMethod writeVal;
-};
-
-//-----------------------------------------------------------------------------
-template <typename T, typename O>
-qtUiStatePrivate::Item<T, O>::Item(
-  O* object, ReadMethod read, WriteRefMethod write)
-  : object(object), read(read), writeRef(write), writeVal(0)
-{
-}
-
-//-----------------------------------------------------------------------------
-template <typename T, typename O>
-qtUiStatePrivate::Item<T, O>::Item(
-  O* object, ReadMethod read, WriteValMethod write)
-  : object(object), read(read), writeRef(0), writeVal(write)
-{
-}
-
-//-----------------------------------------------------------------------------
-template <typename T, typename O>
-QVariant qtUiStatePrivate::Item<T, O>::value() const
-{
-  if (!this->object)
-    {
-    return QVariant();
-    }
-
-  return (*(object.data()).*this->read)();
-}
-
-//-----------------------------------------------------------------------------
-template <typename T, typename O>
-void qtUiStatePrivate::Item<T, O>::setValue(const QVariant& data)
-{
-  if (!this->object)
-    {
-    return;
-    }
-
-  if (this->writeVal)
-    {
-    (*(object.data()).*this->writeVal)(data.value<T>());
-    }
-  else
-    {
-    (*(object.data()).*this->writeRef)(data.value<T>());
-    }
-}
-
-//END qtUiStatePrivate::Item
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -399,7 +324,7 @@ void qtUiState::mapChecked(const QString& key, QAction* action)
 {
   QTE_D(qtUiState);
   qtUiState::AbstractItem* item =
-    new qtUiStatePrivate::Item<bool, QAction>(
+    new qtUiState::Item<bool, QAction>(
     action, &QAction::isChecked, &QAction::setChecked);
   d->map(key, item);
 }
@@ -409,7 +334,7 @@ void qtUiState::mapChecked(const QString& key, QAbstractButton* widget)
 {
   QTE_D(qtUiState);
   qtUiState::AbstractItem* item =
-    new qtUiStatePrivate::Item<bool, QAbstractButton>(
+    new qtUiState::Item<bool, QAbstractButton>(
     widget, &QAbstractButton::isChecked, &QAbstractButton::setChecked);
   d->map(key, item);
 }
@@ -419,7 +344,7 @@ void qtUiState::mapChecked(const QString& key, QGroupBox* widget)
 {
   QTE_D(qtUiState);
   qtUiState::AbstractItem* item =
-    new qtUiStatePrivate::Item<bool, QGroupBox>(
+    new qtUiState::Item<bool, QGroupBox>(
     widget, &QGroupBox::isChecked, &QGroupBox::setChecked);
   d->map(key, item);
 }
@@ -429,7 +354,7 @@ void qtUiState::mapText(const QString& key, QLineEdit* widget)
 {
   QTE_D(qtUiState);
   qtUiState::AbstractItem* item =
-    new qtUiStatePrivate::Item<QString, QLineEdit>(
+    new qtUiState::Item<QString, QLineEdit>(
     widget, &QLineEdit::text, &QLineEdit::setText);
   d->map(key, item);
 }
@@ -439,7 +364,7 @@ void qtUiState::mapValue(const QString& key, QSpinBox* widget)
 {
   QTE_D(qtUiState);
   qtUiState::AbstractItem* item =
-    new qtUiStatePrivate::Item<int, QSpinBox>(
+    new qtUiState::Item<int, QSpinBox>(
     widget, &QSpinBox::value, &QSpinBox::setValue);
   d->map(key, item);
 }
@@ -449,7 +374,7 @@ void qtUiState::mapValue(const QString& key, QDoubleSpinBox* widget)
 {
   QTE_D(qtUiState);
   qtUiState::AbstractItem* item =
-    new qtUiStatePrivate::Item<double, QDoubleSpinBox>(
+    new qtUiState::Item<double, QDoubleSpinBox>(
     widget, &QDoubleSpinBox::value, &QDoubleSpinBox::setValue);
   d->map(key, item);
 }

@@ -92,6 +92,9 @@ public:
       virtual void setValue(const QVariant& data) = 0;
     };
 
+  // See qtUiStateItem.h
+  template <typename ValueType, typename Object> class Item;
+
   /// Construct a qtUiState, using the specified QSettings as the backing
   /// store.
   ///
