@@ -9,17 +9,18 @@
 
 #include <cmath>
 
-#include <QtCore>
+#include <qmath.h>
+#include <qnumeric.h>
 
 #ifdef Q_OS_WIN
 
 // Replacements for C99 standard math functions that are missing on Windows
 
 inline double round(double a)
-{ return floor(a + 0.5); }
+{ return qFloor(a + 0.5); }
 
 inline double trunc(double a)
-{ return (a < 0.0 ? ceil(a) : floor(a)); }
+{ return (a < 0.0 ? qCeil(a) : qFloor(a)); }
 
 #endif
 
