@@ -525,7 +525,9 @@
 #  endif
 #endif
 
-#if __cplusplus >= 201103L || defined(DOXYGEN)
+#if (__cplusplus >= 201103L && !defined(_MSC_VER)) || \
+    defined(__GNUC__) || \
+    defined(DOXYGEN)
 /// Thread-safe constant with opportunistic static storage.
 ///
 /// This macro declares a constant variable, using static storage if it is
