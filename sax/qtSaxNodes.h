@@ -19,6 +19,8 @@ class qtSaxWriter;
 class qtSaxDocumentPrivate;
 class qtSaxElementPrivate;
 class qtSaxAttributePrivate;
+class qtSaxEntityPrivate;
+class qtSaxTextPrivate;
 
 //-----------------------------------------------------------------------------
 /// Base class for SAX writer nodes
@@ -88,6 +90,55 @@ public:
 protected:
     QTE_DECLARE_PRIVATE_RPTR(qtSaxAttribute)
     QTE_DECLARE_PRIVATE(qtSaxAttribute)
+
+    virtual void write(QXmlStreamWriter&) const QTE_OVERRIDE;
+};
+
+//-----------------------------------------------------------------------------
+/// SAX writer node representing an entity reference
+///
+/// This class represents an XML entity reference.
+///
+/// \sa QXmlStreamWriter::writeEntityReference
+class QTE_EXPORT qtSaxEntity : public qtSaxNode
+{
+public:
+    explicit qtSaxEntity(QString const& name);
+    virtual ~qtSaxEntity();
+
+protected:
+    QTE_DECLARE_PRIVATE_RPTR(qtSaxEntity)
+    QTE_DECLARE_PRIVATE(qtSaxEntity)
+
+    virtual void write(QXmlStreamWriter&) const QTE_OVERRIDE;
+};
+
+//-----------------------------------------------------------------------------
+/// SAX writer node representing text
+///
+/// This class represents XML text. This class may be used instead of writing a
+/// QString directly when the text to be written contains XML entity
+/// references by passing qtSaxText::TextWithEntities as the text type when
+/// constructing the node. This instructs qtSaxText to write embedded entity
+/// references as-is, rather than escaping them as would normally be done.
+///
+/// \sa QXmlStreamWriter::writeCharacters,
+///     QXmlStreamWriter::writeEntityReference
+class QTE_EXPORT qtSaxText : public qtSaxNode
+{
+public:
+    enum TextType
+    {
+        RawText,
+        TextWithEntities,
+    };
+
+    explicit qtSaxText(QString const& text, TextType = RawText);
+    virtual ~qtSaxText();
+
+protected:
+    QTE_DECLARE_PRIVATE_RPTR(qtSaxText)
+    QTE_DECLARE_PRIVATE(qtSaxText)
 
     virtual void write(QXmlStreamWriter&) const QTE_OVERRIDE;
 };
