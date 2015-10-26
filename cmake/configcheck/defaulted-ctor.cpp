@@ -1,10 +1,10 @@
 struct Foo
 {
-  Foo() = default;
-  Foo(const Foo&) = default;
+    Foo() = default;
+    Foo(const Foo&) = default;
 };
 
 int main()
 {
-  return 0;
+    return 0;
 }
