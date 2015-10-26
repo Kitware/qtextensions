@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -253,7 +253,7 @@ QSize qtSqueezedLabel::minimumSizeHint() const
   const QString& text = this->text();
   if (text.isEmpty())
     {
-    return QSize(0, 0);
+    return {0, 0};
     }
 
   QTE_D_CONST(qtSqueezedLabel);
@@ -273,7 +273,7 @@ QSize qtSqueezedLabel::minimumSizeHint() const
     // Ellipsis minimum size is enough to show just the ellipsis
     width = qMin(width, fm.width(qtSqueezedLabelPrivate::ellipsis()));
     }
-  return QSize(width, fm.height());
+  return {width, fm.height()};
 }
 
 //-----------------------------------------------------------------------------

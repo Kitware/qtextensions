@@ -196,7 +196,7 @@ QVariant qtUiStatePrivate::StateItem<O>::value() const
 {
   if (!this->object)
     {
-    return QVariant();
+    return {};
     }
 
   if (this->read)

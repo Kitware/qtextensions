@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 inline QByteArray qtBytes(const std::string& ss)
 {
-  return QByteArray(ss.data(), static_cast<int>(ss.size()));
+  return {ss.data(), static_cast<int>(ss.size())};
 }
 
 //-----------------------------------------------------------------------------

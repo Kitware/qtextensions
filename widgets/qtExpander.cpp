@@ -55,7 +55,7 @@ QSize qtExpander::arrowSize()
   // hope for the best.
   //int aw = style->pixelMetric(QStyle::PM_IndicatorWidth);
   //int ah = style->pixelMetric(QStyle::PM_IndicatorHeight);
-  return QSize(15, 15);
+  return {15, 15};
 }
 
 //-----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -32,7 +32,7 @@ QBrush qtThrobberPrivate::brushAt(int pos)
   qreal a = ((dotCount + pos - this->step) % dotCount);
   a = 0.1 + (0.75 * pow(a / dotCount, 2.2));
   int c = qRound(a * 255.0);
-  return QColor(c, c, c);
+  return QColor{c, c, c};
 }
 
 //-----------------------------------------------------------------------------
@@ -54,7 +54,7 @@ qtThrobber::~qtThrobber()
 //-----------------------------------------------------------------------------
 QSize qtThrobber::minimumSizeHint() const
 {
-  return QSize(12, 12);
+  return {12, 12};
 }
 
 //-----------------------------------------------------------------------------
@@ -137,7 +137,7 @@ void qtThrobber::paintEvent(QPaintEvent* e)
     painter.save();
     painter.setBrush(d->brushAt(i));
     painter.rotate((360.0 / qtThrobberPrivate::dotCount) * i);
-    painter.drawEllipse(QRectF(-20.0 - r, -r, 2.0 * r, 2.0 * r));
+    painter.drawEllipse(QRectF{-20.0 - r, -r, 2.0 * r, 2.0 * r});
     painter.restore();
     }
 }

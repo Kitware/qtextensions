@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -45,9 +45,9 @@ QDebug out(QtMsgType type = QtDebugMsg, QString file = QString(),
 
   if (type == QtDebugMsg)
     {
-    return QDebug(type);
+    return {type};
     }
-  return QDebug(type) << qPrintable(prefix);
+  return QDebug{type} << qPrintable(prefix);
 }
 
 //-----------------------------------------------------------------------------
@@ -87,7 +87,7 @@ QString iconName(const ObjectProperties& properties)
 {
   if (!properties.contains("icon"))
     {
-    return QString();
+    return {};
     }
 
   QString name = properties.value("icon");

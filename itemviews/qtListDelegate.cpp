@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -94,7 +94,7 @@ void qtListDelegate::updateEditorGeometry(
   QRect rect = opt.rect;
 
   // Grow rect to fit editor
-  rect = rect.united(QRect(rect.topLeft(), editor->minimumSize()));
+  rect = rect.united({rect.topLeft(), editor->minimumSize()});
 
   // Translate to fit within parent
   if (geom.top() > rect.top())
