@@ -293,6 +293,39 @@ qte_install_library_targets(${PROJECT_NAME})
 
 ###############################################################################
 
+# BEGIN qtExtensions designer plugin build rules
+
+qt4_wrap_cpp(qtExtensionsDesignerPluginMocSources
+  designer/qtColorButtonInterface.h
+  designer/qtDesignerPlugin.h
+  designer/qtDesignerWidgetInterface.h
+  designer/qtDoubleSliderInterface.h
+  designer/qtExpanderInterface.h
+  designer/qtOverlayWidgetInterface.h
+  designer/qtSqueezedLabelInterface.h
+  designer/qtThrobberInterface.h
+)
+
+add_library(${PROJECT_NAME}DesignerPlugin MODULE
+  designer/qtDesignerPlugin.cpp
+  designer/qtDesignerWidgetInterface.cpp
+  ${qtExtensionsDesignerPluginMocSources}
+)
+
+target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
+  ${PROJECT_NAME}
+#   ${QT_QTDESIGNER_LIBRARY}
+)
+
+install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
+  COMPONENT Development
+  DESTINATION lib${LIB_SUFFIX}/qte/plugins/designer
+)
+
+# END qtExtensions designer plugin build rules
+
+###############################################################################
+
 # BEGIN qtExtensions library python wrapping rules
 
 set(qtExtensionsWrapObjects

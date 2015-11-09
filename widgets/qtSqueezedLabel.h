@@ -17,6 +17,8 @@ class QTE_EXPORT qtSqueezedLabel : public QLabel
 {
   Q_OBJECT
 
+  Q_FLAGS(ElideMode)
+
   Q_PROPERTY(ElideMode elideMode READ elideMode WRITE setElideMode)
   Q_PROPERTY(QString fullText READ fullText WRITE setFullText)
 
