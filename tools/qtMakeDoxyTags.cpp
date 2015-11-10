@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -54,7 +54,7 @@ void parseTags(const QString& filename, QDomNode& root, QDomDocument& doc)
     }
 
   // Iterate over compounds in the input tag DOM
-  foreach (const QDomElement& iscope, qtDom::findElements(tags, "compound"))
+  for each (auto const& iscope, qtDom::findElements(tags, "compound"))
     {
     // Create and populate a scope node from the input scope node
     qtDomElement oscope(doc, "compound");
@@ -64,7 +64,7 @@ void parseTags(const QString& filename, QDomNode& root, QDomDocument& doc)
     const QString anchorFile = copyChildText(oscope, doc, iscope, "filename");
 
     // Iterate over members in the input scope node
-    foreach (const QDomElement& itag, qtDom::findElements(iscope, "member"))
+    for each (auto const& itag, qtDom::findElements(iscope, "member"))
       {
       // See if this looks like an enum value; all tags with names and no kind
       // are considered to be enum values, which may not be entirely accurate
@@ -170,7 +170,7 @@ int main(int argc, char** argv)
 
   // Extract tags
   int errors = 0;
-  foreach(const QString& tag, args.values("tags"))
+  for each (auto const& tag, args.values("tags"))
     {
     qDebug() << "Extracting tag" << tag;
     QDomNode node = parseInput(tag, docdir + '/' + tag + ".html", tags);

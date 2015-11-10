@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -113,7 +113,7 @@ bool qtKstReader::Value::readIntArray(QList<int>& out) const
     return true;
     }
 
-  foreach (Value v, this->array)
+  for each (auto const& v, this->array)
     {
     int e;
     if (!v.readInt(e))
@@ -139,7 +139,7 @@ bool qtKstReader::Value::readLongArray(QList<qint64>& out) const
     return true;
     }
 
-  foreach (Value v, this->array)
+  for each (auto const& v, this->array)
     {
     qint64 e;
     if (!v.readLong(e))
@@ -165,7 +165,7 @@ bool qtKstReader::Value::readRealArray(QList<double>& out) const
     return true;
     }
 
-  foreach (Value v, this->array)
+  for each (auto const& v, this->array)
     {
     double e;
     if (!v.readReal(e))
@@ -724,7 +724,7 @@ bool qtKstReader::readTable(qtKstReader& out, int value, int record) const
     }
 
   QList<qtKstReader::Record> records;
-  foreach (const qtKstReader::Value& r, v.array)
+  for each (auto const& r, v.array)
     {
     if (r.array.isEmpty())
       {

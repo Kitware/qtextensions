@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -9,6 +9,7 @@
 #include <QCoreApplication>
 #include <QHash>
 
+#include "../core/qtEnumerate.h"
 #include "../core/qtUtil.h"
 
 #include "qtActionFactory.h"
@@ -61,7 +62,7 @@ qtActionManager::qtActionManager(QObject* parent)
 qtActionManager::~qtActionManager()
 {
   QTE_D(qtActionManager);
-  foreach (qtActionFactory* f, d->actions)
+  for each (auto const f, d->actions)
     delete f;
   delete d;
 }
@@ -131,7 +132,7 @@ void qtActionManager::unregisterStaticAction(QObject* object)
 void qtActionManager::addDynamicActions(qtActionManagerDialog* dialog) const
 {
   QTE_D_CONST(qtActionManager);
-  foreach (qtActionFactory* f, d->actions)
+  for each (auto const f, d->actions)
     f->addToDialog(dialog);
 }
 
@@ -139,7 +140,7 @@ void qtActionManager::addDynamicActions(qtActionManagerDialog* dialog) const
 void qtActionManager::reloadActions(QSettings& settings) const
 {
   QTE_D_CONST(qtActionManager);
-  foreach_iter (StaticActionMap::const_iterator, iter, d->staticActions)
+  for each (auto const& iter, qtEnumerate(d->staticActions))
     this->loadShortcut(iter.key(), settings, iter.value());
 }
 
@@ -149,13 +150,13 @@ void qtActionManager::loadShortcut(QAction* action, QSettings& settings,
 {
   // Get default shortcut(s)
   QVariantList values;
-  foreach (QKeySequence seq, action->shortcuts())
+  for each (auto const& seq, action->shortcuts())
     values.append(seq);
 
   // Load shortcut(s)
   QList<QKeySequence> shortcuts;
   values = settings.value("Shortcuts/" + settingsKey, values).toList();
-  foreach (QVariant value, values)
+  for each (auto const& value, values)
     {
     if (value.canConvert<QKeySequence>())
       {

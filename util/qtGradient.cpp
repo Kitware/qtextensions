@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -203,7 +203,7 @@ void qtGradient::setStops(const QList<qtGradient::Stop>& stops,
 
   // Convert to map
   QMap<qreal, qtGradient::Stop> stopsMap;
-  foreach (const Stop& stop, stops)
+  for each (auto const& stop, stops)
     stopsMap.insert(stop.Position, stop);
 
   // Handle 'regular' stop sets, based on normalization mode
@@ -215,7 +215,7 @@ void qtGradient::setStops(const QList<qtGradient::Stop>& stops,
 
     // Recreate stop set, normalized
     d->stops.clear();
-    foreach (Stop stop, stops)
+    for each (auto stop, stops)
       {
       stop.Position = (stop.Position - offset) * scale;
       d->stops.insert(stop.Position, stop);

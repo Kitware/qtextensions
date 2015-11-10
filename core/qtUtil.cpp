@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -50,7 +50,7 @@ QIcon standardIcon(const QString& name, int size)
 QIcon standardIcon(const QString& name, QList<int> sizes)
 {
   QIcon icon;
-  foreach (int size, sizes)
+  for each (auto const size, sizes)
     icon.addFile(standardIconResource(name, size));
   return icon;
 }
@@ -176,7 +176,7 @@ void resizeColumnsToContents(QTreeWidget* tree, bool includeCollapsedItems)
     }
 
   // Restore collapsed state of anything we expanded
-  foreach (QTreeWidgetItem* item, collapsedItems)
+  for each (auto const item, collapsedItems)
     item->setExpanded(false);
 }
 

@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -151,7 +151,7 @@ void qtSettings::commit()
   QTE_D(qtSettings);
 
   QSet<qtSettings::Scope> modifiedScopes;
-  foreach (const QString& key, d->modifiedSettings.values())
+  for each (auto const& key, d->modifiedSettings.values())
     {
     qtAbstractSetting* s = d->settings[key];
     qtSettings::Scope scope = s->scope();
@@ -159,7 +159,7 @@ void qtSettings::commit()
     modifiedScopes.insert(scope);
     }
 
-  foreach (qtSettings::Scope s, modifiedScopes)
+  for each (auto const s, modifiedScopes)
     d->store(s).sync();
 
   d->modifiedSettings.clear();
@@ -171,7 +171,7 @@ void qtSettings::discard()
 {
   QTE_D(qtSettings);
 
-  foreach (const QString& key, d->modifiedSettings.values())
+  for each (auto const& key, d->modifiedSettings.values())
     d->settings[key]->discard();
 
   d->modifiedSettings.clear();
@@ -185,7 +185,7 @@ void qtSettings::clear()
   d->settings.clear();
   d->modifiedSettings.clear();
 
-  foreach (QSettings* settings, d->stores.values())
+  for each (auto const settings, d->stores.values())
     settings->clear();
 }
 

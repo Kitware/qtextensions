@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -29,7 +29,7 @@ QWidget* qtComboBoxDelegate::createListEditor(QWidget* parent) const
           this, SLOT(editorValueChanged()));
 
   // Fill combo box
-  foreach (QString name, this->valueNames())
+  for each (auto const& name, this->valueNames())
     box->addItem(name, this->valueData(name));
 
   // Flag box to show pop-up once we know the geometry

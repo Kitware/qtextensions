@@ -70,9 +70,9 @@ public:
 bool qtCliArgsPrivate::checkRequired()
 {
   // Check that required options were specified
-  foreach (const qtCliArgsPrivate::OptionGroup& og, this->options)
+  for each (auto const& og, this->options)
     {
-    foreach (const qtCliOption& option, og.options)
+    for each (auto const& option, og.options)
       {
       if (option.isRequired() && !option.isSet())
         {
@@ -84,7 +84,7 @@ bool qtCliArgsPrivate::checkRequired()
     }
 
   // Check that required arguments were specified
-  foreach (const qtCliOption& narg, this->namedArgs)
+  for each (auto const& narg, this->namedArgs)
     {
     if (narg.isRequired() && !narg.isSet())
       {
@@ -102,7 +102,7 @@ bool qtCliArgsPrivate::checkRequired()
 void qtCliArgsPrivate::generateQtArgs()
 {
   this->qtArgs.append(originalArgs[0]);
-  foreach (const qtCliOption& option, this->options.value("qt").options)
+  for each (auto const& option, this->options.value("qt").options)
     {
     QString name = option.preferredName();
     if (option.isSet())
@@ -227,16 +227,16 @@ void qtCliArgs::addOptions(const qtCliOptions& options, QString group,
   // Add options to maps
   qtCliArgsPrivate::OptionGroup& og = d->options[lgroup];
   og.name = group;
-  foreach (const qtCliOption& option, options.options())
+  for each (auto const& option, options.options())
     {
     og.options.append(option);
     qtCliOption* po = &og.options.last();
-    foreach (QString sn, po->shortNames())
+    for each (auto const& sn, po->shortNames())
       {
       d->optionMap.insert(sn, po);
       d->shortOptions.insert(sn, po);
       }
-    foreach (QString ln, po->longNames())
+    for each (auto const& ln, po->longNames())
       {
       d->optionMap.insert(ln, po);
       d->longOptions.insert(ln, po);
@@ -262,7 +262,7 @@ void qtCliArgs::addNamedArguments(const qtCliOptions& args)
     }
 
   // Add named arguments to maps
-  foreach (const qtCliOption& arg, args.options())
+  for each (auto const& arg, args.options())
     {
     if (d->multiNamedArg < 0)
       {
@@ -272,7 +272,7 @@ void qtCliArgs::addNamedArguments(const qtCliOptions& args)
         }
       d->namedArgs.append(arg);
       qtCliOption* pa = &d->namedArgs.last();
-      foreach (QString name, pa->longNames())
+      for each (auto const& name, pa->longNames())
         d->optionMap.insert(name, pa);
       }
     else
@@ -552,7 +552,7 @@ void qtCliArgs::shortUsage() const
 
   // Build options groups list
   QStringList args;
-  foreach (QString group, d->optionGroups)
+  for each (auto const& group, d->optionGroups)
     {
     if (!group.isEmpty())
       {
@@ -565,7 +565,7 @@ void qtCliArgs::shortUsage() const
     }
 
   // Build list of named options
-  foreach (const qtCliOption& narg, d->namedArgs)
+  for each (auto const& narg, d->namedArgs)
     {
     QString format;
     if (narg.isRequired())
@@ -595,7 +595,7 @@ void qtCliArgs::usage(QString group) const
   genericOptions.add("help", "Show help for common options");
 
   // Build help options for generic help
-  foreach (QString group, d->optionGroups)
+  for each (auto const& group, d->optionGroups)
     {
     if (!group.isEmpty())
       {
@@ -612,7 +612,7 @@ void qtCliArgs::usage(QString group) const
   // Show short usage and help for generic options
   this->shortUsage();
   qOut() << "\nGeneric options:\n";
-  foreach (const qtCliOption& option, genericOptions.options())
+  for each (auto const& option, genericOptions.options())
     qOut() << option.optionUsage() << '\n';
 
   // Show help for requested group(s)
@@ -627,7 +627,7 @@ void qtCliArgs::usage(QString group) const
       qOut() << '\n' << og.name << " options:\n";
 
       // Show options for this group
-      foreach (const qtCliOption& option, og.options)
+      for each (auto const& option, og.options)
         qOut() << option.optionUsage() << '\n';
       }
     }
@@ -636,7 +636,7 @@ void qtCliArgs::usage(QString group) const
     // Show help for basic/all group(s)
     QStringList groups =
       (group == "all" ? d->optionGroups : d->commonOptionGroups);
-    foreach (QString groupName, groups)
+    for each (auto const& groupName, groups)
       {
       const QString lgn = groupName.toLower();
       const qtCliArgsPrivate::OptionGroup& og = d->options[lgn];
@@ -652,7 +652,7 @@ void qtCliArgs::usage(QString group) const
         }
 
       // Show options for this group
-      foreach (const qtCliOption& option, og.options)
+      for each (auto const& option, og.options)
         qOut() << option.optionUsage() << '\n';
       }
 
@@ -663,7 +663,7 @@ void qtCliArgs::usage(QString group) const
       qOut() << "\nArguments:\n";
 
       // Show named arguments
-      foreach (const qtCliOption& narg, d->namedArgs)
+      for each (auto const& narg, d->namedArgs)
         qOut() << narg.namedArgUsage() << '\n';
       }
     }

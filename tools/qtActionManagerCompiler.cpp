@@ -1,8 +1,13 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
+
+#include "qteVersion.h"
+
+#include "../core/qtEnumerate.h"
+#include "../core/qtGlobal.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -18,8 +23,6 @@
 #include <QTextStream>
 
 #include <cstdio>
-
-#include "qteVersion.h"
 
 typedef QHash<QString, QString> ObjectProperties;
 typedef QHash<QString, ObjectProperties> ActionMap;
@@ -118,7 +121,7 @@ void writeGeneratedFileHeader(QTextStream& s, QStringList inFiles)
   else
     {
     s << "s:\n";
-    foreach (QString inFile, inFiles)
+    for each (auto const& inFile, inFiles)
       s << "**    '" << QFileInfo(inFile).fileName() << "'\n";
     }
   s << "** Created: " << QDateTime::currentDateTime().toString() << '\n'
@@ -280,7 +283,7 @@ bool processUi(QString uiName, QTextStream& managerSource)
      << "public:\n";
 
   // Write action group declarations
-  foreach (QString actionGroup, actionGroups.uniqueKeys())
+  for each (auto const& actionGroup, actionGroups.uniqueKeys())
     am << "    QActionGroup *" << actionGroup << ";\n";
   am << '\n';
 
@@ -297,20 +300,21 @@ bool processUi(QString uiName, QTextStream& managerSource)
     }
   else
     {
-    foreach (QString actionGroup, actionGroups.uniqueKeys())
+    for each (auto const& actionGroup, actionGroups.uniqueKeys())
       {
       am << "        " << actionGroup
          << " = new QActionGroup(actionGroupParent);\n";
-      foreach (QString actionInGroup, actionGroups.values(actionGroup))
+      for each (auto const& actionInGroup, actionGroups.values(actionGroup))
+        {
         am << "        " << actionGroup << "->addAction(ui."
            << actionInGroup << ");\n";
+        }
       am << '\n';
       }
     }
 
   // Write code to set up actions
-  ActionMap::const_iterator iter, actionsEnd = actions.end();
-  for (iter = actions.begin(); iter != actionsEnd; ++iter)
+  for each (auto const& iter, qtEnumerate(actions))
     {
     am << "        qtAm->setupAction(settings, ui." << iter.key()
        << ", \"" << uiClassName << '/' << iter.key() << '\"';
@@ -342,7 +346,7 @@ bool processUi(QString uiName, QTextStream& managerSource)
 
   // Write manager code
   QTextStream& ms = managerSource; // alias parameter
-  for (iter = actions.begin(); iter != actionsEnd; ++iter)
+  for each (auto const& iter, qtEnumerate(actions))
     {
     QString icon = iconName(iter.value());
     QString defaultShortcut = iter.value().value("shortcut");
@@ -412,7 +416,7 @@ int main(int argc, char** argv)
          << "    {\n";
 
       // Process .ui files
-      foreach (QString uiFile, args)
+      for each (auto const& uiFile, args)
         {
         if (!processUi(uiFile, ms))
           {
