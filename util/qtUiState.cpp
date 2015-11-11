@@ -98,7 +98,7 @@ QStringList qtUiStatePrivate::matchingKeys(const QString& pattern) const
     (pattern.endsWith('/') ? "" : "(/|$)"));
   QStringList matches;
 
-  for each (auto const& key, this->items.keys())
+  foreach (auto const& key, this->items.keys())
     {
     if (re.indexIn(key) >= 0)
       {
@@ -112,7 +112,7 @@ QStringList qtUiStatePrivate::matchingKeys(const QString& pattern) const
 //-----------------------------------------------------------------------------
 void qtUiStatePrivate::save(const QStringList& keys) const
 {
-  for each (auto const& key, keys)
+  foreach (auto const& key, keys)
     {
     qtUiState::AbstractItem* item = this->items.value(key, 0);
     if (item)
@@ -129,7 +129,7 @@ void qtUiStatePrivate::restore(const QStringList& keys) const
 {
   this->store->sync();
 
-  for each (auto const& key, keys)
+  foreach (auto const& key, keys)
     {
     qtUiState::AbstractItem* item = this->items.value(key, 0);
     if (item)
@@ -263,7 +263,7 @@ void qtUiState::save(const QStringList& keys) const
   QTE_D_CONST(qtUiState);
 
   QSet<QString> matchingKeys;
-  for each (auto const& pattern, keys)
+  foreach (auto const& pattern, keys)
     {
     matchingKeys += QSet<QString>::fromList(d->matchingKeys(pattern));
     }
@@ -290,7 +290,7 @@ void qtUiState::restore(const QStringList& keys) const
   QTE_D_CONST(qtUiState);
 
   QSet<QString> matchingKeys;
-  for each (auto const& pattern, keys)
+  foreach (auto const& pattern, keys)
     {
     matchingKeys += QSet<QString>::fromList(d->matchingKeys(pattern));
     }

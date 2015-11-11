@@ -129,10 +129,10 @@ void qtStatusManagerPrivate::update()
     qtDebug(this->debugArea) << "clearing status";
     }
 
-  for each (auto const label, this->labels)
+  foreach (auto const label, this->labels)
     label->setText(si.text);
 
-  for each (auto const progressBar, this->progressBars)
+  foreach (auto const progressBar, this->progressBars)
     {
     progressBar->setVisible(si.progressAvailable);
     if (si.progressAvailable)

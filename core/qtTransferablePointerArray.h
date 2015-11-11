@@ -23,7 +23,7 @@ struct qtTransferablePointerArrayDeleter
     {
     if (list)
       {
-      for each (auto const item, *list)
+      foreach (auto const item, *list)
         ItemCleanup::cleanup(item);
       delete list;
       }

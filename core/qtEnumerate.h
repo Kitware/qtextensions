@@ -70,7 +70,7 @@ protected:
 /// \code{.cpp}
 /// typedef QHash<int, QString> MyMap;
 /// MyMap map = createMap();
-/// for each(auto const iter, qtEnumerate(map))
+/// foreach(auto const iter, qtEnumerate(map))
 ///   qDebug() << "key" << iter.key() << "value" << iter.value();
 /// \endcode
 template <typename Container>

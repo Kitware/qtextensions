@@ -50,7 +50,7 @@ QIcon standardIcon(const QString& name, int size)
 QIcon standardIcon(const QString& name, QList<int> sizes)
 {
   QIcon icon;
-  for each (auto const size, sizes)
+  foreach (auto const size, sizes)
     icon.addFile(standardIconResource(name, size));
   return icon;
 }
@@ -176,7 +176,7 @@ void resizeColumnsToContents(QTreeWidget* tree, bool includeCollapsedItems)
     }
 
   // Restore collapsed state of anything we expanded
-  for each (auto const item, collapsedItems)
+  foreach (auto const item, collapsedItems)
     item->setExpanded(false);
 }
 

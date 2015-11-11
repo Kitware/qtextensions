@@ -194,7 +194,7 @@ qtDrawer::~qtDrawer()
 
   // Remove content widgets
   d->containerLayout->removeWidget(this);
-  for each (auto const col, d->contentWidgets.keys())
+  foreach (auto const col, d->contentWidgets.keys())
     {
     if (col != 0)
       {
@@ -337,7 +337,7 @@ int qtDrawer::countDescendants() const
   QTE_D_CONST(qtDrawer);
 
   int count = d->children.count();
-  for each (auto const* const child, d->children)
+  foreach (auto const* const child, d->children)
     count += child->countDescendants();
 
   return count;
@@ -429,7 +429,7 @@ void qtDrawer::shift()
   d->containerLayout->addWidget(this, d->row, 0);
 
   // Shift other content widgets
-  for each (auto const col, d->contentWidgets.keys())
+  foreach (auto const col, d->contentWidgets.keys())
     {
     if (col != 0)
       {
@@ -445,7 +445,7 @@ void qtDrawer::clear()
 {
   QTE_D(qtDrawer);
 
-  for each (auto const child, d->children)
+  foreach (auto const child, d->children)
     {
     child->clear();
     delete child;
@@ -521,7 +521,7 @@ void qtDrawer::setVisible(bool visibility)
 
   this->setUpdatesEnabled(false);
   QWidget::setVisible(visibility);
-  for each (auto const widget, d->contentWidgets)
+  foreach (auto const widget, d->contentWidgets)
     widget->setVisible(visibility);
 
   this->setChildVisibility();
@@ -546,7 +546,7 @@ void qtDrawer::setChildVisibility(qtDrawer* child)
     }
   else
     {
-    for each (auto const child, d->children)
+    foreach (auto const child, d->children)
       child->setVisible(visibility);
     }
 }

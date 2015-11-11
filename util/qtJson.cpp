@@ -77,7 +77,7 @@ qtJson::JsonData qtJson::encode(const qtJson::Array& array)
   QList<JsonData> encodedValues;
   encodedValues.reserve(array.count());
 
-  for each (auto const& value, array)
+  foreach (auto const& value, array)
     {
     encodedValues.append(encode(value));
     }

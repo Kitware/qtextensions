@@ -30,7 +30,7 @@ QWidget* qtListDelegate::createListEditor(QWidget* parent) const
 
   // Fill list widget
   QStringList names = this->valueNames();
-  for each (auto const& name, names)
+  foreach (auto const& name, names)
     list->addItem(this->createListItem(name, this->valueData(name)));
 
   // Set a reasonable minimum size

@@ -121,7 +121,7 @@ void writeGeneratedFileHeader(QTextStream& s, QStringList inFiles)
   else
     {
     s << "s:\n";
-    for each (auto const& inFile, inFiles)
+    foreach (auto const& inFile, inFiles)
       s << "**    '" << QFileInfo(inFile).fileName() << "'\n";
     }
   s << "** Created: " << QDateTime::currentDateTime().toString() << '\n'
@@ -283,7 +283,7 @@ bool processUi(QString uiName, QTextStream& managerSource)
      << "public:\n";
 
   // Write action group declarations
-  for each (auto const& actionGroup, actionGroups.uniqueKeys())
+  foreach (auto const& actionGroup, actionGroups.uniqueKeys())
     am << "    QActionGroup *" << actionGroup << ";\n";
   am << '\n';
 
@@ -300,11 +300,11 @@ bool processUi(QString uiName, QTextStream& managerSource)
     }
   else
     {
-    for each (auto const& actionGroup, actionGroups.uniqueKeys())
+    foreach (auto const& actionGroup, actionGroups.uniqueKeys())
       {
       am << "        " << actionGroup
          << " = new QActionGroup(actionGroupParent);\n";
-      for each (auto const& actionInGroup, actionGroups.values(actionGroup))
+      foreach (auto const& actionInGroup, actionGroups.values(actionGroup))
         {
         am << "        " << actionGroup << "->addAction(ui."
            << actionInGroup << ");\n";
@@ -314,7 +314,7 @@ bool processUi(QString uiName, QTextStream& managerSource)
     }
 
   // Write code to set up actions
-  for each (auto const& iter, qtEnumerate(actions))
+  foreach (auto const& iter, qtEnumerate(actions))
     {
     am << "        qtAm->setupAction(settings, ui." << iter.key()
        << ", \"" << uiClassName << '/' << iter.key() << '\"';
@@ -346,7 +346,7 @@ bool processUi(QString uiName, QTextStream& managerSource)
 
   // Write manager code
   QTextStream& ms = managerSource; // alias parameter
-  for each (auto const& iter, qtEnumerate(actions))
+  foreach (auto const& iter, qtEnumerate(actions))
     {
     QString icon = iconName(iter.value());
     QString defaultShortcut = iter.value().value("shortcut");
@@ -416,7 +416,7 @@ int main(int argc, char** argv)
          << "    {\n";
 
       // Process .ui files
-      for each (auto const& uiFile, args)
+      foreach (auto const& uiFile, args)
         {
         if (!processUi(uiFile, ms))
           {

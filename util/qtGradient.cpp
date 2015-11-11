@@ -203,7 +203,7 @@ void qtGradient::setStops(const QList<qtGradient::Stop>& stops,
 
   // Convert to map
   QMap<qreal, qtGradient::Stop> stopsMap;
-  for each (auto const& stop, stops)
+  foreach (auto const& stop, stops)
     stopsMap.insert(stop.Position, stop);
 
   // Handle 'regular' stop sets, based on normalization mode
@@ -215,7 +215,7 @@ void qtGradient::setStops(const QList<qtGradient::Stop>& stops,
 
     // Recreate stop set, normalized
     d->stops.clear();
-    for each (auto stop, stops)
+    foreach (auto stop, stops)
       {
       stop.Position = (stop.Position - offset) * scale;
       d->stops.insert(stop.Position, stop);

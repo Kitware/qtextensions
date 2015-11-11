@@ -113,7 +113,7 @@ bool qtKstReader::Value::readIntArray(QList<int>& out) const
     return true;
     }
 
-  for each (auto const& v, this->array)
+  foreach (auto const& v, this->array)
     {
     int e;
     if (!v.readInt(e))
@@ -139,7 +139,7 @@ bool qtKstReader::Value::readLongArray(QList<qint64>& out) const
     return true;
     }
 
-  for each (auto const& v, this->array)
+  foreach (auto const& v, this->array)
     {
     qint64 e;
     if (!v.readLong(e))
@@ -165,7 +165,7 @@ bool qtKstReader::Value::readRealArray(QList<double>& out) const
     return true;
     }
 
-  for each (auto const& v, this->array)
+  foreach (auto const& v, this->array)
     {
     double e;
     if (!v.readReal(e))
@@ -724,7 +724,7 @@ bool qtKstReader::readTable(qtKstReader& out, int value, int record) const
     }
 
   QList<qtKstReader::Record> records;
-  for each (auto const& r, v.array)
+  foreach (auto const& r, v.array)
     {
     if (r.array.isEmpty())
       {

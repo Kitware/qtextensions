@@ -151,7 +151,7 @@ void qtSettings::commit()
   QTE_D(qtSettings);
 
   QSet<qtSettings::Scope> modifiedScopes;
-  for each (auto const& key, d->modifiedSettings.values())
+  foreach (auto const& key, d->modifiedSettings.values())
     {
     qtAbstractSetting* s = d->settings[key];
     qtSettings::Scope scope = s->scope();
@@ -159,7 +159,7 @@ void qtSettings::commit()
     modifiedScopes.insert(scope);
     }
 
-  for each (auto const s, modifiedScopes)
+  foreach (auto const s, modifiedScopes)
     d->store(s).sync();
 
   d->modifiedSettings.clear();
@@ -171,7 +171,7 @@ void qtSettings::discard()
 {
   QTE_D(qtSettings);
 
-  for each (auto const& key, d->modifiedSettings.values())
+  foreach (auto const& key, d->modifiedSettings.values())
     d->settings[key]->discard();
 
   d->modifiedSettings.clear();
@@ -185,7 +185,7 @@ void qtSettings::clear()
   d->settings.clear();
   d->modifiedSettings.clear();
 
-  for each (auto const settings, d->stores.values())
+  foreach (auto const settings, d->stores.values())
     settings->clear();
 }
 

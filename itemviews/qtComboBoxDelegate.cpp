@@ -29,7 +29,7 @@ QWidget* qtComboBoxDelegate::createListEditor(QWidget* parent) const
           this, SLOT(editorValueChanged()));
 
   // Fill combo box
-  for each (auto const& name, this->valueNames())
+  foreach (auto const& name, this->valueNames())
     box->addItem(name, this->valueData(name));
 
   // Flag box to show pop-up once we know the geometry

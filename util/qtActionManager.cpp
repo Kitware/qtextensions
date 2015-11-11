@@ -62,7 +62,7 @@ qtActionManager::qtActionManager(QObject* parent)
 qtActionManager::~qtActionManager()
 {
   QTE_D(qtActionManager);
-  for each (auto const f, d->actions)
+  foreach (auto const f, d->actions)
     delete f;
   delete d;
 }
@@ -132,7 +132,7 @@ void qtActionManager::unregisterStaticAction(QObject* object)
 void qtActionManager::addDynamicActions(qtActionManagerDialog* dialog) const
 {
   QTE_D_CONST(qtActionManager);
-  for each (auto const f, d->actions)
+  foreach (auto const f, d->actions)
     f->addToDialog(dialog);
 }
 
@@ -140,7 +140,7 @@ void qtActionManager::addDynamicActions(qtActionManagerDialog* dialog) const
 void qtActionManager::reloadActions(QSettings& settings) const
 {
   QTE_D_CONST(qtActionManager);
-  for each (auto const& iter, qtEnumerate(d->staticActions))
+  foreach (auto const& iter, qtEnumerate(d->staticActions))
     this->loadShortcut(iter.key(), settings, iter.value());
 }
 
@@ -150,13 +150,13 @@ void qtActionManager::loadShortcut(QAction* action, QSettings& settings,
 {
   // Get default shortcut(s)
   QVariantList values;
-  for each (auto const& seq, action->shortcuts())
+  foreach (auto const& seq, action->shortcuts())
     values.append(seq);
 
   // Load shortcut(s)
   QList<QKeySequence> shortcuts;
   values = settings.value("Shortcuts/" + settingsKey, values).toList();
-  for each (auto const& value, values)
+  foreach (auto const& value, values)
     {
     if (value.canConvert<QKeySequence>())
       {
