@@ -17,8 +17,8 @@ public:
 
     qtEnumerator(Container const& container) : c(container) {}
 
-    iterator begin() const { return iterator(c.begin()); }
-    iterator end() const { return iterator(c.end()); }
+    iterator begin() const { return {c.begin()}; }
+    iterator end() const { return {c.end()}; }
 
 protected:
     Container const& c;
@@ -41,7 +41,7 @@ public:
 
 protected:
     friend class qtEnumerator<Container>;
-    iterator(Iterator const& iter) : i(iter) {}
+    iterator(Iterator const& iter) : i{iter} {}
 
     Iterator i;
 };
@@ -76,7 +76,7 @@ protected:
 template <typename Container>
 qtEnumerator<Container> qtEnumerate(Container const& container)
 {
-    return qtEnumerator<Container>(container);
+    return {container};
 }
 
 #endif
