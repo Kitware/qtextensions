@@ -63,6 +63,11 @@ endfunction()
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(QTE_ENABLE_PYTHON "Enable qtExtensions Python (PySide) bindings" OFF)
 
+# Use RPATH on OS/X
+if(APPLE)
+  set(CMAKE_MACOSX_RPATH TRUE)
+endif()
+
 # Set compiler flags for exports (e.g. -fvisibility=hidden)
 add_compiler_export_flags()
 
