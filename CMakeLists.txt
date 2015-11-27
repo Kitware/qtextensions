@@ -81,6 +81,7 @@ set(qtExtensionsSources
     widgets/qtDrawerWidget.cpp
     widgets/qtExpander.cpp
     widgets/qtGradientWidget.cpp
+    widgets/qtMenu.cpp
     widgets/qtOverlayWidget.cpp
     widgets/qtSqueezedLabel.cpp
     widgets/qtThrobber.cpp
@@ -121,6 +122,7 @@ set(qtExtensionsMocHeaders
     widgets/qtDrawerWidget.h
     widgets/qtExpander.h
     widgets/qtGradientWidget.h
+    widgets/qtMenu.h
     widgets/qtOverlayWidget.h
     widgets/qtSqueezedLabel.h
     widgets/qtThrobber.h
@@ -197,6 +199,7 @@ set(qtExtensionsInstallHeaders
     widgets/qtDrawerWidget.h
     widgets/qtExpander.h
     widgets/qtGradientWidget.h
+    widgets/qtMenu.h
     widgets/qtOverlayWidget.h
     widgets/qtSqueezedLabel.h
     widgets/qtThrobber.h
@@ -353,6 +356,7 @@ set(qtExtensionsWrapObjects
     qtDrawerWidget
     qtExpander
     qtGradientWidget
+    qtMenu
     qtOverlayWidget
     qtThrobber
     # ItemViews
