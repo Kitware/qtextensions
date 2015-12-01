@@ -173,8 +173,6 @@ set(qtExtensionsInstallHeaders
     util/qtDockController.h
     util/qtGradient.h
     util/qtJson.h
-    util/qtMap.h
-    util/qtMapImpl.h
     util/qtPrioritizedMenuProxy.h
     util/qtPrioritizedToolBarProxy.h
     util/qtRand.h
