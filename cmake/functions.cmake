@@ -6,10 +6,16 @@ function(qte_shift_arg variable value)
 endfunction()
 
 #------------------------------------------------------------------------------
-function(qte_library_include_interface target install_prefix)
-  if (NOT install_prefix MATCHES "|.*/")
-    set(install_prefix "${install_prefix}/")
+macro(qte_add_slash var)
+  if (NOT ${var} MATCHES "^$|.*/$")
+    set(${var} "${${var}}/")
   endif()
+endmacro()
+
+#------------------------------------------------------------------------------
+# Set interface include directories (for build and install) on target
+function(qte_library_include_interface target install_prefix)
+  qte_add_slash(install_prefix)
   foreach(path ${ARGN})
     target_include_directories(${target} SYSTEM INTERFACE
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${path}>
@@ -44,7 +50,21 @@ function(qte_install_library_targets)
     RUNTIME       COMPONENT Runtime     DESTINATION bin
     LIBRARY       COMPONENT Runtime     DESTINATION lib${LIB_SUFFIX}
     ARCHIVE       COMPONENT Development DESTINATION lib${LIB_SUFFIX}
-    INCLUDES      COMPONENT Development DESTINATION include/QtE
-    PUBLIC_HEADER COMPONENT Development DESTINATION include/QtE
   )
+endfunction()
+
+#------------------------------------------------------------------------------
+# Install headers with subdirectories
+function(qte_install_includes destination)
+  qte_add_slash(destination)
+  foreach (header ${ARGN})
+    get_filename_component(subdir "${header}" DIRECTORY)
+    qte_add_slash(subdir)
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${header}")
+      set(header "${CMAKE_CURRENT_BINARY_DIR}/${header}")
+    endif()
+    install(FILES "${header}"
+      COMPONENT Development DESTINATION ${destination}${subdir}
+    )
+  endforeach()
 endfunction()
