@@ -272,10 +272,6 @@ qte_library_include_interface(${PROJECT_NAME} include/QtE
   widgets
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
-  PUBLIC_HEADER "${qtExtensionsInstallHeaders}"
-)
-
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
   ${QT_LIBRARIES}
@@ -287,6 +283,7 @@ if(MSVC)
   set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS /Zc:wchar_t-)
 endif()
 
+qte_install_includes(include/QtE ${qtExtensionsInstallHeaders} qtExports.h)
 qte_install_library_targets(${PROJECT_NAME})
 
 # END qtExtensions library build rules
