@@ -6,6 +6,8 @@
 
 #include "qtComboBoxDelegate.h"
 
+#include "../core/qtIndexRange.h"
+
 #include <QComboBox>
 
 //-----------------------------------------------------------------------------
@@ -46,7 +48,7 @@ void qtComboBoxDelegate::setListEditorData(
   QComboBox* box = qobject_cast<QComboBox*>(editor);
 
   int i = -1;
-  for (int j = 0; j < box->count(); ++j)
+  foreach (int const j, qtIndexRange(box->count()))
     {
     if (this->compareData(newData, box->itemData(j)))
       {

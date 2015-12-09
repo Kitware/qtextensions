@@ -7,14 +7,15 @@
 #ifndef __qtStlUtil_h
 #define __qtStlUtil_h
 
-#include <string>
-#include <vector>
+#include "qtGlobal.h"
+#include "qtIndexRange.h"
 
 #include <QList>
 #include <QString>
 #include <QUrl>
 
-#include <qtExports.h>
+#include <string>
+#include <vector>
 
 //-----------------------------------------------------------------------------
 inline QByteArray qtBytes(const std::string& ss)
@@ -63,15 +64,13 @@ inline std::string stdString(const QUrl& qu)
 template <typename T>
 inline QList<T> qtList(const std::vector<T>& in)
 {
-  const size_t k = in.size();
+  auto const k = in.size();
 
   QList<T> out;
   out.reserve(static_cast<int>(k));
 
-  for (size_t n = 0; n < k; ++n)
-    {
+  foreach (auto const n, qtIndexRange(k))
     out.append(in[n]);
-    }
 
   return out;
 }

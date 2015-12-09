@@ -8,6 +8,7 @@
 
 #include <QSharedData>
 
+#include "../core/qtIndexRange.h"
 #include "../core/qtMath.h"
 
 #include "qtColorUtil.h"
@@ -348,7 +349,7 @@ QList<QColor> qtGradient::render(int size) const
   out.reserve(size);
 
   qreal k = 1.0 / (size - 1);
-  for (int i = 0; i < size; ++i)
+  foreach (auto const i, qtIndexRange(size))
     {
     out.append(this->at(i * k));
     }

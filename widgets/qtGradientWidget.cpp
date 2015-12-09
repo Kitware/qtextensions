@@ -1,17 +1,19 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
 
 #include "qtGradientWidget.h"
 
+#include "../util/qtColorUtil.h"
+
+#include "../core/qtIndexRange.h"
+
 #include <QImage>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPixmap>
-
-#include "../util/qtColorUtil.h"
 
 QTE_IMPLEMENT_D_FUNC(qtGradientWidget)
 
@@ -117,13 +119,13 @@ void qtGradientWidget::paintEvent(QPaintEvent*)
     const int k = this->width();
     QList<QColor> g = d->gradient.render(k);
 
-    for (int i = 0; i < k; ++i)
+    foreach (auto const i, qtIndexRange(k))
       {
       const QColor& color = g[i];
       const qreal a = color.alphaF();
       const QColor cg1 = qtColorUtil::blend(c1, color, a);
       const QColor cg2 = qtColorUtil::blend(c2, color, a);
-      for (int j = 0; j < 12; ++j)
+      foreach (auto const j, qtIndexRange(12))
         {
         const QColor& cb = (((i % 12) > 5) != ((j % 12) > 5) ? cg1 : cg2);
         image.setPixel(i, j, cb.rgb());

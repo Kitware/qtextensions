@@ -7,9 +7,11 @@
 #ifndef __qtFlagListDelegate_h
 #define __qtFlagListDelegate_h
 
-#include <QListWidgetItem>
-
 #include "qtListDelegate.h"
+
+#include "../core/qtIndexRange.h"
+
+#include <QListWidgetItem>
 
 template <typename Flag, typename Flags>
 class qtFlagListDelegate : public qtListDelegate
@@ -56,7 +58,7 @@ void qtFlagListDelegate<Flag, Flags>::setListEditorData(
     Flags dataFlags = data.value<Flags>();
 
     // Set check state of appropriate items
-    for (int i = 0; i < list->count(); ++i)
+    foreach (auto const i, qtIndexRange(list->count()))
       {
       QListWidgetItem* item = list->item(i);
       bool check = false;
@@ -81,7 +83,7 @@ void qtFlagListDelegate<Flag, Flags>::setModelData(
   Flags newData = 0;
 
   // Generate text and data
-  for (int i = 0; i < list->count(); ++i)
+  foreach (auto const i, qtIndexRange(list->count()))
     {
     QListWidgetItem* item = list->item(i);
     if (item->checkState())

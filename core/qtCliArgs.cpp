@@ -6,6 +6,8 @@
 
 #include "qtCliArgs.h"
 
+#include "qtIndexRange.h"
+
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
@@ -150,7 +152,7 @@ qtCliArgs::qtCliArgs(int argc, char** argv)
 
 #ifndef Q_OS_WIN
   // Convert argument list to QStringList
-  for (int i = 0; i < argc; ++i)
+  foreach (auto const i, qtIndexRange(argc))
     {
     d->originalArgs.append(QString::fromLocal8Bit(argv[i]));
     }
@@ -158,7 +160,7 @@ qtCliArgs::qtCliArgs(int argc, char** argv)
   // On Windows, argv is inadequate for dealing with Unicode input; we ignore
   // it and use GetCommandLineW() instead
   LPWSTR* wArgv = CommandLineToArgvW(GetCommandLineW(), &argc);
-  for (int i = 0; i < argc; ++i)
+  foreach (auto const i, qtIndexRange(argc))
     {
     d->originalArgs.append(QString::fromWCharArray(wArgv[i]));
     }

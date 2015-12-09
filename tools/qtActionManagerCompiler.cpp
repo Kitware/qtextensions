@@ -8,6 +8,7 @@
 
 #include "../core/qtEnumerate.h"
 #include "../core/qtGlobal.h"
+#include "../core/qtIndexRange.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -68,7 +69,7 @@ QDebug warn(QString file = QString(), uint line = 0, uint col = 0)
 //-----------------------------------------------------------------------------
 QString makeIdentifier(QString identifier)
 {
-  for (int n = 0; n < identifier.size(); ++n)
+  foreach (auto const n, qtIndexRange(identifier.size()))
     {
     if (!identifier[n].isLetter())
       {
@@ -142,7 +143,7 @@ ObjectProperties extractProperties(const QDomNode& object)
 {
   ObjectProperties properties;
   QDomNodeList childNodes = object.childNodes();
-  for (int ci = 0; ci < childNodes.count(); ++ci)
+  foreach (auto const ci, qtIndexRange(childNodes.count()))
     {
     // Get property
     QDomElement element = childNodes.at(ci).toElement();
@@ -159,7 +160,7 @@ ObjectProperties extractProperties(const QDomNode& object)
     // Get value
     QString propertyValue;
     QDomNodeList propertyChildNodes = element.childNodes();
-    for (int pi = 0; pi < propertyChildNodes.count(); ++pi)
+    foreach (auto const pi, qtIndexRange(propertyChildNodes.count()))
       {
       QDomNode n = propertyChildNodes.at(pi);
       QString tagName = n.toElement().tagName();
@@ -218,7 +219,7 @@ bool processUi(QString uiName, QTextStream& managerSource)
   // Get UI window title
   QString uiWindowTitle;
   QDomNodeList widgetNodes = doc.elementsByTagName("widget");
-  for (int wi = 0; wi < widgetNodes.count(); ++wi)
+  foreach (auto const wi, qtIndexRange(widgetNodes.count()))
     {
     if (widgetNodes.at(wi).toElement().attribute("name") == uiClassName)
       {
@@ -241,7 +242,7 @@ bool processUi(QString uiName, QTextStream& managerSource)
     }
   ActionMap actions;
   ActionGroupMap actionGroups;
-  for (int ai = 0; ai < actionNodes.count(); ++ai)
+  foreach (auto const ai, qtIndexRange(actionNodes.count()))
     {
     QDomNode actionNode = actionNodes.at(ai);
     QString actionName = actionNode.toElement().attribute("name");

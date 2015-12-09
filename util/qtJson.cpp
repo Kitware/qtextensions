@@ -6,7 +6,9 @@
 
 #include "qtJson.h"
 
+#include "../core/qtEnumerate.h"
 #include "../core/qtGlobal.h"
+#include "../core/qtIndexRange.h"
 #include "../core/qtMath.h"
 
 namespace // anonymous
@@ -18,7 +20,7 @@ qtJson::JsonData join(QList<qtJson::JsonData> list, char prefix, char suffix)
   qtJson::JsonData result;
 
   result += prefix;
-  for (int i = 0, k = list.count(); i < k; ++i)
+  foreach (auto const i, qtIndexRange(list.count()))
     {
     if (i)
       {
@@ -42,7 +44,7 @@ qtJson::JsonData qtJson::encode(QString value)
   result.reserve(k + 2);
 
   result += "\"";
-  for (int i = 0; i < k; ++i)
+  foreach (auto const i, qtIndexRange(k))
     {
     const QChar& c = value[i];
     if (c == '\\')
@@ -91,11 +93,8 @@ qtJson::JsonData qtJson::encode(const qtJson::Object& object)
   QList<JsonData> encodedPairs;
   encodedPairs.reserve(object.count());
 
-  const Object::const_iterator end = object.constEnd();
-  for (Object::const_iterator iter = object.constBegin(); iter != end; ++iter)
-    {
+  foreach (auto const iter, qtEnumerate(object))
     encodedPairs.append(encode(iter.key()) + ':' + encode(iter.value()));
-    }
 
   return join(encodedPairs, '{', '}');
 }

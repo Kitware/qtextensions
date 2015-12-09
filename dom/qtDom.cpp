@@ -1,14 +1,16 @@
 /*ckwg +5
- * Copyright 2012 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
 
+#include "qtDom.h"
+
+#include "../core/qtIndexRange.h"
+
 #include <QDomElement>
 #include <QList>
 #include <QStringList>
-
-#include "qtDom.h"
 
 namespace qtDom
 {
@@ -38,7 +40,7 @@ QList<QDomElement> findElements(
 
   // Iterate over child nodes
   const QDomNodeList childNodes = root.childNodes();
-  for (int i = 0, k = childNodes.count(); i < k; ++i)
+  foreach (auto const i, qtIndexRange(childNodes.count()))
     {
     findElements(result, childNodes.at(i), selectors, selectorIndex);
     }

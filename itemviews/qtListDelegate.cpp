@@ -6,6 +6,8 @@
 
 #include "qtListDelegate.h"
 
+#include "../core/qtIndexRange.h"
+
 #include <QEvent>
 #include <QListWidget>
 
@@ -61,7 +63,7 @@ void qtListDelegate::setListEditorData(
   QListWidget* list = qobject_cast<QListWidget*>(editor);
 
   int i = -1;
-  for (int j = 0; j < list->count(); ++j)
+  foreach (int const j, qtIndexRange(list->count()))
     {
     if (this->compareData(newData, list->item(j)->data(Qt::UserRole)))
       {
