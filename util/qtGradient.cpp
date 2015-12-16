@@ -204,8 +204,11 @@ void qtGradient::setStops(QList<qtGradient::Stop> const& stops,
 
     // Convert to map
     QMap<qreal, qtGradient::Stop> stopsMap;
-    foreach (auto const& stop, stops)
-        stopsMap.insert(stop.Position, stop);
+    foreach (auto stop, stops)
+    {
+      stop.Weight = qBound(0.0, stop.Weight, 1.0);
+      stopsMap.insert(stop.Position, stop);
+    }
 
     // Handle 'regular' stop sets, based on normalization mode
     if (nm == qtGradient::NormalizeStops)
@@ -249,11 +252,14 @@ void qtGradient::setStops(QList<qtGradient::Stop> const& stops,
 //-----------------------------------------------------------------------------
 bool qtGradient::insertStop(qtGradient::Stop stop)
 {
-    if (!(0.0 < stop.Position || stop.Position < 1.0))
+    if (0.0 > stop.Position || stop.Position > 1.0)
         return false;
 
     QTE_D_MUTABLE();
+
+    stop.Weight = qBound(0.0, stop.Weight, 1.0);
     d->stops.insert(stop.Position, stop);
+
     return true;
 }
 
