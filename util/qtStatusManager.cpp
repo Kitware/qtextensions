@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -129,10 +129,10 @@ void qtStatusManagerPrivate::update()
     qtDebug(this->debugArea) << "clearing status";
     }
 
-  foreach (QLabel* label, this->labels)
+  foreach (auto const label, this->labels)
     label->setText(si.text);
 
-  foreach (QProgressBar* progressBar, this->progressBars)
+  foreach (auto const progressBar, this->progressBars)
     {
     progressBar->setVisible(si.progressAvailable);
     if (si.progressAvailable)

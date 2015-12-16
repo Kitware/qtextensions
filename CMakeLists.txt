@@ -154,7 +154,9 @@ set(qtExtensionsInstallHeaders
     core/qtDebugArea.h
     core/qtDebugHelper.h
     core/qtDebugImpl.h
+    core/qtEnumerate.h
     core/qtGlobal.h
+    core/qtIndexRange.h
     core/qtMath.h
     core/qtOnce.h
     core/qtScopedValueChange.h

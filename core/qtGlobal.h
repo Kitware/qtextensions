@@ -432,11 +432,27 @@
        _ii == _ij && _ii < _ik; ++_ij) \
     for (variable = (parent)->child(_ii); _ii == _ij; ++_ii)
 
+#if __cplusplus >= 201103L || defined(DOXYGEN)
+/// Alias for #foreach.
+///
+/// This macro is a synonym for #foreach that is guaranteed to be available.
+/// (If QT_NO_KEYWORDS is defined, the more convenient #foreach is hidden to
+/// avoid namespace pollution.)
+#  define QTE_FOREACH(decl, container) for (decl : container)
+#else
+#  define QTE_FOREACH(decl, container) \
+  for (auto _oguard = 1; _oguard;) \
+    for (auto&& _container = (container); _oguard; _oguard = 0) \
+      for (auto _iter = _container.begin(), _end = _container.end(), \
+           _iguard = _container.begin(); _iguard != _end; ++_iguard) \
+        for (decl = *_iter; _iter == _iguard; ++_iter)
+#endif
+
 /// Alias for #foreach_iter.
 ///
 /// This macro is a synonym for #foreach_iter that is guaranteed to be
-/// available. (If QT_NO_KEYWORDS is defined, the more convenient #foreach_iter
-/// is hidden to avoid namespace pollution.)
+/// available. (If QT_NO_KEYWORDS is defined, the more convenient
+/// #foreach_iter is hidden to avoid namespace pollution.)
 #define QTE_FOREACH_ITER(iterator_type, variable, container) \
   for (iterator_type variable = (container).begin(), _end = (container).end(); \
        variable != _end; ++variable)
@@ -471,14 +487,52 @@
 ///   processItem(item);
 /// \endcode
 #  define foreach_child(variable, parent)
+/// Iterate over container.
+///
+/// This macro provides for simple iteration over the elements in a container.
+/// It has the same semantics as C++11
+/// <a href="http://en.cppreference.com/w/cpp/language/range-for">range-based
+/// for</a> (and in C++11 mode, expands to the same), but also provides an
+/// implementation for pre-C++11 compilers.
+///
+/// \note Unlike %Qt's \c foreach, QtExtensions' \c foreach does \em not make a
+///       copy of \p container. You should not modify \p container (i.e. by
+///       adding or removing items) within the loop. It is safe to modify items
+///       in place.
+///
+/// \par Example 1:
+/// \code{.cpp}
+/// // QStringList getStrings();
+/// foreach(auto const& s, getStrings())
+///   qDebug() << s;
+/// \endcode
+///
+/// \par Example 2:
+/// \code{.cpp}
+/// // QStringList strings;
+/// foreach(auto& s, strings)
+///   s = s.toLower();
+/// \endcode
+#  define foreach(declaration, container)
+/// Iterate over a copy of a container.
+///
+/// This macro provides for simple iteration over the elements in a container,
+/// with the additional safety that a copy of the container is used for
+/// iteration. This allows safely making changes (such as insertions or
+/// removals) to the original container during iteration. Such changes will not
+/// be visible to iteration.
+///
+/// This is implemented using %Qt's \c foreach.
+#  define foreach_copy(declaration, container) Q_FOREACH
 /// Iterate over container using an iterator.
 ///
 /// This macro simplifies iterating over a container using an iterator. This
-/// has the advantage over %Qt's foreach in that it works also with STL
-/// containers, and can be used on maps (ordered or otherwise, e.g. QHash)
-/// where knowing the key is required, and iterating over the key set is
-/// undesirable either to avoid the extra cost of value look-up, or the
-/// inconvenience of dealing with maps with non-unique keys (e.g. QMultiMap).
+/// has the advantage over %Qt's \c foreach in that it works also with STL
+/// containers (without making an expensive copy), and can be used on Qt
+/// associative containers (e.g. QMap, QHash) when knowing the key is required,
+/// and iterating over the key set is undesirable either to avoid the extra
+/// cost of value look-up, or the inconvenience of dealing with maps with
+/// non-unique keys (e.g. QMultiMap).
 ///
 /// \param iterator_type
 ///   The typename of the iterator object; typically \c T::const_iterator where
@@ -490,8 +544,13 @@
 ///   Container over which to iterate. This should be a constant expression
 ///   (usually a variable name), as it is evaluated more than once.
 ///
-/// \note Unlike foreach, foreach_iter does \em not make a copy of
-///       \p container. You should not modify \p container within the loop.
+/// \note Unlike %Qt's \c foreach, \c foreach_iter does \em not make a copy of
+///       \p container. You should not modify \p container (i.e. by adding or
+///       removing items) within the loop. It is safe to modify items in place.
+///
+/// \note
+///   Most uses that do not need to modify the items during iteration can be
+///   replaced with #foreach and qtEnumerate.
 ///
 /// \par Example:
 /// \code{.cpp}
@@ -513,6 +572,15 @@
 #  define synchronized(mutex)
 #else
 #  ifndef QT_NO_KEYWORDS
+#    if defined(foreach) && defined(Q_FOREACH)
+#      undef foreach
+#    endif
+#    ifndef foreach
+#      define foreach QTE_FOREACH
+#    endif
+#    ifndef foreach_copy
+#      define foreach_copy Q_FOREACH
+#    endif
 #    ifndef foreach_child
 #      define foreach_child QTE_FOREACH_CHILD
 #    endif

@@ -1,10 +1,14 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
 
 #include "qtColorButton.h"
+
+#include "../util/qtColorUtil.h"
+
+#include "../core/qtIndexRange.h"
 
 #include <QBrush>
 #include <QColorDialog>
@@ -13,8 +17,6 @@
 #include <QStyleOptionFrameV3>
 #include <QPainter>
 #include <QPixmap>
-
-#include "../util/qtColorUtil.h"
 
 QTE_IMPLEMENT_D_FUNC(qtColorButton)
 
@@ -32,7 +34,7 @@ public:
 //-----------------------------------------------------------------------------
 QPalette qtColorButtonPrivate::fillPalette(QPalette ref) const
 {
-  for (int n = 0; n < QPalette::NColorGroups; ++n)
+  foreach (auto const n, qtIndexRange<int>(QPalette::NColorGroups))
     {
     QPalette::ColorGroup cg = static_cast<QPalette::ColorGroup>(n);
     QColor c =
@@ -98,9 +100,9 @@ void qtColorButton::setColor(QColor color)
       {
       const qreal k = color.alphaF();
       QImage tex(8, 8, QImage::Format_RGB32);
-      for (int i = 0; i < 4; ++i)
+      foreach (auto const i, qtIndexRange(4))
         {
-        for (int j = 0; j < 4; ++j)
+        foreach (auto const j, qtIndexRange(4))
           {
           QColor c1 = this->palette().color(QPalette::Button);
           QColor c2 = this->palette().color(QPalette::ButtonText);

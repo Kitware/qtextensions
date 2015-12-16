@@ -1,8 +1,14 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
+
+#include "qteVersion.h"
+
+#include "../core/qtEnumerate.h"
+#include "../core/qtGlobal.h"
+#include "../core/qtIndexRange.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -18,8 +24,6 @@
 #include <QTextStream>
 
 #include <cstdio>
-
-#include "qteVersion.h"
 
 typedef QHash<QString, QString> ObjectProperties;
 typedef QHash<QString, ObjectProperties> ActionMap;
@@ -65,7 +69,7 @@ QDebug warn(QString file = QString(), uint line = 0, uint col = 0)
 //-----------------------------------------------------------------------------
 QString makeIdentifier(QString identifier)
 {
-  for (int n = 0; n < identifier.size(); ++n)
+  foreach (auto const n, qtIndexRange(identifier.size()))
     {
     if (!identifier[n].isLetter())
       {
@@ -118,7 +122,7 @@ void writeGeneratedFileHeader(QTextStream& s, QStringList inFiles)
   else
     {
     s << "s:\n";
-    foreach (QString inFile, inFiles)
+    foreach (auto const& inFile, inFiles)
       s << "**    '" << QFileInfo(inFile).fileName() << "'\n";
     }
   s << "** Created: " << QDateTime::currentDateTime().toString() << '\n'
@@ -139,7 +143,7 @@ ObjectProperties extractProperties(const QDomNode& object)
 {
   ObjectProperties properties;
   QDomNodeList childNodes = object.childNodes();
-  for (int ci = 0; ci < childNodes.count(); ++ci)
+  foreach (auto const ci, qtIndexRange(childNodes.count()))
     {
     // Get property
     QDomElement element = childNodes.at(ci).toElement();
@@ -156,7 +160,7 @@ ObjectProperties extractProperties(const QDomNode& object)
     // Get value
     QString propertyValue;
     QDomNodeList propertyChildNodes = element.childNodes();
-    for (int pi = 0; pi < propertyChildNodes.count(); ++pi)
+    foreach (auto const pi, qtIndexRange(propertyChildNodes.count()))
       {
       QDomNode n = propertyChildNodes.at(pi);
       QString tagName = n.toElement().tagName();
@@ -215,7 +219,7 @@ bool processUi(QString uiName, QTextStream& managerSource)
   // Get UI window title
   QString uiWindowTitle;
   QDomNodeList widgetNodes = doc.elementsByTagName("widget");
-  for (int wi = 0; wi < widgetNodes.count(); ++wi)
+  foreach (auto const wi, qtIndexRange(widgetNodes.count()))
     {
     if (widgetNodes.at(wi).toElement().attribute("name") == uiClassName)
       {
@@ -238,7 +242,7 @@ bool processUi(QString uiName, QTextStream& managerSource)
     }
   ActionMap actions;
   ActionGroupMap actionGroups;
-  for (int ai = 0; ai < actionNodes.count(); ++ai)
+  foreach (auto const ai, qtIndexRange(actionNodes.count()))
     {
     QDomNode actionNode = actionNodes.at(ai);
     QString actionName = actionNode.toElement().attribute("name");
@@ -280,7 +284,7 @@ bool processUi(QString uiName, QTextStream& managerSource)
      << "public:\n";
 
   // Write action group declarations
-  foreach (QString actionGroup, actionGroups.uniqueKeys())
+  foreach (auto const& actionGroup, actionGroups.uniqueKeys())
     am << "    QActionGroup *" << actionGroup << ";\n";
   am << '\n';
 
@@ -297,20 +301,21 @@ bool processUi(QString uiName, QTextStream& managerSource)
     }
   else
     {
-    foreach (QString actionGroup, actionGroups.uniqueKeys())
+    foreach (auto const& actionGroup, actionGroups.uniqueKeys())
       {
       am << "        " << actionGroup
          << " = new QActionGroup(actionGroupParent);\n";
-      foreach (QString actionInGroup, actionGroups.values(actionGroup))
+      foreach (auto const& actionInGroup, actionGroups.values(actionGroup))
+        {
         am << "        " << actionGroup << "->addAction(ui."
            << actionInGroup << ");\n";
+        }
       am << '\n';
       }
     }
 
   // Write code to set up actions
-  ActionMap::const_iterator iter, actionsEnd = actions.end();
-  for (iter = actions.begin(); iter != actionsEnd; ++iter)
+  foreach (auto const& iter, qtEnumerate(actions))
     {
     am << "        qtAm->setupAction(settings, ui." << iter.key()
        << ", \"" << uiClassName << '/' << iter.key() << '\"';
@@ -342,7 +347,7 @@ bool processUi(QString uiName, QTextStream& managerSource)
 
   // Write manager code
   QTextStream& ms = managerSource; // alias parameter
-  for (iter = actions.begin(); iter != actionsEnd; ++iter)
+  foreach (auto const& iter, qtEnumerate(actions))
     {
     QString icon = iconName(iter.value());
     QString defaultShortcut = iter.value().value("shortcut");
@@ -412,7 +417,7 @@ int main(int argc, char** argv)
          << "    {\n";
 
       // Process .ui files
-      foreach (QString uiFile, args)
+      foreach (auto const& uiFile, args)
         {
         if (!processUi(uiFile, ms))
           {

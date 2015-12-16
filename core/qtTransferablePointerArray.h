@@ -7,6 +7,8 @@
 #ifndef __qtTransferablePointerArray_h
 #define __qtTransferablePointerArray_h
 
+#include "qtGlobal.h"
+
 #include <QScopedPointer>
 #include <QtAlgorithms>
 
@@ -21,7 +23,7 @@ struct qtTransferablePointerArrayDeleter
     {
     if (list)
       {
-      foreach (T* item, *list)
+      foreach (auto const item, *list)
         ItemCleanup::cleanup(item);
       delete list;
       }

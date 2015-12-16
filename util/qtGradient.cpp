@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -8,6 +8,7 @@
 
 #include <QSharedData>
 
+#include "../core/qtIndexRange.h"
 #include "../core/qtMath.h"
 
 #include "qtColorUtil.h"
@@ -203,7 +204,7 @@ void qtGradient::setStops(const QList<qtGradient::Stop>& stops,
 
   // Convert to map
   QMap<qreal, qtGradient::Stop> stopsMap;
-  foreach (const Stop& stop, stops)
+  foreach (auto const& stop, stops)
     stopsMap.insert(stop.Position, stop);
 
   // Handle 'regular' stop sets, based on normalization mode
@@ -215,7 +216,7 @@ void qtGradient::setStops(const QList<qtGradient::Stop>& stops,
 
     // Recreate stop set, normalized
     d->stops.clear();
-    foreach (Stop stop, stops)
+    foreach (auto stop, stops)
       {
       stop.Position = (stop.Position - offset) * scale;
       d->stops.insert(stop.Position, stop);
@@ -348,7 +349,7 @@ QList<QColor> qtGradient::render(int size) const
   out.reserve(size);
 
   qreal k = 1.0 / (size - 1);
-  for (int i = 0; i < size; ++i)
+  foreach (auto const i, qtIndexRange(size))
     {
     out.append(this->at(i * k));
     }

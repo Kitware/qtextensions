@@ -1,15 +1,17 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
+
+#include "qtThrobber.h"
+
+#include "../core/qtIndexRange.h"
 
 #include <QPainter>
 #include <QTimer>
 
 #include <cmath>
-
-#include "qtThrobber.h"
 
 QTE_IMPLEMENT_D_FUNC(qtThrobber)
 
@@ -132,7 +134,7 @@ void qtThrobber::paintEvent(QPaintEvent* e)
 
   painter.setPen(Qt::NoPen);
 
-  for (int i = 0; i < qtThrobberPrivate::dotCount; ++i)
+  foreach (auto const i, qtIndexRange(qtThrobberPrivate::dotCount))
     {
     painter.save();
     painter.setBrush(d->brushAt(i));

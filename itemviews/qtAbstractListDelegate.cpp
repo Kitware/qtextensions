@@ -1,11 +1,12 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
 
 #include "qtAbstractListDelegate.h"
 
+#include "../core/qtIndexRange.h"
 #include "../core/qtScopedValueChange.h"
 
 QTE_IMPLEMENT_D_FUNC(qtAbstractListDelegate)
@@ -36,7 +37,7 @@ void qtAbstractListDelegate::setMapping(
   QTE_D(qtAbstractListDelegate);
   d->names = names;
   d->dataMap.clear();
-  for (int i = 0; i < names.count(); ++i)
+  foreach (auto const i, qtIndexRange(names.count()))
     {
     QVariant v = (i < values.count() ? values[i] : QVariant(i));
     d->dataMap.insert(names[i], v);

@@ -1,10 +1,12 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
 
 #include "qtListDelegate.h"
+
+#include "../core/qtIndexRange.h"
 
 #include <QEvent>
 #include <QListWidget>
@@ -30,7 +32,7 @@ QWidget* qtListDelegate::createListEditor(QWidget* parent) const
 
   // Fill list widget
   QStringList names = this->valueNames();
-  foreach (QString name, names)
+  foreach (auto const& name, names)
     list->addItem(this->createListItem(name, this->valueData(name)));
 
   // Set a reasonable minimum size
@@ -61,7 +63,7 @@ void qtListDelegate::setListEditorData(
   QListWidget* list = qobject_cast<QListWidget*>(editor);
 
   int i = -1;
-  for (int j = 0; j < list->count(); ++j)
+  foreach (int const j, qtIndexRange(list->count()))
     {
     if (this->compareData(newData, list->item(j)->data(Qt::UserRole)))
       {

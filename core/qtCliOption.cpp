@@ -175,9 +175,9 @@ QString qtCliOption::optionUsage() const
 
   // Generate text for option names
   QStringList names;
-  foreach (QString sn, d->shortNames)
+  foreach (auto const& sn, d->shortNames)
     names.append("-" + sn);
-  foreach (QString ln, d->longNames)
+  foreach (auto const& ln, d->longNames)
     names.append("--" + ln);
   QString namesText =
     QString("%1 %2").arg(names.join(", "), d->argText).trimmed();
