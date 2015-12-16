@@ -1,0 +1,2 @@
+kate-wildcard(*.cpp;*.h): indent-width 4;
+kate-wildcard(CMakeLists.txt;*.cmake;*.cmake.in): indent-width 2;
