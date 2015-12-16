@@ -280,7 +280,6 @@ add_library(${PROJECT_NAME}DesignerPlugin MODULE
 
 target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
   ${PROJECT_NAME}
-#   ${QT_QTDESIGNER_LIBRARY}
 )
 
 install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
