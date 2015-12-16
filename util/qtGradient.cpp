@@ -75,14 +75,14 @@ QColor qtGradientData::cubicBlend(
     qtGradient::Stop const& c, qtGradient::Stop const& d, qreal t) const
 {
     // Calculate intermediary stops
-    auto const& cb = b.Color, cc = c.Color;
-    auto const& ca = blend(a.Color, cb, 0.5);
-    auto const& cd = blend(d.Color, cc, 0.5);
+    auto const& cb = b.color, cc = c.color;
+    auto const& ca = blend(a.color, cb, 0.5);
+    auto const& cd = blend(d.color, cc, 0.5);
     auto const& cm = blend(cb, cc, 0.5);
-    auto const w = b.Weight;
-    auto const pb = b.Position, pc = c.Position;
-    auto const pa = qtColorUtil::blend(a.Position, pb, a.Weight);
-    auto const pd = qtColorUtil::blend(d.Position, pc, c.Weight);
+    auto const w = b.weight;
+    auto const pb = b.position, pc = c.position;
+    auto const pa = qtColorUtil::blend(a.position, pb, a.weight);
+    auto const pd = qtColorUtil::blend(d.position, pc, c.weight);
     auto const pm = qtColorUtil::blend(pb, pc, w);
 
     if (t > w)
@@ -206,8 +206,8 @@ void qtGradient::setStops(QList<qtGradient::Stop> const& stops,
     QMap<qreal, qtGradient::Stop> stopsMap;
     foreach (auto stop, stops)
     {
-      stop.Weight = qBound(0.0, stop.Weight, 1.0);
-      stopsMap.insert(stop.Position, stop);
+      stop.weight = qBound(0.0, stop.weight, 1.0);
+      stopsMap.insert(stop.position, stop);
     }
 
     // Handle 'regular' stop sets, based on normalization mode
@@ -221,8 +221,8 @@ void qtGradient::setStops(QList<qtGradient::Stop> const& stops,
         d->stops.clear();
         foreach (auto stop, stops)
         {
-            stop.Position = (stop.Position - offset) * scale;
-            d->stops.insert(stop.Position, stop);
+            stop.position = (stop.position - offset) * scale;
+            d->stops.insert(stop.position, stop);
         }
     }
     else
@@ -252,13 +252,13 @@ void qtGradient::setStops(QList<qtGradient::Stop> const& stops,
 //-----------------------------------------------------------------------------
 bool qtGradient::insertStop(qtGradient::Stop stop)
 {
-    if (0.0 > stop.Position || stop.Position > 1.0)
+    if (0.0 > stop.position || stop.position > 1.0)
         return false;
 
     QTE_D_MUTABLE();
 
-    stop.Weight = qBound(0.0, stop.Weight, 1.0);
-    d->stops.insert(stop.Position, stop);
+    stop.weight = qBound(0.0, stop.weight, 1.0);
+    d->stops.insert(stop.position, stop);
 
     return true;
 }
@@ -278,7 +278,7 @@ QColor qtGradient::at(qreal pos) const
     if (d->stops.isEmpty())
         return Qt::transparent;
     if (d->stops.count() < 2)
-        return d->stops.begin().value().Color;
+        return d->stops.begin().value().color;
 
     // Apply spread to get normalized position
     switch (d->spread)
@@ -301,7 +301,7 @@ QColor qtGradient::at(qreal pos) const
 
     // Check for exact (or 'close enough') match
     if (qFuzzyCompare(pos, su.key()))
-        return su.value().Color;
+        return su.value().color;
 
     // Find previous stop and calculate relative position
     auto const sl = su - 1;
@@ -311,13 +311,13 @@ QColor qtGradient::at(qreal pos) const
     // previous stop (in case we are off 'just enough' that lowerBound didn't
     // consider it a match)
     if (qFuzzyCompare(pos, sl.key()))
-        return sl.value().Color;
+        return sl.value().color;
 
     // Calculate blended color
     switch (d->interpolateMode & qtGradient::InterpolateFunctionMask)
     {
         case qtGradient::InterpolateDiscrete:
-            return (rpos < sl->Weight ? sl->Color : su->Color);
+            return (rpos < sl->weight ? sl->color : su->color);
 
         case qtGradient::InterpolateCubic:
         {
@@ -327,7 +327,7 @@ QColor qtGradient::at(qreal pos) const
         }
 
         default: // qtGradient::InterpolateLinear
-            return d->linearBlend(sl->Color, su->Color, rpos, sl->Weight);
+            return d->linearBlend(sl->color, su->color, rpos, sl->weight);
     }
 }
 

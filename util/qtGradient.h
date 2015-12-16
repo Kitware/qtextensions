@@ -23,12 +23,12 @@ public:
         Stop(qreal position = 0.0,
              QColor color = Qt::transparent,
              qreal weight = 0.5)
-            : Color(color), Position(position), Weight(weight)
+            : color(color), position(position), weight(weight)
         {}
 
-        QColor Color;
-        qreal Position;
-        qreal Weight;
+        QColor color;
+        qreal position;
+        qreal weight;
     };
 
     enum InterpolationFlag
