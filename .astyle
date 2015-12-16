@@ -5,6 +5,7 @@ convert-tabs
 break-closing-brackets
 keep-one-line-blocks
 keep-one-line-statements
+remove-brackets
 
 extra-headers=foreach;foreach_iter;foreach_child;QTE_FOREACH_ITER
 
