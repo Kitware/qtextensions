@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>qtGradientEditor</class>
+ <widget class="QDialog" name="qtGradientEditor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>468</width>
+    <height>214</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Edit Gradient</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="2">
+    <widget class="qtGradientWidget" name="gradient" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>24</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" rowspan="5">
+    <widget class="QTreeWidget" name="stops">
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <property name="uniformRowHeights">
+      <bool>true</bool>
+     </property>
+     <property name="allColumnsShowFocus">
+      <bool>true</bool>
+     </property>
+     <attribute name="headerDefaultSectionSize">
+      <number>40</number>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>Color</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Position</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Weight</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="addStop">
+     <property name="text">
+      <string>&amp;Add Stop</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="removeStops">
+     <property name="text">
+      <string>&amp;Remove Stop(s)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Interpolation</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="modeLabel">
+        <property name="text">
+         <string>Mode</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="mode">
+        <property name="currentIndex">
+         <number>1</number>
+        </property>
+        <item>
+         <property name="text">
+          <string>Discrete</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Linear</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Cubic</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="colorSpaceLabel">
+        <property name="text">
+         <string>Color Space</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="colorSpace">
+        <item>
+         <property name="text">
+          <string>RGB</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>CMYK</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>HSV</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>HSL</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="5" column="1">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>qtGradientWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/qtGradientWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>qtGradientEditor</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>305</x>
+     <y>197</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>200</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>qtGradientEditor</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>305</x>
+     <y>197</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>200</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

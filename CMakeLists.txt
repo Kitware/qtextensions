@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 project(qtExtensions)
 include(qteVersion.cmake)
 
@@ -97,6 +99,7 @@ set(qtExtensionsSources
     dialogs/qtActionManagerDialog.cpp
     dialogs/qtConfirmationDialog.cpp
     dialogs/qtDoubleInputDialog.cpp
+    dialogs/qtGradientEditor.cpp
     # Dom
     dom/qtDom.cpp
     dom/qtDomElement.cpp
@@ -138,11 +141,13 @@ set(qtExtensionsMocHeaders
     dialogs/qtActionManagerDialog.h
     dialogs/qtConfirmationDialog.h
     dialogs/qtDoubleInputDialog.h
+    dialogs/qtGradientEditor.h
 )
 
 set(qtExtensionsUiFiles
     dialogs/qtActionManagerDialog.ui
     dialogs/qtConfirmationDialog.ui
+    dialogs/qtGradientEditor.ui
 )
 
 set(qtExtensionsInstallHeaders
@@ -217,6 +222,7 @@ set(qtExtensionsInstallHeaders
     dialogs/qtActionManagerDialog.h
     dialogs/qtConfirmationDialog.h
     dialogs/qtDoubleInputDialog.h
+    dialogs/qtGradientEditor.h
     # Dom
     dom/qtDom.h
     dom/qtDomElement.h
@@ -368,6 +374,7 @@ set(qtExtensionsWrapObjects
     qtSpinBoxDelegate
     # Dialogs
     qtActionManagerDialog
+    qtGradientEditor
     # Dom
     qtDomElement
 )
