@@ -11,9 +11,8 @@ extra-headers=foreach;foreach_iter;foreach_child;QTE_FOREACH_ITER
 
 indent-classes
 indent-switches
-indent-cases
 indent-namespaces
-indent-preprocessor
+indent-preproc-define
 max-instatement-indent=50
 min-conditional-indent=0
 
