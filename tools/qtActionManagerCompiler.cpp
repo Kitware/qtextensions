@@ -49,9 +49,9 @@ QDebug out(QtMsgType type = QtDebugMsg, QString file = QString(),
 
   if (type == QtDebugMsg)
     {
-    return QDebug(type);
+    return {type};
     }
-  return QDebug(type) << qPrintable(prefix);
+  return QDebug{type} << qPrintable(prefix);
 }
 
 //-----------------------------------------------------------------------------
@@ -91,7 +91,7 @@ QString iconName(const ObjectProperties& properties)
 {
   if (!properties.contains("icon"))
     {
-    return QString();
+    return {};
     }
 
   QString name = properties.value("icon");

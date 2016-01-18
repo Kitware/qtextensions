@@ -448,13 +448,13 @@ bool qtKstReaderPrivate::readComment(const QString& data, int& pos) const
 //-----------------------------------------------------------------------------
 QRegExp qtKstReader::defaultSeparator()
 {
-  return QRegExp(",", Qt::CaseSensitive, QRegExp::FixedString);
+  return QRegExp{",", Qt::CaseSensitive, QRegExp::FixedString};
 }
 
 //-----------------------------------------------------------------------------
 QRegExp qtKstReader::defaultTerminator()
 {
-  return QRegExp(";", Qt::CaseSensitive, QRegExp::FixedString);
+  return QRegExp{";", Qt::CaseSensitive, QRegExp::FixedString};
 }
 
 //-----------------------------------------------------------------------------

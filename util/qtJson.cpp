@@ -156,6 +156,6 @@ qtJson::JsonData qtJson::encode(const Value& value)
 
     // Anything else is not supported
     default:
-      return JsonData();
+      return {};
     }
 }

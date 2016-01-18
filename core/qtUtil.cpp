@@ -43,7 +43,7 @@ QString standardIconResource(const QString& name, int size)
 //-----------------------------------------------------------------------------
 QIcon standardIcon(const QString& name, int size)
 {
-  return QIcon(standardIconResource(name, size));
+  return QIcon{standardIconResource(name, size)};
 }
 
 //-----------------------------------------------------------------------------

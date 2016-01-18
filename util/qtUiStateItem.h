@@ -89,7 +89,7 @@ template <typename T, typename O>
 QVariant qtUiState::Item<T, O>::value() const
 {
     if (!this->object)
-        return QVariant();
+        return {};
 
     return (*(object.data()).*this->read)();
 }

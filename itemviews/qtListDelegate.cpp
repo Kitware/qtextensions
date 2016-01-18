@@ -96,7 +96,7 @@ void qtListDelegate::updateEditorGeometry(
   QRect rect = opt.rect;
 
   // Grow rect to fit editor
-  rect = rect.united(QRect(rect.topLeft(), editor->minimumSize()));
+  rect = rect.united({rect.topLeft(), editor->minimumSize()});
 
   // Translate to fit within parent
   if (geom.top() > rect.top())

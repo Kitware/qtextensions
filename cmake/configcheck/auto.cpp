@@ -1,5 +1,5 @@
 int main()
 {
-  auto ret = 0;
-  return ret;
+    auto ret = 0;
+    return ret;
 }
