@@ -100,6 +100,7 @@ set(qtExtensionsSources
     dialogs/qtActionManagerDialog.cpp
     dialogs/qtConfirmationDialog.cpp
     dialogs/qtDoubleInputDialog.cpp
+    dialogs/qtGradientEditor.cpp
     # Dom
     dom/qtDom.cpp
     dom/qtDomElement.cpp
@@ -112,6 +113,7 @@ set(qtExtensionsSources
 set(qtExtensionsUiFiles
     dialogs/qtActionManagerDialog.ui
     dialogs/qtConfirmationDialog.ui
+    dialogs/qtGradientEditor.ui
 )
 
 set(qtExtensionsInstallHeaders
@@ -186,6 +188,7 @@ set(qtExtensionsInstallHeaders
     dialogs/qtActionManagerDialog.h
     dialogs/qtConfirmationDialog.h
     dialogs/qtDoubleInputDialog.h
+    dialogs/qtGradientEditor.h
     # Dom
     dom/qtDom.h
     dom/qtDomElement.h
@@ -333,6 +336,7 @@ set(qtExtensionsWrapObjects
     qtSpinBoxDelegate
     # Dialogs
     qtActionManagerDialog
+    qtGradientEditor
     # Dom
     qtDomElement
 )
