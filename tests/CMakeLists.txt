@@ -5,24 +5,20 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 # Interactive tests
 qte_add_test(testDrawers INTERACTIVE
   SOURCES TestDrawers.cpp qtEditableLabel.cpp
-  MOC_HEADERS TestDrawers.h qtEditableLabel.h
   RESOURCES icons.qrc
 )
 
 qte_add_test(testExpander INTERACTIVE
   SOURCES TestExpander.cpp
-  MOC_HEADERS TestExpander.h
 )
 
 qte_add_test(testDoubleSlider INTERACTIVE
   SOURCES TestDoubleSlider.cpp
-  MOC_HEADERS TestDoubleSlider.h
   UI testDoubleSlider.ui
 )
 
 qte_add_test(testSqueezedLabel INTERACTIVE
   SOURCES TestSqueezedLabel.cpp
-  MOC_HEADERS TestSqueezedLabel.h
 )
 
 qte_add_test(testColorButton        INTERACTIVE TestColorButton.cpp)

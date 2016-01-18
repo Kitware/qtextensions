@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 project(qtExtensions)
 include(qteVersion.cmake)
 
@@ -24,8 +27,6 @@ include(cmake/testing.cmake)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/qteVersion.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/qteVersion.h @ONLY)
-
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(qte-amc tools/qtActionManagerCompiler.cpp)
 target_link_libraries(qte-amc ${QT_LIBRARIES})
@@ -58,6 +59,7 @@ set(qtExtensionsSources
     util/qtActionPriorityList.cpp
     util/qtColorUtil.cpp
     util/qtDockController.cpp
+    util/qtDockControllerPrivate.cpp
     util/qtGradient.cpp
     util/qtJson.cpp
     util/qtPrioritizedMenuProxy.cpp
@@ -68,6 +70,7 @@ set(qtExtensionsSources
     util/qtStatusManager.cpp
     util/qtStatusNotifier.cpp
     util/qtStatusSource.cpp
+    util/qtStatusSourcePrivate.cpp
     util/qtUiState.cpp
     # IO
     io/qtKstReader.cpp
@@ -104,40 +107,6 @@ set(qtExtensionsSources
     sax/qtSaxNodes.cpp
     sax/qtSaxTraversal.cpp
     sax/qtSaxWriter.cpp
-)
-
-set(qtExtensionsMocHeaders
-    # Util
-    util/qtAbstractAnimation.h
-    util/qtActionManager.h
-    util/qtDockControllerPrivate.h
-    util/qtStatusForwarder.h
-    util/qtStatusManager.h
-    util/qtStatusNotifier.h
-    util/qtStatusSourcePrivate.h
-    # Widgets
-    widgets/qtColorButton.h
-    widgets/qtDoubleSlider.h
-    widgets/qtDrawer.h
-    widgets/qtDrawerWidget.h
-    widgets/qtExpander.h
-    widgets/qtGradientWidget.h
-    widgets/qtMenu.h
-    widgets/qtOverlayWidget.h
-    widgets/qtSqueezedLabel.h
-    widgets/qtThrobber.h
-    # ItemViews
-    itemviews/qtAbstractListDelegate.h
-    itemviews/qtColorButtonItemWidget.h
-    itemviews/qtComboBoxDelegate.h
-    itemviews/qtDoubleSpinBoxDelegate.h
-    itemviews/qtListDelegate.h
-    itemviews/qtRichTextDelegate.h
-    itemviews/qtSpinBoxDelegate.h
-    # Dialogs
-    dialogs/qtActionManagerDialog.h
-    dialogs/qtConfirmationDialog.h
-    dialogs/qtDoubleInputDialog.h
 )
 
 set(qtExtensionsUiFiles
@@ -235,15 +204,13 @@ set(qtExtensionsInstallHeaders
 # BEGIN qtExtensions library build rules
 
 qt4_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
-qt4_wrap_cpp(qtExtensionsMocSources ${qtExtensionsMocHeaders})
 
 source_group("Generated" FILES
-  ${qtExtensionsMocSources}
   ${qtExtensionsUiSources}
 )
 
 add_library(${PROJECT_NAME}
-  ${qtExtensionsSources} ${qtExtensionsMocSources} ${qtExtensionsUiSources}
+  ${qtExtensionsSources} ${qtExtensionsUiSources}
 )
 
 generate_export_header(${PROJECT_NAME}
@@ -295,10 +262,9 @@ qte_install_library_targets(${PROJECT_NAME})
 
 # BEGIN qtExtensions designer plugin build rules
 
+# Explicitly wrap pure interface headers (that don't have source files)
 qt4_wrap_cpp(qtExtensionsDesignerPluginMocSources
   designer/qtColorButtonInterface.h
-  designer/qtDesignerPlugin.h
-  designer/qtDesignerWidgetInterface.h
   designer/qtDoubleSliderInterface.h
   designer/qtExpanderInterface.h
   designer/qtOverlayWidgetInterface.h
@@ -314,7 +280,6 @@ add_library(${PROJECT_NAME}DesignerPlugin MODULE
 
 target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
   ${PROJECT_NAME}
-#   ${QT_QTDESIGNER_LIBRARY}
 )
 
 install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
