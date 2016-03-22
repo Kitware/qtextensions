@@ -24,10 +24,10 @@ function(qte_amc_wrap_ui outvar name)
       set(QTE_AMC_ENVIRONMENT
         ${CMAKE_COMMAND} -E env "\"PATH=${QT_BIN_DIR}\\;%PATH%\"")
     elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-      if(NOT DEFINED QT_QTGUI_LIBRARY)
+      if(NOT DEFINED QT_QTCORE_LIBRARY)
         message(FATAL_ERROR "Qt must be found before using qte_amc_wrap_ui")
       endif()
-      get_filename_component(QT_LIB_DIR "${QT_QTGUI_LIBRARY}" DIRECTORY)
+      get_filename_component(QT_LIB_DIR "${QT_QTCORE_LIBRARY}" DIRECTORY)
 
       set(QTE_AMC_ENVIRONMENT
         ${CMAKE_COMMAND} -E env "\"DYLD_FALLBACK_LIBRARY_PATH=${QT_LIB_DIR}:\${DYLD_FALLBACK_LIBRARY_PATH}\"")
