@@ -23,7 +23,7 @@ function(qte_amc_wrap_ui outvar name)
 
       set(QTE_AMC_ENVIRONMENT
         ${CMAKE_COMMAND} -E env "\"PATH=${QT_BIN_DIR}\\;%PATH%\"")
-    elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    elseif (APPLE)
       if(NOT DEFINED QT_QTCORE_LIBRARY)
         message(FATAL_ERROR "Qt must be found before using qte_amc_wrap_ui")
       endif()
