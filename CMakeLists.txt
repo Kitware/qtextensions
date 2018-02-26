@@ -61,6 +61,7 @@ set(qtExtensionsSources
     util/qtActionFactory.cpp
     util/qtActionManager.cpp
     util/qtActionPriorityList.cpp
+    util/qtColorScheme.cpp
     util/qtColorUtil.cpp
     util/qtDockController.cpp
     util/qtDockControllerPrivate.cpp
@@ -147,6 +148,7 @@ set(qtExtensionsInstallHeaders
     util/qtAbstractSetting.h
     util/qtActionFactory.h
     util/qtActionManager.h
+    util/qtColorScheme.h
     util/qtColorUtil.h
     util/qtDockController.h
     util/qtGradient.h
