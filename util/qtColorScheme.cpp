@@ -48,11 +48,11 @@ void qtColorScheme::load(QPalette::ColorGroup group, const QString& groupName,
                          QPalette::ColorRole role, const QString& roleName,
                          const QSettings& settings)
 {
-  auto const& defaultColor = this->color(group, role);
-
-  auto const& colorName = settings.value(
-    this->key(groupName, roleName), defaultColor).toString();
-  this->setColor(group, role, QColor{colorName});
+  auto const& color = settings.value(this->key(groupName, roleName));
+  if (color.isValid())
+    {
+    this->setColor(group, role, QColor{color.toString()});
+    }
 }
 
 //-----------------------------------------------------------------------------
