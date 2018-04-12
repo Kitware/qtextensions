@@ -26,6 +26,7 @@ class QTE_EXPORT qtProgressWidget : public QWidget
   Q_OBJECT
 
   Q_PROPERTY(bool autoHide READ autoHide WRITE setAutoHide)
+  Q_PROPERTY(bool busyOnZero READ busyOnZero WRITE setBusyOnZero)
 
   typedef QWidget Superclass;
 
@@ -34,10 +35,12 @@ public:
   virtual ~qtProgressWidget();
 
   bool autoHide();
+  bool busyOnZero();
 
 public slots:
   virtual void updateProgress(int value, QString text);
   void setAutoHide(bool hide);
+  void setBusyOnZero(bool busy);
 
 protected:
   QTE_DECLARE_PRIVATE_RPTR(qtProgressWidget)

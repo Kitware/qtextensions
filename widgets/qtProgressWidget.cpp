@@ -23,11 +23,15 @@ public:
   explicit qtProgressWidgetPrivate(qtProgressWidget* q)
     : q_ptr(q)
   {
+    this->autoHide = true;
+    this->busyOnZero = false;
   }
   bool autoHide;
+  bool busyOnZero;
   QVector<QPointer<QWidget>> ProgressBars;
 
   void autoHideWidget();
+  void updateProgressBars();
 
 protected:
   QTE_DECLARE_PUBLIC_PTR(qtProgressWidget)
@@ -54,6 +58,43 @@ void qtProgressWidgetPrivate::autoHideWidget()
 }
 
 //-----------------------------------------------------------------------------
+void qtProgressWidgetPrivate::updateProgressBars()
+{
+  QTE_Q(qtProgressWidget);
+  QPointer<QWidget> widget = nullptr;
+
+  for (int i = 0; i < this->ProgressBars.size(); ++i)
+  {
+    widget = this->ProgressBars.at(i);
+    QLabel* label =
+      qobject_cast<QLabel*>(widget->layout()->itemAt(0)->widget());
+    QProgressBar* bar =
+      qobject_cast<QProgressBar*>(widget->layout()->itemAt(1)->widget());
+    int v = widget->property("value").toInt();
+    if (v >= 99)
+    {
+      // Remove the progress bar along with its label
+      q->layout()->removeWidget(widget);
+      this->ProgressBars.erase(this->ProgressBars.begin() + i);
+      delete widget;
+    }
+    else if (v < 1 && this->busyOnZero)
+    {
+      bar->setMinimum(0);
+      bar->setMaximum(0);
+      bar->setValue(v);
+    }
+    else
+    {
+      bar->setMaximum(100);
+      bar->setValue(v);
+    }
+  }
+
+  this->autoHideWidget();
+}
+
+//-----------------------------------------------------------------------------
 qtProgressWidget::qtProgressWidget(QWidget* parent)
   : Superclass(parent)
   , d_ptr(new qtProgressWidgetPrivate(this))
@@ -64,7 +105,6 @@ qtProgressWidget::qtProgressWidget(QWidget* parent)
   layout->setContentsMargins(0, 0, 0, 0);
   this->setLayout(layout);
 
-  d->autoHide = true;
   d->autoHideWidget();
 }
 
@@ -94,6 +134,23 @@ void qtProgressWidget::setAutoHide(bool hide)
 }
 
 //-----------------------------------------------------------------------------
+bool qtProgressWidget::busyOnZero()
+{
+  QTE_D_CONST(qtProgressWidget);
+  return d->busyOnZero;
+}
+
+//-----------------------------------------------------------------------------
+void qtProgressWidget::setBusyOnZero(bool busy)
+{
+  QTE_D(qtProgressWidget);
+  if (d->busyOnZero != busy)
+  {
+    d->busyOnZero = busy;
+  }
+}
+
+//-----------------------------------------------------------------------------
 void qtProgressWidget::updateProgress(int value, QString text)
 {
   QTE_D(qtProgressWidget);
@@ -107,19 +164,7 @@ void qtProgressWidget::updateProgress(int value, QString text)
       qobject_cast<QLabel*>(widget->layout()->itemAt(0)->widget());
     if (label && (label->text().compare(text) == 0))
     {
-      if (value >= 99)
-      {
-        // Remove the progress bar along with its label
-        this->layout()->removeWidget(widget);
-        d->ProgressBars.erase(d->ProgressBars.begin() + i);
-        delete widget;
-      }
-      else
-      {
-        // Update the progress bar
-        qobject_cast<QProgressBar*>(widget->layout()->itemAt(1)->widget())
-          ->setValue(value);
-      }
+      widget->setProperty("value", value);
       break;
     }
     else
@@ -128,7 +173,7 @@ void qtProgressWidget::updateProgress(int value, QString text)
     }
   }
 
-  if (!widget && value < 99)
+  if (!widget)
   {
     widget = new QWidget(this);
     QVBoxLayout* vbox = new QVBoxLayout();
@@ -141,9 +186,10 @@ void qtProgressWidget::updateProgress(int value, QString text)
     QProgressBar* bar = new QProgressBar(this);
     vbox->addWidget(bar);
     bar->setValue(value);
+    widget->setProperty("value", value);
     this->layout()->addWidget(widget);
     d->ProgressBars.push_back(widget);
   }
 
-  d->autoHideWidget();
+  d->updateProgressBars();
 }
