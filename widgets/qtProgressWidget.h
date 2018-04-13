@@ -25,7 +25,14 @@ class QTE_EXPORT qtProgressWidget : public QWidget
 {
   Q_OBJECT
 
+  /// This property controls whether the widget will be hidden automatically
+  /// when there are no active progress bars. (Default: true)
   Q_PROPERTY(bool autoHide READ autoHide WRITE setAutoHide)
+
+  /// This property controls whether the widget should show a busy progress bar
+  /// when the its value is 0. This can be used in special cases where the task
+  /// being monitored does not report its progress - only that it started and
+  /// ended. (Default: false)
   Q_PROPERTY(bool busyOnZero READ busyOnZero WRITE setBusyOnZero)
 
   typedef QWidget Superclass;
