@@ -35,6 +35,17 @@ class QTE_EXPORT qtProgressWidget : public QWidget
   /// ended. (Default: false)
   Q_PROPERTY(bool busyOnZero READ busyOnZero WRITE setBusyOnZero)
 
+  /// This property controls whether the task name should be visible.
+  /// If true, the task name is displayed as `name: status` above the progress
+  /// bar. (Default: false)
+  /// \sa labelVisible
+  Q_PROPERTY(bool nameVisible READ nameVisible WRITE setNameVisible)
+
+  /// This property controls whether the task label should be visible.
+  /// If true, the label is displayed above the progress bar. (Default: true)
+  /// \sa nameVisible
+  Q_PROPERTY(bool labelVisible READ labelVisible WRITE setLabelVisible)
+
   typedef QWidget Superclass;
 
 public:
@@ -43,11 +54,15 @@ public:
 
   bool autoHide();
   bool busyOnZero();
+  bool nameVisible();
+  bool labelVisible();
 
 public slots:
-  virtual void updateProgress(int value, QString text);
+  virtual void updateProgress(QString name, int value, QString text);
   void setAutoHide(bool hide);
   void setBusyOnZero(bool busy);
+  void setNameVisible(bool visible);
+  void setLabelVisible(bool visible);
 
 protected:
   QTE_DECLARE_PRIVATE_RPTR(qtProgressWidget)

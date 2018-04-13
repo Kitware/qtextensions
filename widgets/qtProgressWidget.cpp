@@ -8,6 +8,7 @@
 #include "qtProgressWidget.h"
 
 // Qt includes
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QProgressBar>
 #include <QString>
@@ -25,13 +26,21 @@ public:
   {
     this->autoHide = true;
     this->busyOnZero = false;
+    this->nameVisible = false;
+    this->labelVisible = true;
   }
   bool autoHide;
   bool busyOnZero;
+  bool nameVisible;
+  bool labelVisible;
   QVector<QPointer<QWidget>> ProgressBars;
 
   void autoHideWidget();
   void updateProgressBars();
+  void updateProgress(QString& name, int value, QString& text);
+  void addProgressBar(QString& name, int value, QString& label);
+  QLabel* nameLabel(QWidget*);
+  QLabel* descriptionLabel(QWidget*);
 
 protected:
   QTE_DECLARE_PUBLIC_PTR(qtProgressWidget)
@@ -66,8 +75,10 @@ void qtProgressWidgetPrivate::updateProgressBars()
   for (int i = 0; i < this->ProgressBars.size(); ++i)
   {
     widget = this->ProgressBars.at(i);
-    QLabel* label =
-      qobject_cast<QLabel*>(widget->layout()->itemAt(0)->widget());
+    QLabel* nameLabel = this->nameLabel(widget);
+    nameLabel->setVisible(this->nameVisible);
+    QLabel* descriptionLabel = this->descriptionLabel(widget);
+    descriptionLabel->setVisible(this->labelVisible);
     QProgressBar* bar =
       qobject_cast<QProgressBar*>(widget->layout()->itemAt(1)->widget());
     int v = widget->property("value").toInt();
@@ -92,6 +103,91 @@ void qtProgressWidgetPrivate::updateProgressBars()
   }
 
   this->autoHideWidget();
+}
+
+//-----------------------------------------------------------------------------
+void qtProgressWidgetPrivate::updateProgress(QString& name,
+                                             int value,
+                                             QString& text)
+{
+  QPointer<QWidget> widget = nullptr;
+
+  // Check if we already have a progress bar for the task.
+  for (int i = 0; i < this->ProgressBars.size(); ++i)
+  {
+    widget = this->ProgressBars.at(i);
+    if (widget && (widget->objectName().compare(name) == 0))
+    {
+      widget->setProperty("value", value);
+      // Update the text description
+      this->descriptionLabel(widget)->setText(text);
+      break;
+    }
+    else
+    {
+      widget = nullptr;
+    }
+  }
+
+  if (!widget)
+  {
+    this->addProgressBar(name, value, text);
+  }
+
+  this->updateProgressBars();
+}
+
+//-----------------------------------------------------------------------------
+void qtProgressWidgetPrivate::addProgressBar(QString& name,
+                                             int value,
+                                             QString& text)
+{
+  QTE_Q(qtProgressWidget);
+  QWidget* widget = new QWidget(q);
+  QVBoxLayout* vbox = new QVBoxLayout();
+  vbox->setSpacing(0);
+  vbox->setContentsMargins(0, 0, 0, 0);
+  widget->setLayout(vbox);
+  QHBoxLayout* hbox = new QHBoxLayout();
+  vbox->addLayout(hbox);
+  QLabel* nameLabel = new QLabel(widget);
+  nameLabel->setText(name);
+  nameLabel->setStyleSheet("font-weight: bold;");
+  hbox->addWidget(nameLabel, 0, Qt::AlignJustify);
+  QLabel* descriptionLabel = new QLabel(widget);
+  descriptionLabel->setText(text);
+  hbox->addWidget(descriptionLabel, 5, Qt::AlignJustify);
+
+  QProgressBar* bar = new QProgressBar(widget);
+  vbox->addWidget(bar);
+  bar->setValue(value);
+  widget->setObjectName(name);
+  widget->setProperty("value", value);
+
+  q->layout()->addWidget(widget);
+  this->ProgressBars.push_back(widget);
+}
+
+//-----------------------------------------------------------------------------
+QLabel* qtProgressWidgetPrivate::nameLabel(QWidget* widget)
+{
+  if (!widget)
+  {
+    return nullptr;
+  }
+  return qobject_cast<QLabel*>(
+    widget->layout()->itemAt(0)->layout()->itemAt(0)->widget());
+}
+
+//-----------------------------------------------------------------------------
+QLabel* qtProgressWidgetPrivate::descriptionLabel(QWidget* widget)
+{
+  if (!widget)
+  {
+    return nullptr;
+  }
+  return qobject_cast<QLabel*>(
+    widget->layout()->itemAt(0)->layout()->itemAt(1)->widget());
 }
 
 //-----------------------------------------------------------------------------
@@ -147,49 +243,49 @@ void qtProgressWidget::setBusyOnZero(bool busy)
   if (d->busyOnZero != busy)
   {
     d->busyOnZero = busy;
+    d->updateProgressBars();
   }
 }
 
 //-----------------------------------------------------------------------------
-void qtProgressWidget::updateProgress(int value, QString text)
+bool qtProgressWidget::nameVisible()
+{
+  QTE_D_CONST(qtProgressWidget);
+  return d->nameVisible;
+}
+
+//-----------------------------------------------------------------------------
+void qtProgressWidget::setNameVisible(bool visible)
 {
   QTE_D(qtProgressWidget);
-  QPointer<QWidget> widget = nullptr;
-
-  // Check if we already have a progress bar for the task.
-  for (int i = 0; i < d->ProgressBars.size(); ++i)
+  if (d->nameVisible != visible)
   {
-    widget = d->ProgressBars.at(i);
-    QLabel* label =
-      qobject_cast<QLabel*>(widget->layout()->itemAt(0)->widget());
-    if (label && (label->text().compare(text) == 0))
-    {
-      widget->setProperty("value", value);
-      break;
-    }
-    else
-    {
-      widget = nullptr;
-    }
+    d->nameVisible = visible;
+    d->updateProgressBars();
   }
+}
 
-  if (!widget)
+//-----------------------------------------------------------------------------
+bool qtProgressWidget::labelVisible()
+{
+  QTE_D_CONST(qtProgressWidget);
+  return d->labelVisible;
+}
+
+//-----------------------------------------------------------------------------
+void qtProgressWidget::setLabelVisible(bool visible)
+{
+  QTE_D(qtProgressWidget);
+  if (d->labelVisible != visible)
   {
-    widget = new QWidget(this);
-    QVBoxLayout* vbox = new QVBoxLayout();
-    vbox->setSpacing(0);
-    vbox->setContentsMargins(0, 0, 0, 0);
-    widget->setLayout(vbox);
-    QLabel* label = new QLabel(widget);
-    vbox->addWidget(label);
-    label->setText(text);
-    QProgressBar* bar = new QProgressBar(this);
-    vbox->addWidget(bar);
-    bar->setValue(value);
-    widget->setProperty("value", value);
-    this->layout()->addWidget(widget);
-    d->ProgressBars.push_back(widget);
+    d->labelVisible = visible;
+    d->updateProgressBars();
   }
+}
 
-  d->updateProgressBars();
+//-----------------------------------------------------------------------------
+void qtProgressWidget::updateProgress(QString name, int value, QString text)
+{
+  QTE_D(qtProgressWidget);
+  d->updateProgress(name, value, text);
 }
