@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -11,16 +11,12 @@
 #include "../core/qtGlobal.h"
 
 // Qt includes
-#include <QPointer>
-#include <QVector>
 #include <QWidget>
 
 // Forward declarations
 class qtProgressWidgetPrivate;
 
-/* Custom widget that shows progress bars and associated labels in a size
- * consistent manner.
- */
+/// Custom widget that shows progress bars and associated labels
 class QTE_EXPORT qtProgressWidget : public QWidget
 {
   Q_OBJECT
@@ -49,7 +45,7 @@ class QTE_EXPORT qtProgressWidget : public QWidget
   typedef QWidget Superclass;
 
 public:
-  qtProgressWidget(QWidget* parent = 0);
+  qtProgressWidget(QWidget* parent = nullptr);
   virtual ~qtProgressWidget();
 
   bool autoHide();

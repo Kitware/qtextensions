@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -9,6 +9,7 @@
 
 // Qt includes
 #include <QHBoxLayout>
+#include <QHash>
 #include <QLabel>
 #include <QProgressBar>
 #include <QString>
@@ -33,9 +34,9 @@ public:
   bool busyOnZero;
   bool nameVisible;
   bool labelVisible;
-  QVector<QPointer<QWidget>> ProgressBars;
+  QHash<QString, QWidget*> progressBars;
 
-  void autoHideWidget();
+  void updateVisibility();
   void updateProgressBars();
   void updateProgress(QString& name, int value, QString& text);
   void addProgressBar(QString& name, int value, QString& label);
@@ -50,12 +51,12 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-void qtProgressWidgetPrivate::autoHideWidget()
+void qtProgressWidgetPrivate::updateVisibility()
 {
   QTE_Q(qtProgressWidget);
   if (this->autoHide)
   {
-    if (this->ProgressBars.empty())
+    if (this->progressBars.empty())
     {
       q->hide();
     }
@@ -70,11 +71,12 @@ void qtProgressWidgetPrivate::autoHideWidget()
 void qtProgressWidgetPrivate::updateProgressBars()
 {
   QTE_Q(qtProgressWidget);
-  QPointer<QWidget> widget = nullptr;
 
-  for (int i = 0; i < this->ProgressBars.size(); ++i)
+  QHash<QString, QWidget*>::iterator progressBarsIter =
+    this->progressBars.begin();
+  while (progressBarsIter != this->progressBars.end())
   {
-    widget = this->ProgressBars.at(i);
+    QWidget* widget = progressBarsIter.value();
     QLabel* nameLabel = this->nameLabel(widget);
     nameLabel->setVisible(this->nameVisible);
     QLabel* descriptionLabel = this->descriptionLabel(widget);
@@ -86,7 +88,7 @@ void qtProgressWidgetPrivate::updateProgressBars()
     {
       // Remove the progress bar along with its label
       q->layout()->removeWidget(widget);
-      this->ProgressBars.erase(this->ProgressBars.begin() + i);
+      progressBarsIter = this->progressBars.erase(progressBarsIter);
       delete widget;
     }
     else if (v < 1 && this->busyOnZero)
@@ -94,15 +96,17 @@ void qtProgressWidgetPrivate::updateProgressBars()
       bar->setMinimum(0);
       bar->setMaximum(0);
       bar->setValue(v);
+      progressBarsIter++;
     }
     else
     {
       bar->setMaximum(100);
       bar->setValue(v);
+      progressBarsIter++;
     }
   }
 
-  this->autoHideWidget();
+  this->updateVisibility();
 }
 
 //-----------------------------------------------------------------------------
@@ -110,26 +114,16 @@ void qtProgressWidgetPrivate::updateProgress(QString& name,
                                              int value,
                                              QString& text)
 {
-  QPointer<QWidget> widget = nullptr;
+  QWidget* widget = this->progressBars.value(name, nullptr);
 
   // Check if we already have a progress bar for the task.
-  for (int i = 0; i < this->ProgressBars.size(); ++i)
+  if (widget)
   {
-    widget = this->ProgressBars.at(i);
-    if (widget && (widget->objectName().compare(name) == 0))
-    {
-      widget->setProperty("value", value);
-      // Update the text description
-      this->descriptionLabel(widget)->setText(text);
-      break;
-    }
-    else
-    {
-      widget = nullptr;
-    }
+    widget->setProperty("value", value);
+    // Update the text description
+    this->descriptionLabel(widget)->setText(text);
   }
-
-  if (!widget)
+  else
   {
     this->addProgressBar(name, value, text);
   }
@@ -165,7 +159,7 @@ void qtProgressWidgetPrivate::addProgressBar(QString& name,
   widget->setProperty("value", value);
 
   q->layout()->addWidget(widget);
-  this->ProgressBars.push_back(widget);
+  this->progressBars.insert(name, widget);
 }
 
 //-----------------------------------------------------------------------------
@@ -192,54 +186,51 @@ QLabel* qtProgressWidgetPrivate::descriptionLabel(QWidget* widget)
 
 //-----------------------------------------------------------------------------
 qtProgressWidget::qtProgressWidget(QWidget* parent)
-  : Superclass(parent)
-  , d_ptr(new qtProgressWidgetPrivate(this))
+  : Superclass(parent),
+    d_ptr(new qtProgressWidgetPrivate(this))
 {
   QTE_D(qtProgressWidget);
   QVBoxLayout* layout = new QVBoxLayout();
-  layout->setSpacing(0);
   layout->setContentsMargins(0, 0, 0, 0);
   this->setLayout(layout);
 
-  d->autoHideWidget();
+  d->updateVisibility();
 }
 
 //-----------------------------------------------------------------------------
 qtProgressWidget::~qtProgressWidget()
 {
-  QTE_D(qtProgressWidget);
-  d->ProgressBars.clear();
 }
 
 //-----------------------------------------------------------------------------
 bool qtProgressWidget::autoHide()
 {
-  QTE_D_CONST(qtProgressWidget);
+  QTE_D();
   return d->autoHide;
 }
 
 //-----------------------------------------------------------------------------
 void qtProgressWidget::setAutoHide(bool hide)
 {
-  QTE_D(qtProgressWidget);
+  QTE_D();
   if (d->autoHide != hide)
   {
     d->autoHide = hide;
-    d->autoHideWidget();
+    d->updateVisibility();
   }
 }
 
 //-----------------------------------------------------------------------------
 bool qtProgressWidget::busyOnZero()
 {
-  QTE_D_CONST(qtProgressWidget);
+  QTE_D();
   return d->busyOnZero;
 }
 
 //-----------------------------------------------------------------------------
 void qtProgressWidget::setBusyOnZero(bool busy)
 {
-  QTE_D(qtProgressWidget);
+  QTE_D();
   if (d->busyOnZero != busy)
   {
     d->busyOnZero = busy;
@@ -250,14 +241,14 @@ void qtProgressWidget::setBusyOnZero(bool busy)
 //-----------------------------------------------------------------------------
 bool qtProgressWidget::nameVisible()
 {
-  QTE_D_CONST(qtProgressWidget);
+  QTE_D();
   return d->nameVisible;
 }
 
 //-----------------------------------------------------------------------------
 void qtProgressWidget::setNameVisible(bool visible)
 {
-  QTE_D(qtProgressWidget);
+  QTE_D();
   if (d->nameVisible != visible)
   {
     d->nameVisible = visible;
@@ -268,14 +259,14 @@ void qtProgressWidget::setNameVisible(bool visible)
 //-----------------------------------------------------------------------------
 bool qtProgressWidget::labelVisible()
 {
-  QTE_D_CONST(qtProgressWidget);
+  QTE_D();
   return d->labelVisible;
 }
 
 //-----------------------------------------------------------------------------
 void qtProgressWidget::setLabelVisible(bool visible)
 {
-  QTE_D(qtProgressWidget);
+  QTE_D();
   if (d->labelVisible != visible)
   {
     d->labelVisible = visible;
@@ -286,6 +277,6 @@ void qtProgressWidget::setLabelVisible(bool visible)
 //-----------------------------------------------------------------------------
 void qtProgressWidget::updateProgress(QString name, int value, QString text)
 {
-  QTE_D(qtProgressWidget);
+  QTE_D();
   d->updateProgress(name, value, text);
 }
