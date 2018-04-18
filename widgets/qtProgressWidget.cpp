@@ -22,7 +22,7 @@ class qtProgressWidgetPrivate
 {
 public:
   explicit qtProgressWidgetPrivate(qtProgressWidget* q)
-    : q_ptr(q)
+    : q_ptr{q}
   {
     this->autoHide = true;
     this->busyOnZero = false;
@@ -186,7 +186,7 @@ QLabel* qtProgressWidgetPrivate::descriptionLabel(QWidget* widget)
 //-----------------------------------------------------------------------------
 qtProgressWidget::qtProgressWidget(QWidget* parent)
   : Superclass(parent),
-    d_ptr(new qtProgressWidgetPrivate(this))
+    d_ptr{new qtProgressWidgetPrivate(this)}
 {
   QTE_D(qtProgressWidget);
   QVBoxLayout* layout = new QVBoxLayout();
