@@ -7,7 +7,6 @@
 #ifndef __qtProgressWidget_h
 #define qtProgressWidget_h
 
-// QTE includes
 #include "../core/qtGlobal.h"
 
 // Qt includes
@@ -68,4 +67,4 @@ private:
   QTE_DISABLE_COPY(qtProgressWidget)
 };
 
-#endif // __qtProgressWidget_h
+#endif
