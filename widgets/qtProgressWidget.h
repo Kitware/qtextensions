@@ -5,7 +5,7 @@
  */
 
 #ifndef __qtProgressWidget_h
-#define qtProgressWidget_h
+#define __qtProgressWidget_h
 
 #include "../core/qtGlobal.h"
 
@@ -15,49 +15,73 @@
 // Forward declarations
 class qtProgressWidgetPrivate;
 
-/// Custom widget that shows progress bars and associated labels
+/// Custom widget that shows and manages multiple progress bars and associated
+/// status messages / task descriptions.
 class QTE_EXPORT qtProgressWidget : public QWidget
 {
   Q_OBJECT
 
   /// This property controls whether the widget will be hidden automatically
-  /// when there are no active progress bars. (Default: true)
+  /// when there are no active progress bars.
+  ///
+  /// By default, this property is \c true.
   Q_PROPERTY(bool autoHide READ autoHide WRITE setAutoHide)
 
-  /// This property controls whether the widget should show a busy progress bar
-  /// when the its value is 0. This can be used in special cases where the task
-  /// being monitored does not report its progress - only that it started and
-  /// ended. (Default: false)
-  Q_PROPERTY(bool busyOnZero READ busyOnZero WRITE setBusyOnZero)
-
   /// This property controls whether the task name should be visible.
-  /// If true, the task name is displayed as `name: status` above the progress
-  /// bar. (Default: false)
+  /// If true, the task name is displayed as <tt>name| description</tt> above
+  /// the progress bar.
+  ///
+  /// By default, this property is \c false.
+  ///
   /// \sa labelVisible
   Q_PROPERTY(bool nameVisible READ nameVisible WRITE setNameVisible)
 
-  /// This property controls whether the task label should be visible.
-  /// If true, the label is displayed above the progress bar. (Default: true)
+  /// This property controls whether the description label should be visible.
+  /// If true, the label is displayed above the progress bar.
+  ///
+  /// By default, this property is \c true.
+  ///
   /// \sa nameVisible
-  Q_PROPERTY(bool labelVisible READ labelVisible WRITE setLabelVisible)
-
-  typedef QWidget Superclass;
+  Q_PROPERTY(
+    bool descriptionVisible READ descriptionVisible WRITE setDescriptionVisible)
 
 public:
   qtProgressWidget(QWidget* parent = nullptr);
   virtual ~qtProgressWidget();
 
-  bool autoHide();
-  bool busyOnZero();
-  bool nameVisible();
-  bool labelVisible();
+  bool autoHide() const;
+  bool nameVisible() const;
+  bool descriptionVisible() const;
 
 public slots:
-  virtual void updateProgress(QString name, int value, QString text);
   void setAutoHide(bool hide);
-  void setBusyOnZero(bool busy);
   void setNameVisible(bool visible);
-  void setLabelVisible(bool visible);
+  void setDescriptionVisible(bool visible);
+
+  /// Set the description of a particular progress bar.
+  ///
+  /// \note This method adds a new progress bar if none match the \c name key.
+  virtual void setDescription(const QString& name, const QString& description);
+
+  /// Set the value range for a particular progress bar.
+  ///
+  /// This method can be useful to set custom ranges for different progress bars
+  /// managed by the qtProgressWidget. If the minimum and maximum are set to the
+  //i/ same value, the progress bar enters a special busy state.
+  ///
+  /// \note Unlike setDescription and setValue, this method does not add a new
+  /// progress bar if none match the \c name key.
+  ///
+  /// \sa setDescription, setValue
+  virtual void setRange(const QString& name, int minimum, int maximum);
+
+  /// Set the value of a particular progress bar.
+  ///
+  /// \note This method adds a new progress bar if none match the \c name key.
+  virtual void setValue(const QString& name, int value);
+
+  /// Remove a particular progress bar from the widget
+  virtual void remove(const QString& name);
 
 protected:
   QTE_DECLARE_PRIVATE_RPTR(qtProgressWidget)
