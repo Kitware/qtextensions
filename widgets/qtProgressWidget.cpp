@@ -39,9 +39,9 @@ public:
   void setValue(const QString& name, int value);
   void setRange(const QString& name, int minimum, int maximum);
   void setDescription(const QString& name, const QString& description);
-  void addProgressBar(const QString& name,
-                      int value,
-                      const QString& description);
+  QWidget* addProgressBar(const QString& name,
+                          const QString& description,
+                          int value);
   void removeProgressBar(const QString& name);
   // Get access to the internal widget's name label
   QLabel* nameLabel(QWidget*);
@@ -89,7 +89,7 @@ void qtProgressWidgetPrivate::setDescription(const QString& name,
   }
   else
   {
-    this->addProgressBar(name, 0, description);
+    this->addProgressBar(name, description, 0);
   }
 }
 
@@ -101,6 +101,12 @@ void qtProgressWidgetPrivate::setRange(const QString& name,
   QWidget* widget = this->progressBars.value(name, nullptr);
   if (widget)
   {
+    // Update the range
+    this->progressBar(widget)->setRange(minimum, maximum);
+  }
+  else
+  {
+    widget = this->addProgressBar(name, "", 0);
     // Update the range
     this->progressBar(widget)->setRange(minimum, maximum);
   }
@@ -136,14 +142,14 @@ void qtProgressWidgetPrivate::setValue(const QString& name, int value)
   }
   else
   {
-    this->addProgressBar(name, value, "");
+    this->addProgressBar(name, "", value);
   }
 }
 
 //-----------------------------------------------------------------------------
-void qtProgressWidgetPrivate::addProgressBar(const QString& name,
-                                             int value,
-                                             const QString& description)
+QWidget* qtProgressWidgetPrivate::addProgressBar(const QString& name,
+                                                 const QString& description,
+                                                 int value)
 {
   QTE_Q(qtProgressWidget);
   QWidget* widget = new QWidget(q);
@@ -172,6 +178,7 @@ void qtProgressWidgetPrivate::addProgressBar(const QString& name,
   this->progressBars.insert(name, widget);
 
   this->updateVisibility();
+  return widget;
 }
 
 //-----------------------------------------------------------------------------
@@ -311,7 +318,7 @@ void qtProgressWidget::setDescription(const QString& name,
                                       const QString& description)
 {
   QTE_D();
-  if(!d->checkName(name))
+  if (!d->checkName(name))
   {
     return;
   }
@@ -322,7 +329,7 @@ void qtProgressWidget::setDescription(const QString& name,
 void qtProgressWidget::setRange(const QString& name, int minimum, int maximum)
 {
   QTE_D();
-  if(!d->checkName(name))
+  if (!d->checkName(name))
   {
     return;
   }
@@ -333,7 +340,7 @@ void qtProgressWidget::setRange(const QString& name, int minimum, int maximum)
 void qtProgressWidget::setValue(const QString& name, int value)
 {
   QTE_D();
-  if(!d->checkName(name))
+  if (!d->checkName(name))
   {
     return;
   }
@@ -349,4 +356,21 @@ void qtProgressWidget::remove(const QString& name)
     return;
   }
   d->removeProgressBar(name);
+}
+
+//-----------------------------------------------------------------------------
+bool qtProgressWidget::addProgressBar(const QString& name,
+                                      const QString& description,
+                                      int value,
+                                      int minimum,
+                                      int maximum)
+{
+  QTE_D();
+  if (!d->checkName(name))
+  {
+    return false;
+  }
+  d->addProgressBar(name, description, value);
+  d->setRange(name, minimum, maximum);
+  return true;
 }

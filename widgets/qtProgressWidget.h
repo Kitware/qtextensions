@@ -58,6 +58,16 @@ public slots:
   void setNameVisible(bool visible);
   void setDescriptionVisible(bool visible);
 
+  /// Add a progress bar to the widget.
+  ///
+  /// \return Boolean indicating whether the progress bar was successfully
+  /// added to the widget.
+  virtual bool addProgressBar(const QString& name,
+                              const QString& description = QString(""),
+                              int value = 0,
+                              int minimum = 0,
+                              int maximum = 100);
+
   /// Set the description of a particular progress bar.
   ///
   /// \note This method adds a new progress bar if none match the \c name key.
@@ -67,15 +77,16 @@ public slots:
   ///
   /// This method can be useful to set custom ranges for different progress bars
   /// managed by the qtProgressWidget. If the minimum and maximum are set to the
-  //i/ same value, the progress bar enters a special busy state.
+  /// same value, the progress bar enters a special busy state.
   ///
-  /// \note Unlike setDescription and setValue, this method does not add a new
-  /// progress bar if none match the \c name key.
+  /// \note This method adds a new progress bar if none match the \c name key.
   ///
   /// \sa setDescription, setValue
   virtual void setRange(const QString& name, int minimum, int maximum);
 
   /// Set the value of a particular progress bar.
+  /// The progress bar is identified by the \c name parameter. If no progress
+  /// with that name exists, this method adds one.
   ///
   /// \note This method adds a new progress bar if none match the \c name key.
   virtual void setValue(const QString& name, int value);
