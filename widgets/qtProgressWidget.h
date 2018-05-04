@@ -94,6 +94,12 @@ public slots:
   /// Remove a particular progress bar from the widget
   virtual void remove(const QString& name);
 
+  /// Access the internal dictionary of progress bar widgets.
+  ///
+  /// The progress widget maintains an internal hash table of
+  /// <QString, QWidget*> pairs with the the key being the name for each task.
+  QHash<QString, QWidget*> progressBars();
+
 protected:
   QTE_DECLARE_PRIVATE_RPTR(qtProgressWidget)
 

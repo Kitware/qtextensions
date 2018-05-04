@@ -374,3 +374,10 @@ bool qtProgressWidget::addProgressBar(const QString& name,
   d->setRange(name, minimum, maximum);
   return true;
 }
+
+//-----------------------------------------------------------------------------
+QHash<QString, QWidget*> qtProgressWidget::progressBars()
+{
+  QTE_D();
+  return d->progressBars;
+}
