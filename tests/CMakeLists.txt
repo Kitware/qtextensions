@@ -26,6 +26,7 @@ qte_add_test(testConfirmationDialog INTERACTIVE TestConfirmationDialog.cpp)
 qte_add_test(testGradientEditor     INTERACTIVE TestGradientEditor.cpp)
 qte_add_test(testGradientWidget     INTERACTIVE TestGradientWidget.cpp)
 qte_add_test(testThrobber           INTERACTIVE TestThrobber.cpp)
+qte_add_test(testProgressWidget     INTERACTIVE TestProgressWidget.cpp)
 
 # Automated tests
 qte_add_test(qtExtensions-Kst testKst
