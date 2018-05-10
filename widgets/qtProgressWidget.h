@@ -25,59 +25,37 @@ class QTE_EXPORT qtProgressWidget : public QWidget
     /// By default, this property is \c true.
     Q_PROPERTY(bool autoHide READ autoHide WRITE setAutoHide)
 
-    /// This property controls whether the task name should be visible.
-    /// If true, the task name is displayed above the progress bar.
-    ///
-    /// By default, this property is \c false.
-    ///
-    /// \sa labelVisible
-    Q_PROPERTY(bool nameVisible READ nameVisible WRITE setNameVisible)
-
-    /// This property controls whether the description label should be visible.
-    /// If true, the label is displayed above the progress bar and below the
-    /// task name.
+    /// This property controls whether the task label should be visible. If
+    /// true, the task label is displayed above the progress bar.
     ///
     /// By default, this property is \c true.
-    ///
-    /// \sa nameVisible
-    Q_PROPERTY(bool descriptionVisible
-               READ descriptionVisible
-               WRITE setDescriptionVisible)
+    Q_PROPERTY(bool labelVisible READ labelVisible WRITE setLabelVisible)
 
 public:
     qtProgressWidget(QWidget* parent = nullptr);
     virtual ~qtProgressWidget();
 
     bool autoHide() const;
-    bool nameVisible() const;
-    bool descriptionVisible() const;
+    bool labelVisible() const;
 
 public slots:
     void setAutoHide(bool hide);
-    void setNameVisible(bool visible);
-    void setDescriptionVisible(bool visible);
+    void setLabelVisible(bool visible);
 
     /// Add a task to the widget.
     ///
     /// \return Identifier of the newly added task.
-    virtual int addTask(QString const& name,
-                        QString const& description = QString(""),
-                        int value = 0, int minimum = 0, int maximum = 100);
+    virtual int addTask(QString const& text = QString(""), int value = 0,
+                        int minimum = 0, int maximum = 100);
 
     // Get list of all tasks.
     QList<int> tasks() const;
 
-    // Get the name of the specified task.
-    QString taskName(int id) const;
+    // Get the text of the specified task.
+    QString taskText(int id) const;
 
-    // Set the name of a particular task.
-    void setTaskName(int id, QString const& name);
-
-    /// Get the description of the specified task.
-    QString taskDescription(int id) const;
-
-    /// Set the description of a particular task.
-    void setTaskDescription(int id, QString const& description);
+    // Set the text of a particular task.
+    void setTaskText(int id, QString const& text);
 
     /// Set the value range for a particular task's progress bar.
     ///

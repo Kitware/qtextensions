@@ -22,14 +22,12 @@ public:
     struct Task
     {
         QWidget* container;
-        QLabel* nameLabel;
-        QLabel* descriptionLabel;
+        QLabel* label;
         QProgressBar* progressBar;
     };
 
     bool autoHide = true;
-    bool nameVisible = false;
-    bool descriptionVisible = true;
+    bool labelVisible = true;
 
     QHash<int, Task> tasks;
     QList<int> availableIds;
@@ -51,10 +49,7 @@ void qtProgressWidgetPrivate::updateVisibility(qtProgressWidget* self)
 void qtProgressWidgetPrivate::updateLabelVisibility()
 {
   foreach (auto const& task, this->tasks)
-  {
-    task.nameLabel->setVisible(this->nameVisible);
-    task.descriptionLabel->setVisible(this->descriptionVisible);
-  }
+    task.label->setVisible(this->labelVisible);
 }
 
 //-----------------------------------------------------------------------------
@@ -101,45 +96,26 @@ void qtProgressWidget::setAutoHide(bool hide)
 }
 
 //-----------------------------------------------------------------------------
-bool qtProgressWidget::nameVisible() const
+bool qtProgressWidget::labelVisible() const
 {
     QTE_D();
-    return d->nameVisible;
+    return d->labelVisible;
 }
 
 //-----------------------------------------------------------------------------
-void qtProgressWidget::setNameVisible(bool visible)
+void qtProgressWidget::setLabelVisible(bool visible)
 {
     QTE_D();
-    if (d->nameVisible != visible)
+    if (d->labelVisible != visible)
     {
-        d->nameVisible = visible;
+        d->labelVisible = visible;
         d->updateLabelVisibility();
     }
 }
 
 //-----------------------------------------------------------------------------
-bool qtProgressWidget::descriptionVisible() const
-{
-    QTE_D();
-    return d->descriptionVisible;
-}
-
-//-----------------------------------------------------------------------------
-void qtProgressWidget::setDescriptionVisible(bool visible)
-{
-    QTE_D();
-    if (d->descriptionVisible != visible)
-    {
-        d->descriptionVisible = visible;
-        d->updateLabelVisibility();
-    }
-}
-
-//-----------------------------------------------------------------------------
-int qtProgressWidget::addTask(
-    QString const& name, QString const& description,
-    int value, int minimum, int maximum)
+int qtProgressWidget::addTask(QString const& text, int value,
+                              int minimum, int maximum)
 {
     QTE_D();
 
@@ -150,19 +126,15 @@ int qtProgressWidget::addTask(
 
     qtProgressWidgetPrivate::Task task{
         container,
-        new QLabel{name, container},
-        new QLabel{description, container},
+        new QLabel{text, container},
         new QProgressBar{container},
     };
 
-    container->layout()->addWidget(task.nameLabel);
-    container->layout()->addWidget(task.descriptionLabel);
+    container->layout()->addWidget(task.label);
     container->layout()->addWidget(task.progressBar);
     this->layout()->addWidget(container);
 
-    task.nameLabel->setStyleSheet("font-weight: bold;");
-    task.nameLabel->setVisible(d->nameVisible);
-    task.descriptionLabel->setVisible(d->descriptionVisible);
+    task.label->setVisible(d->labelVisible);
 
     task.progressBar->setRange(minimum, maximum);
     task.progressBar->setValue(value);
@@ -198,39 +170,21 @@ QList<int> qtProgressWidget::tasks() const
 }
 
 //-----------------------------------------------------------------------------
-QString qtProgressWidget::taskName(int id) const
+QString qtProgressWidget::taskText(int id) const
 {
     QTE_D();
     if (auto const* const t = qtGet(d->tasks, id))
-        return t->nameLabel->text();
+        return t->label->text();
 
     return {};
 }
 
 //-----------------------------------------------------------------------------
-void qtProgressWidget::setTaskName(int id, QString const& name)
+void qtProgressWidget::setTaskText(int id, QString const& text)
 {
     QTE_D();
     if (auto const* const t = qtGet(d->tasks, id))
-        t->nameLabel->setText(name);
-}
-
-//-----------------------------------------------------------------------------
-QString qtProgressWidget::taskDescription(int id) const
-{
-    QTE_D();
-    if (auto const* const t = qtGet(d->tasks, id))
-        return t->descriptionLabel->text();
-
-    return {};
-}
-
-//-----------------------------------------------------------------------------
-void qtProgressWidget::setTaskDescription(int id, QString const& description)
-{
-    QTE_D();
-    if (auto const* const t = qtGet(d->tasks, id))
-        t->descriptionLabel->setText(description);
+        t->label->setText(text);
 }
 
 //-----------------------------------------------------------------------------
