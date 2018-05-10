@@ -212,6 +212,7 @@ source_group("Generated" FILES
   ${qtExtensionsUiSources}
 )
 
+add_library(${PROJECT_NAME}Headers INTERFACE)
 add_library(${PROJECT_NAME}
   ${qtExtensionsSources} ${qtExtensionsUiSources}
 )
@@ -229,12 +230,12 @@ endif()
 
 target_compile_options(${PROJECT_NAME} INTERFACE ${QTE_REQUIRED_CXX_FLAGS})
 
-target_include_directories(${PROJECT_NAME} SYSTEM INTERFACE
+target_include_directories(${PROJECT_NAME}Headers SYSTEM INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
   $<INSTALL_INTERFACE:include/QtE>
 )
-qte_library_include_interface(${PROJECT_NAME} include/QtE
+qte_library_include_interface(${PROJECT_NAME}Headers include/QtE
   core
   dialogs
   dom
@@ -247,6 +248,7 @@ qte_library_include_interface(${PROJECT_NAME} include/QtE
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
+  ${PROJECT_NAME}Headers
   ${QT_LIBRARIES}
   PRIVATE
   ${ONCE_THREAD_LIBRARY}
@@ -257,7 +259,7 @@ if(MSVC)
 endif()
 
 qte_install_includes(include/QtE ${qtExtensionsInstallHeaders} qtExports.h)
-qte_install_library_targets(${PROJECT_NAME})
+qte_install_library_targets(${PROJECT_NAME} ${PROJECT_NAME}Headers)
 
 # END qtExtensions library build rules
 
