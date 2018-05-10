@@ -4,22 +4,22 @@
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
 
-#include <QApplication>
-
 #include "../widgets/qtProgressWidget.h"
 
+#include <QApplication>
+
+//-----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-  QApplication app(argc, argv);
+    QApplication app{argc, argv};
 
-  qtProgressWidget widget;
-  widget.setNameVisible(true);
-  widget.addProgressBar("Task 1", "Description 1", 20);
-  widget.setValue("Task 2", 20);
-  widget.setRange("Task 2", 0, 40);
-  widget.setDescription("Task 3", "Description 3");
-  widget.addProgressBar("Task 4", "Description 4", 0, 0, 0);
+    qtProgressWidget widget;
+    widget.setLabelAlignment(Qt::AlignCenter);
 
-  widget.show();
-  return app.exec();
+    auto const task1 = widget.addTask("This is a sample task", 20);
+    auto const task2 = widget.addTask("This task is 'busy'");
+    widget.setProgressRange(task2, 0, 0);
+
+    widget.show();
+    return app.exec();
 }
