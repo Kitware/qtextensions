@@ -86,6 +86,7 @@ set(qtExtensionsSources
     widgets/qtGradientWidget.cpp
     widgets/qtMenu.cpp
     widgets/qtOverlayWidget.cpp
+    widgets/qtProgressWidget.cpp
     widgets/qtSqueezedLabel.cpp
     widgets/qtThrobber.cpp
     # ItemViews
@@ -172,6 +173,7 @@ set(qtExtensionsInstallHeaders
     widgets/qtGradientWidget.h
     widgets/qtMenu.h
     widgets/qtOverlayWidget.h
+    widgets/qtProgressWidget.h
     widgets/qtSqueezedLabel.h
     widgets/qtThrobber.h
     # ItemViews
@@ -273,6 +275,7 @@ qt4_wrap_cpp(qtExtensionsDesignerPluginMocSources
   designer/qtDoubleSliderInterface.h
   designer/qtExpanderInterface.h
   designer/qtOverlayWidgetInterface.h
+  designer/qtProgressWidgetInterface.h
   designer/qtSqueezedLabelInterface.h
   designer/qtThrobberInterface.h
 )
@@ -325,6 +328,7 @@ set(qtExtensionsWrapObjects
     qtGradientWidget
     qtMenu
     qtOverlayWidget
+    qtProgressWidget
     qtThrobber
     # ItemViews
     qtAbstractListDelegate
