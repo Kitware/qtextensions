@@ -28,13 +28,13 @@ public:
 
     bool autoHide = true;
     bool labelVisible = true;
+    Qt::Alignment labelAlignment = Qt::AlignLeft | Qt::AlignVCenter;
 
     QHash<int, Task> tasks;
     QList<int> availableIds;
     int lastTaskId = -1;
 
     void updateVisibility(qtProgressWidget* self);
-    void updateLabelVisibility();
 
     int newTaskId();
 };
@@ -43,13 +43,6 @@ public:
 void qtProgressWidgetPrivate::updateVisibility(qtProgressWidget* self)
 {
   self->setVisible(!this->autoHide || !this->tasks.empty());
-}
-
-//-----------------------------------------------------------------------------
-void qtProgressWidgetPrivate::updateLabelVisibility()
-{
-  foreach (auto const& task, this->tasks)
-    task.label->setVisible(this->labelVisible);
 }
 
 //-----------------------------------------------------------------------------
@@ -109,7 +102,27 @@ void qtProgressWidget::setLabelVisible(bool visible)
     if (d->labelVisible != visible)
     {
         d->labelVisible = visible;
-        d->updateLabelVisibility();
+        foreach (auto const& task, d->tasks)
+            task.label->setVisible(visible);
+    }
+}
+
+//-----------------------------------------------------------------------------
+Qt::Alignment qtProgressWidget::labelAlignment() const
+{
+    QTE_D();
+    return d->labelAlignment;
+}
+
+//-----------------------------------------------------------------------------
+void qtProgressWidget::setLabelAlignment(Qt::Alignment alignment)
+{
+    QTE_D();
+    if (d->labelAlignment != alignment)
+    {
+        d->labelAlignment = alignment;
+        foreach (auto const& task, d->tasks)
+            task.label->setAlignment(alignment);
     }
 }
 
@@ -135,6 +148,7 @@ int qtProgressWidget::addTask(QString const& text, int value,
     this->layout()->addWidget(container);
 
     task.label->setVisible(d->labelVisible);
+    task.label->setAlignment(d->labelAlignment);
 
     task.progressBar->setRange(minimum, maximum);
     task.progressBar->setValue(value);

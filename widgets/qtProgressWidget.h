@@ -31,22 +31,17 @@ class QTE_EXPORT qtProgressWidget : public QWidget
     /// By default, this property is \c true.
     Q_PROPERTY(bool labelVisible READ labelVisible WRITE setLabelVisible)
 
+    /// This property controls the text alignment of the task labels.
+    Q_PROPERTY(Qt::Alignment labelAlignment READ labelAlignment
+                                            WRITE setLabelAlignment)
+
 public:
     qtProgressWidget(QWidget* parent = nullptr);
     virtual ~qtProgressWidget();
 
     bool autoHide() const;
     bool labelVisible() const;
-
-public slots:
-    void setAutoHide(bool hide);
-    void setLabelVisible(bool visible);
-
-    /// Add a task to the widget.
-    ///
-    /// \return Identifier of the newly added task.
-    virtual int addTask(QString const& text = QString(""), int value = 0,
-                        int minimum = 0, int maximum = 100);
+    Qt::Alignment labelAlignment() const;
 
     // Get list of all tasks.
     QList<int> tasks() const;
@@ -54,8 +49,21 @@ public slots:
     // Get the text of the specified task.
     QString taskText(int id) const;
 
+public slots:
+    void setAutoHide(bool hide);
+    void setLabelVisible(bool visible);
+    void setLabelAlignment(Qt::Alignment);
+
+    /// Add a task to the widget.
+    ///
+    /// \return Identifier of the newly added task.
+    virtual int addTask(QString const& text = QString(""), int value = 0,
+                        int minimum = 0, int maximum = 100);
+
     // Set the text of a particular task.
     void setTaskText(int id, QString const& text);
+
+    /// Set the text alignment of the task labels.
 
     /// Set the value range for a particular task's progress bar.
     ///
