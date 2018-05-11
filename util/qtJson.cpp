@@ -61,7 +61,7 @@ qtJson::JsonData qtJson::encode(QString value)
       }
     else if (c.unicode() < 128)
       {
-      result += c.toAscii();
+      result += c.toLatin1();
       }
     else
       {
