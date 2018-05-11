@@ -1,5 +1,7 @@
 # Import library targets
 include(${CMAKE_CURRENT_LIST_DIR}/qtExtensionsConfigTargets.cmake)
 
+set(QTE_QT_VERSION "@QTE_QT_VERSION@")
+
 # Set use file
 set(qtExtensions_USE_FILE ${CMAKE_CURRENT_LIST_DIR}/UseQtExtensions.cmake)
