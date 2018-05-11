@@ -46,7 +46,7 @@ qtStatusSource::qtStatusSource(const qtStatusSource& other)
 
 //-----------------------------------------------------------------------------
 qtStatusSource::qtStatusSource(qtStatusSourcePrivate* d)
-  : d_ptr(QWeakPointer<qtStatusSourcePrivate>(d).toStrongRef())
+  : d_ptr(QSharedPointer<qtStatusSourcePrivate>(d))
 {
 }
 
