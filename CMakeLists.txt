@@ -207,8 +207,11 @@ set(qtExtensionsInstallHeaders
 ###############################################################################
 
 # BEGIN qtExtensions library build rules
-
-qt4_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
+if(QTE_QT_VERSION VERSION_GREATER "4")
+  qt5_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
+else()
+  qt4_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
+endif()
 
 source_group("Generated" FILES
   ${qtExtensionsUiSources}
