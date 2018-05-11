@@ -5,8 +5,8 @@
  */
 
 #include <QObject>
-#include <QWeakPointer>
 
+#include "qtPointer.h"
 #include "qtStatusSource.h"
 
 class qtStatusSourcePrivate : public QObject
@@ -29,7 +29,7 @@ private:
   friend QDebug& operator<<(QDebug&, const qtStatusSource&);
 
   QObject* owner;
-  QWeakPointer<QObject> ownerRef;
+  qtPointer<QObject> ownerRef;
   QString ownerIdentifier;
   QString displayIdentifier;
 };
