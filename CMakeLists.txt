@@ -269,48 +269,50 @@ qte_install_library_targets(${PROJECT_NAME} ${PROJECT_NAME}Headers)
 
 # END qtExtensions library build rules
 
-# ###############################################################################
+###############################################################################
 
-# # BEGIN qtExtensions designer plugin build rules
+# BEGIN qtExtensions designer plugin build rules
 
-# # Explicitly wrap pure interface headers (that don't have source files)
-# set(qtExtensionsIFaceHeaders
-#   designer/qtColorButtonInterface.h
-#   designer/qtDoubleSliderInterface.h
-#   designer/qtExpanderInterface.h
-#   designer/qtOverlayWidgetInterface.h
-#   designer/qtProgressWidgetInterface.h
-#   designer/qtSqueezedLabelInterface.h
-#   designer/qtThrobberInterface.h
-# )
-# if(QTE_QT_VERSION VERSION_GREATER 4)
-#   qt5_wrap_cpp(qtExtensionsDesignerPluginMocSources
-#     ${qtExtensionsIFaceHeaders}
-#   )
-# else()
-#   qt4_wrap_cpp(qtExtensionsDesignerPluginMocSources
-#     ${qtExtensionsIFaceHeaders}
-#   )
-# endif()
+if(NOT (QTE_QT_VERSION VERSION_GREATER "4"))
+  # Explicitly wrap pure interface headers (that don't have source files)
+  set(qtExtensionsDesignerPluginMocHeaders
+    designer/qtColorButtonInterface.h
+    designer/qtDoubleSliderInterface.h
+    designer/qtExpanderInterface.h
+    designer/qtOverlayWidgetInterface.h
+    designer/qtProgressWidgetInterface.h
+    designer/qtSqueezedLabelInterface.h
+    designer/qtThrobberInterface.h
+  )
+  if(QTE_QT_VERSION VERSION_GREATER "4")
+    qt5_wrap_cpp(qtExtensionsDesignerPluginMocSources
+      ${qtExtensionsDesignerPluginMocHeaders}
+    )
+  else()
+    qt4_wrap_cpp(qtExtensionsDesignerPluginMocSources
+      ${qtExtensionsDesignerPluginMocHeaders}
+    )
+  endif()
 
-# add_library(${PROJECT_NAME}DesignerPlugin MODULE
-#   designer/qtDesignerPlugin.cpp
-#   designer/qtDesignerWidgetInterface.cpp
-#   ${qtExtensionsDesignerPluginMocSources}
-# )
+  add_library(${PROJECT_NAME}DesignerPlugin MODULE
+    designer/qtDesignerPlugin.cpp
+    designer/qtDesignerWidgetInterface.cpp
+    ${qtExtensionsDesignerPluginMocSources}
+  )
 
-# target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
-#   ${PROJECT_NAME}
-# )
+  target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
+    ${PROJECT_NAME}
+  )
 
-# install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
-#   COMPONENT Development
-#   DESTINATION lib${LIB_SUFFIX}/qte/plugins/designer
-# )
+  install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
+    COMPONENT Development
+    DESTINATION lib${LIB_SUFFIX}/qte/plugins/designer
+  )
+endif()
 
-# # END qtExtensions designer plugin build rules
+# END qtExtensions designer plugin build rules
 
-# ###############################################################################
+###############################################################################
 
 # BEGIN qtExtensions library python wrapping rules
 
