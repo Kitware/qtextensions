@@ -69,7 +69,8 @@ if(APPLE)
 endif()
 
 # Set compiler flags for exports (e.g. -fvisibility=hidden)
-add_compiler_export_flags()
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 # Set extra compiler flags
 if(NOT MSVC)
