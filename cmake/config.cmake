@@ -19,7 +19,7 @@ endfunction()
 #------------------------------------------------------------------------------
 # Add first of specified flags that is supported by the compiler
 function(qte_add_cxx_flags_priority)
-  string(REPLACE " " ";" initial_flags ${CMAKE_CXX_FLAGS})
+  string(REPLACE " " ";" initial_flags "${CMAKE_CXX_FLAGS}")
   foreach(flag ${ARGN})
     list(FIND initial_flags ${flag} FLAG_INDEX)
     if(NOT FLAG_INDEX EQUAL -1)
