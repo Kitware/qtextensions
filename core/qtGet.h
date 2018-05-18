@@ -41,7 +41,17 @@ auto qtGet(Container& c, Key const& key)
 }
 
 //-----------------------------------------------------------------------------
+#if !(__GNUC__ == 4 && __GNUC_MINOR__ < 9)
+// This explicitly deleted overload exists to prevent users from calling qtGet
+// on a temporary value, which would lead to a dangling reference.
+// Unfortunately, GCC 4.8 has a bug in overload resolution related to r-value
+// references, which causes use of qtGet to be ambiguous if this overload is
+// present. Since it exists only to prevent users from using the function in a
+// broken manner, it isn't necessary for correct use, so just omit it when
+// compiling with GCC 4.8. Correct code will still work; users of GCC 4.8 will
+// just lose out on incorrect code being caught as an error.
 template <typename Container, typename Key>
 void qtGet(Container&& c, Key const& key) = delete;
+#endif
 
 #endif
