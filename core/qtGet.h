@@ -40,8 +40,25 @@ auto qtGet(Container& c, Key const& key)
   return (iter == c.end() ? nullptr : std::addressof(*iter));
 }
 
+// HACK: GCC 4.8 does not properly disambiguate the rvalue overload, so we just
+// disable it.
+#ifdef __GNUC__
+#  if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 9)
+#    define QTE_DECLARE_RVALUE_OVERLOAD 1
+#  else
+#    define QTE_DECLARE_RVALUE_OVERLOAD 0
+#  endif
+#else
+#  define QTE_DECLARE_RVALUE_OVERLOAD 1
+#endif
+
 //-----------------------------------------------------------------------------
+#if QTE_DECLARE_RVALUE_OVERLOAD
 template <typename Container, typename Key>
 void qtGet(Container&& c, Key const& key) = delete;
+#else
+#  warning "Not declaring rvalue overload of qtGet() because you are using a broken version of GCC (4.8 or earlier)."
+#endif
+#undef QTE_DECLARE_RVALUE_OVERLOAD
 
 #endif
