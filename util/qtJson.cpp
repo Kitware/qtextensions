@@ -59,10 +59,6 @@ qtJson::JsonData qtJson::encode(QString value)
       {
       result += QString().sprintf("\\u%04x", c.unicode()).toUtf8();
       }
-    else if (c.unicode() < 128)
-      {
-      result += c.toLatin1();
-      }
     else
       {
       result += QString(c).toUtf8();
