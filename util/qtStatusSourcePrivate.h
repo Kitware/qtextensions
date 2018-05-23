@@ -6,10 +6,17 @@
 
 #include <QObject>
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+#include <QEnableSharedFromThis>
+#endif
+
 #include "qtPointer.h"
 #include "qtStatusSource.h"
 
 class qtStatusSourcePrivate : public QObject
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+                            , public QEnableSharedFromThis<qtStatusSourcePrivate>
+#endif
 {
   Q_OBJECT
 
