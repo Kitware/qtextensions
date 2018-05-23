@@ -214,7 +214,7 @@ set(qtExtensionsInstallHeaders
 
 # BEGIN qtExtensions library build rules
 
-qt4_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
+qte_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
 
 source_group("Generated" FILES
   ${qtExtensionsUiSources}
