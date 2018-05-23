@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -108,9 +108,9 @@ QString mktemp(QString templatePath)
                    fileName.left(fileName.count() - 6);
   QString seed = QUuid::createUuid().toString().toLower();
   seed = seed.remove(QRegExp("[^0123456789abcdef]"));
-  QByteArray suffix = QByteArray::fromHex(seed.toAscii()).toBase64();
+  QByteArray suffix = QByteArray::fromHex(seed.toLatin1()).toBase64();
   suffix = suffix.left(6).replace('/', ',');
-  return prefix + QString::fromAscii(suffix.toLower());
+  return prefix + QString::fromLatin1(suffix.toLower());
 }
 
 }

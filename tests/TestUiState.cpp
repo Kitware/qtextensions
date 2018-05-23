@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -83,14 +83,14 @@ int randomize(int other, int max)
 //-----------------------------------------------------------------------------
 QString randomize(const QString& other)
 {
-  static const char chars[] =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "0123456789,./;'[]\\`-=<>?:\"{}|~!@#$%^&*()_+";
+  static const char16_t chars[] =
+    u"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    u"0123456789,./;'[]\\`-=<>?:\"{}|~!@#$%^&*()_+";
 
   QString data;
   for (int i = qtRand(64); i; --i)
     {
-    data += QChar::fromAscii(chars[qtRand(sizeof(chars) / sizeof(char))]);
+    data += QChar{chars[qtRand(sizeof(chars) / sizeof(*chars))]};
     }
   return (data == other ? randomize(other) : data);
 }
