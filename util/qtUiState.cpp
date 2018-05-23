@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -20,7 +20,6 @@
 #include <QSpinBox>
 #include <QSplitter>
 #include <QStringList>
-#include <QWeakPointer>
 
 QTE_IMPLEMENT_D_FUNC(qtUiState)
 
@@ -162,7 +161,7 @@ public:
   virtual void setValue(const QVariant&);
 
 protected:
-  QWeakPointer<O> object;
+  qtPointer<O> object;
   int version;
   const ReadMethod read;
   const ReadVersionedMethod readVersioned;

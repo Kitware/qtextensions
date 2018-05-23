@@ -131,11 +131,13 @@ set(qtExtensionsInstallHeaders
     core/qtDebugArea.h
     core/qtDebugHelper.h
     core/qtDebugImpl.h
+    core/qtEnableSharedFromThis.h
     core/qtEnumerate.h
     core/qtGlobal.h
     core/qtIndexRange.h
     core/qtMath.h
     core/qtOnce.h
+    core/qtPointer.h
     core/qtScopedValueChange.h
     core/qtStlUtil.h
     core/qtTest.h
@@ -276,7 +278,7 @@ qte_install_library_targets(${PROJECT_NAME} ${PROJECT_NAME}Headers)
 # BEGIN qtExtensions designer plugin build rules
 
 # Explicitly wrap pure interface headers (that don't have source files)
-qt4_wrap_cpp(qtExtensionsDesignerPluginMocSources
+qte_wrap_cpp(qtExtensionsDesignerPluginMocSources
   designer/qtColorButtonInterface.h
   designer/qtDoubleSliderInterface.h
   designer/qtExpanderInterface.h
