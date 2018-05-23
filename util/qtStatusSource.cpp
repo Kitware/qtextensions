@@ -46,7 +46,12 @@ qtStatusSource::qtStatusSource(const qtStatusSource& other)
 
 //-----------------------------------------------------------------------------
 qtStatusSource::qtStatusSource(qtStatusSourcePrivate* d)
-  : d_ptr(QWeakPointer<qtStatusSourcePrivate>(d).toStrongRef())
+  : d_ptr(
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+          d->sharedFromThis())
+#else
+          QWeakPointer<qtStatusSourcePrivate>(d).toStrongRef())
+#endif
 {
 }
 

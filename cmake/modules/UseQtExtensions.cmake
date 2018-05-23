@@ -15,22 +15,23 @@ function(qte_amc_wrap_ui outvar name)
   set_source_files_properties(${outfiles} ${outfile} PROPERTIES GENERATED TRUE)
 
   if (NOT CMAKE_VERSION VERSION_LESS 3.1)
-    if (WIN32)
-      if(NOT DEFINED QT_QMAKE_EXECUTABLE)
-        message(FATAL_ERROR "Qt must be found before using qte_amc_wrap_ui")
-      endif()
+    if(TARGET Qt5::Core)
+      get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
+      get_filename_component(QT_BIN_DIR "${_Qt5_Core_LOCATION}" PATH)
+    elseif(WIN32 AND DEFINED QT_QMAKE_EXECUTABLE)
       get_filename_component(QT_BIN_DIR "${QT_QMAKE_EXECUTABLE}" DIRECTORY)
+    elseif(APPLE AND DEFINED QT_QTCORE_LIBRARY)
+      get_filename_component(QT_BIN_DIR "${QT_QTCORE_LIBRARY}" DIRECTORY)
+    else()
+      message(FATAL_ERROR "Qt must be found before using qte_amc_wrap_ui")
+    endif()
 
+    if(WIN32)
       set(QTE_AMC_ENVIRONMENT
         ${CMAKE_COMMAND} -E env "\"PATH=${QT_BIN_DIR}\\;%PATH%\"")
     elseif (APPLE)
-      if(NOT DEFINED QT_QTCORE_LIBRARY)
-        message(FATAL_ERROR "Qt must be found before using qte_amc_wrap_ui")
-      endif()
-      get_filename_component(QT_LIB_DIR "${QT_QTCORE_LIBRARY}" DIRECTORY)
-
       set(QTE_AMC_ENVIRONMENT
-        ${CMAKE_COMMAND} -E env "\"DYLD_FALLBACK_LIBRARY_PATH=${QT_LIB_DIR}:\${DYLD_FALLBACK_LIBRARY_PATH}\"")
+        ${CMAKE_COMMAND} -E env "\"DYLD_FALLBACK_LIBRARY_PATH=${QT_BIN_DIR}:\${DYLD_FALLBACK_LIBRARY_PATH}\"")
     else()
       # TODO need to set library path?
       set(QTE_AMC_ENVIRONMENT)

@@ -94,7 +94,7 @@ static bool digitsValid(const QString& str, int base = 10)
 //-----------------------------------------------------------------------------
 static bool parseBasicLong(qint64& out, const QString& in)
 {
-  const QByteArray inAscii = in.toAscii();
+  const QByteArray inAscii = in.toLatin1();
 
   const int k = inAscii.length();
   if (k < 1 || !in[0].isDigit())

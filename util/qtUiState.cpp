@@ -20,7 +20,6 @@
 #include <QSpinBox>
 #include <QSplitter>
 #include <QStringList>
-#include <QWeakPointer>
 
 QTE_IMPLEMENT_D_FUNC(qtUiState)
 
@@ -162,7 +161,7 @@ public:
   virtual void setValue(const QVariant&);
 
 protected:
-  QWeakPointer<O> object;
+  qtPointer<O> object;
   int version;
   const ReadMethod read;
   const ReadVersionedMethod readVersioned;

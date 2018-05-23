@@ -136,6 +136,7 @@ set(qtExtensionsInstallHeaders
     core/qtIndexRange.h
     core/qtMath.h
     core/qtOnce.h
+    core/qtPointer.h
     core/qtScopedValueChange.h
     core/qtStlUtil.h
     core/qtTest.h
@@ -213,8 +214,7 @@ set(qtExtensionsInstallHeaders
 ###############################################################################
 
 # BEGIN qtExtensions library build rules
-
-qt4_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
+qte_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
 
 source_group("Generated" FILES
   ${qtExtensionsUiSources}
@@ -275,31 +275,36 @@ qte_install_library_targets(${PROJECT_NAME} ${PROJECT_NAME}Headers)
 
 # BEGIN qtExtensions designer plugin build rules
 
-# Explicitly wrap pure interface headers (that don't have source files)
-qt4_wrap_cpp(qtExtensionsDesignerPluginMocSources
-  designer/qtColorButtonInterface.h
-  designer/qtDoubleSliderInterface.h
-  designer/qtExpanderInterface.h
-  designer/qtOverlayWidgetInterface.h
-  designer/qtProgressWidgetInterface.h
-  designer/qtSqueezedLabelInterface.h
-  designer/qtThrobberInterface.h
-)
+if(NOT (QTE_QT_VERSION VERSION_GREATER "4"))
+  # Explicitly wrap pure interface headers (that don't have source files)
+  set(qtExtensionsDesignerPluginMocHeaders
+    designer/qtColorButtonInterface.h
+    designer/qtDoubleSliderInterface.h
+    designer/qtExpanderInterface.h
+    designer/qtOverlayWidgetInterface.h
+    designer/qtProgressWidgetInterface.h
+    designer/qtSqueezedLabelInterface.h
+    designer/qtThrobberInterface.h
+  )
+  qte_wrap_cpp(qtExtensionsDesignerPluginMocSources
+    ${qtExtensionsDesignerPluginMocHeaders}
+  )
 
-add_library(${PROJECT_NAME}DesignerPlugin MODULE
-  designer/qtDesignerPlugin.cpp
-  designer/qtDesignerWidgetInterface.cpp
-  ${qtExtensionsDesignerPluginMocSources}
-)
+  add_library(${PROJECT_NAME}DesignerPlugin MODULE
+    designer/qtDesignerPlugin.cpp
+    designer/qtDesignerWidgetInterface.cpp
+    ${qtExtensionsDesignerPluginMocSources}
+  )
 
-target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
-  ${PROJECT_NAME}
-)
+  target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
+    ${PROJECT_NAME}
+  )
 
-install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
-  COMPONENT Development
-  DESTINATION lib${LIB_SUFFIX}/qte/plugins/designer
-)
+  install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
+    COMPONENT Development
+    DESTINATION lib${LIB_SUFFIX}/qte/plugins/designer
+  )
+endif()
 
 # END qtExtensions designer plugin build rules
 
