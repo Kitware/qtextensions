@@ -208,11 +208,7 @@ set(qtExtensionsInstallHeaders
 ###############################################################################
 
 # BEGIN qtExtensions library build rules
-if(QTE_QT_VERSION VERSION_GREATER "4")
-  qt5_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
-else()
-  qt4_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
-endif()
+qte_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
 
 source_group("Generated" FILES
   ${qtExtensionsUiSources}
@@ -284,15 +280,9 @@ if(NOT (QTE_QT_VERSION VERSION_GREATER "4"))
     designer/qtSqueezedLabelInterface.h
     designer/qtThrobberInterface.h
   )
-  if(QTE_QT_VERSION VERSION_GREATER "4")
-    qt5_wrap_cpp(qtExtensionsDesignerPluginMocSources
-      ${qtExtensionsDesignerPluginMocHeaders}
-    )
-  else()
-    qt4_wrap_cpp(qtExtensionsDesignerPluginMocSources
-      ${qtExtensionsDesignerPluginMocHeaders}
-    )
-  endif()
+  qte_wrap_cpp(qtExtensionsDesignerPluginMocSources
+    ${qtExtensionsDesignerPluginMocHeaders}
+  )
 
   add_library(${PROJECT_NAME}DesignerPlugin MODULE
     designer/qtDesignerPlugin.cpp
