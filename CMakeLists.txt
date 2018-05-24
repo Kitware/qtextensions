@@ -286,6 +286,7 @@ qte_wrap_cpp(qtExtensionsDesignerPluginMocSources
   designer/qtProgressWidgetInterface.h
   designer/qtSqueezedLabelInterface.h
   designer/qtThrobberInterface.h
+  TARGET ${PROJECT_NAME}DesignerPlugin
 )
 
 add_library(${PROJECT_NAME}DesignerPlugin MODULE
@@ -297,6 +298,16 @@ add_library(${PROJECT_NAME}DesignerPlugin MODULE
 target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
   ${PROJECT_NAME}
 )
+
+if (QTE_QT_VERSION EQUAL 5)
+  target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::Designer
+    Qt5::UiPlugin
+  )
+endif()
 
 install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
   COMPONENT Development
