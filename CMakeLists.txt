@@ -295,6 +295,10 @@ add_library(${PROJECT_NAME}DesignerPlugin MODULE
   ${qtExtensionsDesignerPluginMocSources}
 )
 
+set_property(TARGET ${PROJECT_NAME}DesignerPlugin
+  PROPERTY LIBRARY_OUTPUT_DIRECTORY designer
+)
+
 target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
   ${PROJECT_NAME}
 )
