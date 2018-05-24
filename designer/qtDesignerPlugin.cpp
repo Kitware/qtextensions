@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -13,7 +13,9 @@
 #include "qtSqueezedLabelInterface.h"
 #include "qtThrobberInterface.h"
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(qtExtensionsDesignerPlugin, qtDesignerPlugin)
+#endif
 
 //-----------------------------------------------------------------------------
 qtDesignerPlugin::qtDesignerPlugin(QObject* parent) : QObject(parent)

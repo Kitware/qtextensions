@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -18,6 +18,10 @@ class qtDesignerPlugin : public QObject,
 {
     Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    Q_PLUGIN_METADATA(IID "com.kitware.qtExtensions.qtDesignerPlugin"
+                      FILE "qtDesignerPluginMetaData.json")
+#endif
 
 public:
     typedef QList<QDesignerCustomWidgetInterface*> InterfaceList;
