@@ -1,35 +1,27 @@
 # Doxygen functions for the qtExtensions project
 
-option(QTE_BUILD_DOCUMENTATION "Build API documentation" OFF)
 cmake_dependent_option(QTE_INSTALL_DOCUMENTATION
   "Install documentation" ON
   "QTE_BUILD_DOCUMENTATION" OFF
 )
 
-set(QTE_DOCUMENTATION_RESOURCES ${CMAKE_CURRENT_LIST_DIR})
+###############################################################################
 
-if(QTE_BUILD_DOCUMENTATION)
-  find_package(Doxygen REQUIRED)
-  add_custom_target(doc)
+#------------------------------------------------------------------------------
+# Query a value from qmake
+function(qte_query_qmake var result)
+  execute_process(COMMAND ${QT_QMAKE_EXECUTABLE} -query ${var}
+    RESULT_VARIABLE return_code
+    OUTPUT_VARIABLE output
+    OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
+  if(NOT return_code)
+    file(TO_CMAKE_PATH "${output}" output)
+    set(${result} ${output} PARENT_SCOPE)
+  endif()
+endfunction()
 
-  # Find qhelpgenerator
-  find_program(QHELPGENERATOR_EXECUTABLE qhelpgenerator HINTS ${QT_BINARY_DIR})
-
-  # Find Qt tag file
-  find_file(QT4_TAG_FILE
-    NAMES qt4.tags qt4.tag qt.tags qt.tag
-    PATHS "${QT_DOC_DIR}"
-    PATH_SUFFIXES html
-  )
-
-  set(QT4_EXTRA_TAG_FILE
-    "${CMAKE_BINARY_DIR}/doc/qt4-extra.tag" CACHE INTERNAL
-    "Location of generated file containing additional Doxygen tags for Qt4"
-    FORCE
-  )
-endif()
-
-# Function to create documentation
+#------------------------------------------------------------------------------
+# Create documentation
 #   name - partial name of target (generates targets doxygen-${name}, etc.)
 #   input_dir - directory containing files to use for documentation
 #   ARGN - additional <name>s to use as tag-file dependencies
@@ -40,18 +32,18 @@ function(qte_add_documentation name input_dir)
 
     set(doc_root "${CMAKE_BINARY_DIR}/doc")
     foreach(tag ${ARGN})
-      if("x_${tag}" MATCHES "^x_[Qq][Tt]4?$")
-        if(QT4_TAG_FILE)
-          list(APPEND tag_files "\"${QT4_TAG_FILE}=${QT_DOC_DIR}/html\"")
+      if("x_${tag}" MATCHES "^x_[Qq][Tt][45]?$")
+        if(QT_TAG_FILE)
+          list(APPEND tag_files "\"${QT_TAG_FILE}=${QT_DOC_DIR_FULL}\"")
         else()
           message(WARNING
-            "Documentation for ${name} requested Qt tag file,"
+            "Documentation for ${name} requested Qt tag file, "
             "but Qt tag file was not found."
           )
         endif()
-        set(tag qt4-extra)
-        set(tag_file "${QT4_EXTRA_TAG_FILE}")
-        set(tag_href "${QT_DOC_DIR}/html")
+        set(tag qt-extra)
+        set(tag_file "${QT_EXTRA_TAG_FILE}")
+        set(tag_href "${QT_DOC_DIR_FULL}")
       else()
         set(tag_file "${doc_root}/${tag}/${tag}.tag")
         set(tag_href "../${tag}")
@@ -123,10 +115,10 @@ function(qte_add_documentation name input_dir)
       )
     endif()
 
-    if(QHELPGENERATOR_EXECUTABLE)
+    if(QT_QHELPGENERATOR_EXECUTABLE)
       set(qch_file "${doc_root}/${name}.qch")
       add_custom_target(doxygen-${name}-qch
-        COMMAND "${QHELPGENERATOR_EXECUTABLE}" index.qhp -o "${qch_file}"
+        COMMAND ${QT_QHELPGENERATOR_EXECUTABLE} index.qhp -o "${qch_file}"
         WORKING_DIRECTORY "${doc_dir}"
         DEPENDS doxygen-${name}
         COMMENT "Creating Qt compressed help for ${name}"
@@ -142,3 +134,57 @@ function(qte_add_documentation name input_dir)
     endif()
   endif()
 endfunction()
+
+###############################################################################
+
+set(QTE_DOCUMENTATION_RESOURCES ${CMAKE_CURRENT_LIST_DIR})
+
+if(QTE_BUILD_DOCUMENTATION)
+  find_package(Doxygen REQUIRED)
+  add_custom_target(doc)
+
+  # Find qhelpgenerator
+  if(TARGET Qt5::qhelpgenerator)
+    get_property(QT_QHELPGENERATOR_EXECUTABLE
+      TARGET Qt5::qhelpgenerator
+      PROPERTY IMPORTED_LOCATION
+    )
+  else()
+    find_program(QT_QHELPGENERATOR_EXECUTABLE
+      qhelpgenerator
+      HINTS ${QT_BINARY_DIR})
+  endif()
+
+  if (QTE_QT_VERSION EQUAL 4)
+    # Find Qt4 tag file
+    find_file(QT_TAG_FILE
+      NAMES qt4.tags qt4.tag qt.tags qt.tag
+      PATHS "${QT_DOC_DIR}"
+      PATH_SUFFIXES html
+    )
+  else()
+    # Find Qt5::QtCore tag file
+    if (NOT QT_DOC_DIR)
+      qte_query_qmake(QT_INSTALL_DOCS qt_doc_dir)
+      set(QT_DOC_DIR
+        ${qt_doc_dir}
+        CACHE PATH "The location of the Qt docs" FORCE
+      )
+    endif()
+
+    find_file(QT_TAG_FILE
+      NAMES qtcore.tags
+      PATHS "${QT_DOC_DIR}"
+      PATH_SUFFIXES qtcore
+    )
+  endif()
+  get_filename_component(QT_DOC_DIR_FULL
+    "${QT_TAG_FILE}" DIRECTORY
+  )
+
+  set(QT_EXTRA_TAG_FILE
+    "${CMAKE_BINARY_DIR}/doc/qt-extra.tag" CACHE INTERNAL
+    "Location of generated file containing additional Doxygen tags for Qt"
+    FORCE
+  )
+endif()

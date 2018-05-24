@@ -1,10 +1,11 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
 
 #include <QDebug>
+#include <QDir>
 #include <QDomDocument>
 #include <QFile>
 #include <QStringList>
@@ -107,6 +108,21 @@ QDomNode parseInput(
   QDomDocument html;
   QString error;
   int el, ec;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  // At least Qt 5.9.4 has invalid generated XHTML due to a broken element in
+  // the copyright footer. Work around the problem by correcting the malformed
+  // element before passing the content on to QDomDocument.
+  // See https://bugreports.qt.io/browse/QTBUG-68459.
+  auto content = file.readAll();
+  content.replace("<br>", "<br/>");
+  if (!html.setContent(content, &error, &el, &ec))
+    {
+    qWarning().nospace()
+      << qPrintable(filename) << ':' << el << ':' << ec
+      << ": " << qPrintable(error);
+    return {};
+    }
+#else
   if (!html.setContent(&file, &error, &el, &ec))
     {
     qWarning().nospace()
@@ -114,6 +130,7 @@ QDomNode parseInput(
       << ": " << qPrintable(error);
     return {};
     }
+#endif
 
   QList<QDomElement> title = qtDom::findElements(html, "h1");
   if (title.isEmpty())
@@ -145,6 +162,8 @@ int main(int argc, char** argv)
               qtCliOption::Required);
   options.add("d <dir>", "Location of Qt HTML documentation",
               qtCliOption::Required);
+  options.add("t <file>", "Name of input tag file",
+              "qt.tags", qtCliOption::Required);
   args.addOptions(options);
 
   qtCliOptions nargs;
@@ -154,8 +173,9 @@ int main(int argc, char** argv)
 
   // Parse arguments
   args.parseOrDie();
-  const QString outname = args.value("o");
-  const QString docdir = args.value("d");
+  const auto& outname = args.value("o");
+  const auto& tagfile = args.value("t");
+  const auto docdir = QDir{args.value("d")};
 
   // Create tagfile root
   QDomDocument tags;
@@ -166,14 +186,14 @@ int main(int argc, char** argv)
 
   // Extract enum values
   qDebug() << "Extracting enum values";
-  parseTags(docdir + "/qt.tags", root, tags);
+  parseTags(QDir{docdir}.filePath(tagfile), root, tags);
 
   // Extract tags
   int errors = 0;
   foreach (auto const& tag, args.values("tags"))
     {
     qDebug() << "Extracting tag" << tag;
-    QDomNode node = parseInput(tag, docdir + '/' + tag + ".html", tags);
+    QDomNode node = parseInput(tag, docdir.filePath(tag + ".html"), tags);
     if (node.isNull())
       {
       ++errors;
