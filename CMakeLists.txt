@@ -416,24 +416,24 @@ add_executable(qte-makedoxytag tools/qtMakeDoxyTags.cpp)
 target_link_libraries(qte-makedoxytag ${PROJECT_NAME} ${QT_LIBRARIES})
 
 # List of extra tags (pages) to extract
-set(qt4_extra_tags
+set(qt_extra_tags
   implicit-sharing
 )
 
 # Create dependency list
-set(qt4_extra_tag_files)
-foreach(tag ${qt4_extra_tags})
-  list(APPEND qt4_extra_tag_files "${QT_DOC_DIR}/html/${tag}.html")
+set(qt_extra_tag_files)
+foreach(tag ${qt_extra_tags})
+  list(APPEND qt_extra_tag_files "${QT_DOC_DIR_FULL}/${tag}.html")
 endforeach()
 
 # Add target to generate extra tags file
 add_custom_command(
-  OUTPUT "${QT4_EXTRA_TAG_FILE}"
-  COMMAND qte-makedoxytag -o "${QT4_EXTRA_TAG_FILE}" -d "${QT_DOC_DIR}/html"
-                          ${qt4_extra_tags}
-  DEPENDS qte-makedoxytag ${qt4_extra_tag_files}
+  OUTPUT "${QT_EXTRA_TAG_FILE}"
+  COMMAND qte-makedoxytag -o "${QT_EXTRA_TAG_FILE}" -d "${QT_DOC_DIR_FULL}"
+                          -t "${QT_TAG_FILE}" ${qt_extra_tags}
+  DEPENDS qte-makedoxytag ${qt_extra_tag_files}
 )
-add_custom_target(doxygen-qt4-extra-tag DEPENDS "${QT4_EXTRA_TAG_FILE}")
+add_custom_target(doxygen-qt-extra-tag DEPENDS "${QT_EXTRA_TAG_FILE}")
 
 # END doxytag helper
 

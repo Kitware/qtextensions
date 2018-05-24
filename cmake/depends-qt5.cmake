@@ -23,6 +23,14 @@ foreach(module ${Qt5_LINK_MODULES})
   list(APPEND QT_LIBRARIES Qt5::${module})
 endforeach()
 
+# Find qmake
+unset(QT_QMAKE_EXECUTABLE CACHE)
+
+get_property(QT_QMAKE_EXECUTABLE
+  TARGET Qt5::qmake
+  PROPERTY IMPORTED_LOCATION
+)
+
 # Define version-compatibility macros
 macro(qte_wrap_cpp)
   qt5_wrap_cpp(${ARGN})
