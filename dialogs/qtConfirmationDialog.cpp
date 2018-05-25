@@ -10,6 +10,7 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QSettings>
+#include <QStyle>
 
 #include "../core/qtUtil.h"
 
