@@ -1,23 +1,29 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
+
+#include "qtTest.h"
+
+#include "qtStlUtil.h"
+#include "qtUtil.h"
 
 #include <QFileInfo>
 #include <QRegExp>
 #include <QStack>
 #include <QThreadStorage>
 
-#include "qtStlUtil.h"
-#include "qtTest.h"
-#include "qtUtil.h"
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QMessageLogContext>
+#endif
 
 namespace // anonymous
 {
 
-static void qtMessageHandler(QtMsgType, const char* msg,
-                             qtTest::StreamPointer stream)
+//-----------------------------------------------------------------------------
+static void qtMessageHandler(
+    QtMsgType, QString const& msg, qtTest::StreamPointer stream)
 {
   static QThreadStorage<qtTest::StreamPointer*> ts;
   qtTest::StreamPointer* tsp = ts.localData();
@@ -42,10 +48,25 @@ static void qtMessageHandler(QtMsgType, const char* msg,
     }
 }
 
-static void qtMessageHandler(QtMsgType type, const char* msg)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+
+//-----------------------------------------------------------------------------
+static void qtMessageHandler(
+    QtMsgType type, QMessageLogContext const& context, QString const& msg)
 {
+  Q_UNUSED(context);
   qtMessageHandler(type, msg, qtTest::StreamPointer());
 }
+
+#else
+
+//-----------------------------------------------------------------------------
+static void qtMessageHandler(QtMsgType type, const char* msg)
+{
+  qtMessageHandler(type, QString::fromLocal8Bit(msg), qtTest::StreamPointer());
+}
+
+#endif
 
 } // namespace <anonymous>
 
@@ -101,7 +122,11 @@ void qtTest::init()
   if (!initialized)
     {
     initialized = true;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    qInstallMessageHandler(&qtMessageHandler);
+#else
     qInstallMsgHandler(&qtMessageHandler);
+#endif
     }
 }
 

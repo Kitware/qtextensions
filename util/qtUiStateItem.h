@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -7,10 +7,10 @@
 #ifndef __qtUiStateItem_h
 #define __qtUiStateItem_h
 
+#include "qtPointer.h"
 #include "qtUiState.h"
 
 #include <QVariant>
-#include <QWeakPointer>
 
 //-----------------------------------------------------------------------------
 /// Template utility class to save and restore UI state of an object.
@@ -62,7 +62,7 @@ public:
     virtual void setValue(QVariant const&) QTE_OVERRIDE;
 
 protected:
-    QWeakPointer<O> object;
+    qtPointer<O> object;
     ReadMethod const read;
     WriteRefMethod const writeRef;
     WriteValMethod const writeVal;

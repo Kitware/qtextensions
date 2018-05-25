@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -94,9 +94,9 @@ static bool digitsValid(const QString& str, int base = 10)
 //-----------------------------------------------------------------------------
 static bool parseBasicLong(qint64& out, const QString& in)
 {
-  const QByteArray inAscii = in.toAscii();
+  const QByteArray inLatin1 = in.toLatin1();
 
-  const int k = inAscii.length();
+  const int k = inLatin1.length();
   if (k < 1 || !in[0].isDigit())
     {
     return false;
@@ -104,7 +104,7 @@ static bool parseBasicLong(qint64& out, const QString& in)
 
   char* end;
   errno = 0;
-  out = strtoll(inAscii.constData(), &end, 10);
+  out = strtoll(inLatin1.constData(), &end, 10);
   return (*end == 0 && errno == 0);
 }
 

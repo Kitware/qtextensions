@@ -131,11 +131,13 @@ set(qtExtensionsInstallHeaders
     core/qtDebugArea.h
     core/qtDebugHelper.h
     core/qtDebugImpl.h
+    core/qtEnableSharedFromThis.h
     core/qtEnumerate.h
     core/qtGlobal.h
     core/qtIndexRange.h
     core/qtMath.h
     core/qtOnce.h
+    core/qtPointer.h
     core/qtScopedValueChange.h
     core/qtStlUtil.h
     core/qtTest.h
@@ -214,7 +216,7 @@ set(qtExtensionsInstallHeaders
 
 # BEGIN qtExtensions library build rules
 
-qt4_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
+qte_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
 
 source_group("Generated" FILES
   ${qtExtensionsUiSources}
@@ -275,31 +277,48 @@ qte_install_library_targets(${PROJECT_NAME} ${PROJECT_NAME}Headers)
 
 # BEGIN qtExtensions designer plugin build rules
 
-# Explicitly wrap pure interface headers (that don't have source files)
-qt4_wrap_cpp(qtExtensionsDesignerPluginMocSources
-  designer/qtColorButtonInterface.h
-  designer/qtDoubleSliderInterface.h
-  designer/qtExpanderInterface.h
-  designer/qtOverlayWidgetInterface.h
-  designer/qtProgressWidgetInterface.h
-  designer/qtSqueezedLabelInterface.h
-  designer/qtThrobberInterface.h
-)
+if(QTE_BUILD_DESIGNER_PLUGIN)
+  # Explicitly wrap pure interface headers (that don't have source files)
+  qte_wrap_cpp(qtExtensionsDesignerPluginMocSources
+    designer/qtColorButtonInterface.h
+    designer/qtDoubleSliderInterface.h
+    designer/qtExpanderInterface.h
+    designer/qtOverlayWidgetInterface.h
+    designer/qtProgressWidgetInterface.h
+    designer/qtSqueezedLabelInterface.h
+    designer/qtThrobberInterface.h
+    TARGET ${PROJECT_NAME}DesignerPlugin
+  )
 
-add_library(${PROJECT_NAME}DesignerPlugin MODULE
-  designer/qtDesignerPlugin.cpp
-  designer/qtDesignerWidgetInterface.cpp
-  ${qtExtensionsDesignerPluginMocSources}
-)
+  add_library(${PROJECT_NAME}DesignerPlugin MODULE
+    designer/qtDesignerPlugin.cpp
+    designer/qtDesignerWidgetInterface.cpp
+    ${qtExtensionsDesignerPluginMocSources}
+  )
 
-target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
-  ${PROJECT_NAME}
-)
+  set_property(TARGET ${PROJECT_NAME}DesignerPlugin
+    PROPERTY LIBRARY_OUTPUT_DIRECTORY designer
+  )
 
-install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
-  COMPONENT Development
-  DESTINATION lib${LIB_SUFFIX}/qte/plugins/designer
-)
+  target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
+    ${PROJECT_NAME}
+  )
+
+  if (QTE_QT_VERSION EQUAL 5)
+    target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
+      Qt5::Core
+      Qt5::Gui
+      Qt5::Widgets
+      Qt5::Designer
+      Qt5::UiPlugin
+    )
+  endif()
+
+  install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
+    COMPONENT Development
+    DESTINATION lib${LIB_SUFFIX}/qte/plugins/designer
+  )
+endif()
 
 # END qtExtensions designer plugin build rules
 
@@ -414,24 +433,24 @@ add_executable(qte-makedoxytag tools/qtMakeDoxyTags.cpp)
 target_link_libraries(qte-makedoxytag ${PROJECT_NAME} ${QT_LIBRARIES})
 
 # List of extra tags (pages) to extract
-set(qt4_extra_tags
+set(qt_extra_tags
   implicit-sharing
 )
 
 # Create dependency list
-set(qt4_extra_tag_files)
-foreach(tag ${qt4_extra_tags})
-  list(APPEND qt4_extra_tag_files "${QT_DOC_DIR}/html/${tag}.html")
+set(qt_extra_tag_files)
+foreach(tag ${qt_extra_tags})
+  list(APPEND qt_extra_tag_files "${QT_DOC_DIR_FULL}/${tag}.html")
 endforeach()
 
 # Add target to generate extra tags file
 add_custom_command(
-  OUTPUT "${QT4_EXTRA_TAG_FILE}"
-  COMMAND qte-makedoxytag -o "${QT4_EXTRA_TAG_FILE}" -d "${QT_DOC_DIR}/html"
-                          ${qt4_extra_tags}
-  DEPENDS qte-makedoxytag ${qt4_extra_tag_files}
+  OUTPUT "${QT_EXTRA_TAG_FILE}"
+  COMMAND qte-makedoxytag -o "${QT_EXTRA_TAG_FILE}" -d "${QT_DOC_DIR_FULL}"
+                          -t "${QT_TAG_FILE}" ${qt_extra_tags}
+  DEPENDS qte-makedoxytag ${qt_extra_tag_files}
 )
-add_custom_target(doxygen-qt4-extra-tag DEPENDS "${QT4_EXTRA_TAG_FILE}")
+add_custom_target(doxygen-qt-extra-tag DEPENDS "${QT_EXTRA_TAG_FILE}")
 
 # END doxytag helper
 
