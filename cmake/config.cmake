@@ -71,6 +71,7 @@ cmake_dependent_option(
 )
 
 option(QTE_BUILD_DOCUMENTATION "Build API documentation" OFF)
+option(QTE_BUILD_DESIGNER_PLUGIN "Build plugin for Designer" ON)
 
 # Use RPATH on OS/X
 if(APPLE)

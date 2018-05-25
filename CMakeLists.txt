@@ -277,46 +277,48 @@ qte_install_library_targets(${PROJECT_NAME} ${PROJECT_NAME}Headers)
 
 # BEGIN qtExtensions designer plugin build rules
 
-# Explicitly wrap pure interface headers (that don't have source files)
-qte_wrap_cpp(qtExtensionsDesignerPluginMocSources
-  designer/qtColorButtonInterface.h
-  designer/qtDoubleSliderInterface.h
-  designer/qtExpanderInterface.h
-  designer/qtOverlayWidgetInterface.h
-  designer/qtProgressWidgetInterface.h
-  designer/qtSqueezedLabelInterface.h
-  designer/qtThrobberInterface.h
-  TARGET ${PROJECT_NAME}DesignerPlugin
-)
+if(QTE_BUILD_DESIGNER_PLUGIN)
+  # Explicitly wrap pure interface headers (that don't have source files)
+  qte_wrap_cpp(qtExtensionsDesignerPluginMocSources
+    designer/qtColorButtonInterface.h
+    designer/qtDoubleSliderInterface.h
+    designer/qtExpanderInterface.h
+    designer/qtOverlayWidgetInterface.h
+    designer/qtProgressWidgetInterface.h
+    designer/qtSqueezedLabelInterface.h
+    designer/qtThrobberInterface.h
+    TARGET ${PROJECT_NAME}DesignerPlugin
+  )
 
-add_library(${PROJECT_NAME}DesignerPlugin MODULE
-  designer/qtDesignerPlugin.cpp
-  designer/qtDesignerWidgetInterface.cpp
-  ${qtExtensionsDesignerPluginMocSources}
-)
+  add_library(${PROJECT_NAME}DesignerPlugin MODULE
+    designer/qtDesignerPlugin.cpp
+    designer/qtDesignerWidgetInterface.cpp
+    ${qtExtensionsDesignerPluginMocSources}
+  )
 
-set_property(TARGET ${PROJECT_NAME}DesignerPlugin
-  PROPERTY LIBRARY_OUTPUT_DIRECTORY designer
-)
+  set_property(TARGET ${PROJECT_NAME}DesignerPlugin
+    PROPERTY LIBRARY_OUTPUT_DIRECTORY designer
+  )
 
-target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
-  ${PROJECT_NAME}
-)
-
-if (QTE_QT_VERSION EQUAL 5)
   target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::Designer
-    Qt5::UiPlugin
+    ${PROJECT_NAME}
+  )
+
+  if (QTE_QT_VERSION EQUAL 5)
+    target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
+      Qt5::Core
+      Qt5::Gui
+      Qt5::Widgets
+      Qt5::Designer
+      Qt5::UiPlugin
+    )
+  endif()
+
+  install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
+    COMPONENT Development
+    DESTINATION lib${LIB_SUFFIX}/qte/plugins/designer
   )
 endif()
-
-install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
-  COMPONENT Development
-  DESTINATION lib${LIB_SUFFIX}/qte/plugins/designer
-)
 
 # END qtExtensions designer plugin build rules
 

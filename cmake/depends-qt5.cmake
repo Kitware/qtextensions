@@ -4,11 +4,14 @@ set(Qt5_LINK_MODULES
   Xml
 )
 
-set(Qt5_REQUIRED_MODULES
-  ${Qt5_LINK_MODULES}
-  Designer
-  UiPlugin
-)
+set(Qt5_REQUIRED_MODULES ${Qt5_LINK_MODULES})
+
+if(QTE_BUILD_DESIGNER_PLUGIN)
+  list(APPEND Qt5_REQUIRED_MODULES
+    Designer
+    UiPlugin
+  )
+endif()
 
 if(QTE_BUILD_DOCUMENTATION)
   list(APPEND Qt5_REQUIRED_MODULES Help)
