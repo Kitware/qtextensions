@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -27,123 +27,123 @@ QTE_IMPLEMENT_D_FUNC(qtSqueezedLabel)
 class qtSqueezedLabelPrivate
 {
 public:
-  qtSqueezedLabelPrivate() : cacheBackground(false)
-    { this->invalidate(0); }
+    qtSqueezedLabelPrivate()
+    { this->invalidate(nullptr); }
 
-  bool isValid(const QString& text);
+    bool isValid(QString const& text);
 
-  void invalidate(QWidget* self);
-  void recalculate(const QSize&, const QFontMetrics&);
+    void invalidate(QWidget* self);
+    void recalculate(QSize const&, QFontMetrics const&);
 
-  static QString ellipsis();
+    static QString ellipsis();
 
-  QString cachedText;
-  QString fullText;
-  qtSqueezedLabel::ElideMode elideMode;
+    QString cachedText;
+    QString fullText;
+    qtSqueezedLabel::ElideMode elideMode;
 
-  bool cacheBackground;
-  QImage background;
+    bool cacheBackground = false;
+    QImage background;
 
-  int fadeWidth;
-  int offset, length;
-  bool elided;
+    int fadeWidth;
+    int offset, length;
+    bool elided;
 };
 
 //-----------------------------------------------------------------------------
-bool qtSqueezedLabelPrivate::isValid(const QString& text)
+bool qtSqueezedLabelPrivate::isValid(QString const& text)
 {
-  return (length >= 0 && text == this->cachedText);
+    return (length >= 0 && text == this->cachedText);
 }
 
 //-----------------------------------------------------------------------------
 void qtSqueezedLabelPrivate::invalidate(QWidget* self)
 {
-  this->offset = -1;
-  this->length = -1;
-  this->elided = true;
+    this->offset = -1;
+    this->length = -1;
+    this->elided = true;
 
-  if (self)
+    if (self)
     {
-    // Prepare to repaint our underlay background
-    this->background =
-      QImage(self->size(), QImage::Format_ARGB32_Premultiplied);
-    qtScopedValueChange<bool> cb(this->cacheBackground, true);
+        // Prepare to repaint our underlay background
+        this->background =
+            QImage{self->size(), QImage::Format_ARGB32_Premultiplied};
+        qtScopedValueChange<bool> cb{this->cacheBackground, true};
 
-    // Calculate our rect relative to our top level widget
-    QWidget* tlw = self->topLevelWidget();
-    QRect rect = self->rect();
-    rect.setTopLeft(self->mapTo(tlw, rect.topLeft()));
-    rect.setBottomRight(self->mapTo(tlw, rect.bottomRight()));
+        // Calculate our rect relative to our top level widget
+        auto* const tlw = self->topLevelWidget();
+        auto rect = self->rect();
+        rect.setTopLeft(self->mapTo(tlw, rect.topLeft()));
+        rect.setBottomRight(self->mapTo(tlw, rect.bottomRight()));
 
-    // Render underlay background
-    tlw->render(&this->background, QPoint(), rect);
+        // Render underlay background
+        tlw->render(&this->background, QPoint{}, rect);
     }
 }
 
 //-----------------------------------------------------------------------------
 void qtSqueezedLabelPrivate::recalculate(
-  const QSize& size, const QFontMetrics& fm)
+    QSize const& size, QFontMetrics const& fm)
 {
-  // Check if text fits
-  const int fullWidth = fm.width(this->cachedText);
-  if (fullWidth <= size.width())
+    // Check if text fits
+    auto const fullWidth = fm.width(this->cachedText);
+    if (fullWidth <= size.width())
     {
-    this->length = this->cachedText.length();
-    this->offset = 0;
-    this->elided = false;
-    return;
+        this->length = this->cachedText.length();
+        this->offset = 0;
+        this->elided = false;
+        return;
     }
 
-  this->elided = true;
+    this->elided = true;
 
-  // How are we eliding?
-  if (elideMode.testFlag(qtSqueezedLabel::ElideFade))
+    // How are we eliding?
+    if (elideMode.testFlag(qtSqueezedLabel::ElideFade))
     {
-    this->fadeWidth = fm.height() * 3;
+        this->fadeWidth = fm.height() * 3;
 
-    // \TODO support modes other then ElideEnd
-    const int availableWidth = size.width();
+        // \TODO support modes other then ElideEnd
+        auto const availableWidth = size.width();
 
-    // Determine number of characters needed to fill label
-    this->offset = 0;
-    this->length = 0;
-    int width = 0;
-    while (width < availableWidth)
-      {
-      ++this->length;
-      width = fm.width(this->cachedText, this->length);
-      }
+        // Determine number of characters needed to fill label
+        this->offset = 0;
+        this->length = 0;
+        int width = 0;
+        while (width < availableWidth)
+        {
+            ++this->length;
+            width = fm.width(this->cachedText, this->length);
+        }
     }
-  else
+    else
     {
-    // \TODO support modes other then ElideEnd
-    const int availableWidth =
-      size.width() - fm.width(qtSqueezedLabelPrivate::ellipsis());
-    if (availableWidth < 0)
-      {
-      // Nothing at all fits... will only happen if we are smaller than our
-      // minimumSizeHint(), but deal with it
-      this->length = 0;
-      this->offset = 0;
-      return;
-      }
+        // \TODO support modes other then ElideEnd
+        auto const availableWidth =
+            size.width() - fm.width(qtSqueezedLabelPrivate::ellipsis());
+        if (availableWidth <= 0)
+        {
+            // Nothing at all fits... will only happen if we are smaller than
+            // our minimumSizeHint(), but deal with it
+            this->length = 0;
+            this->offset = 0;
+            return;
+        }
 
-    // Determine maximum number of characters that can fit
-    this->offset = 0;
-    this->length = this->fullText.length();
-    int width = fullWidth;
-    while (width > availableWidth)
-      {
-      --this->length;
-      width = fm.width(this->cachedText, this->length);
-      }
+        // Determine maximum number of characters that can fit
+        this->offset = 0;
+        this->length = this->fullText.length();
+        auto width = fullWidth;
+        while (width > availableWidth)
+        {
+            --this->length;
+            width = fm.width(this->cachedText, this->length);
+        }
     }
 }
 
 //-----------------------------------------------------------------------------
 QString qtSqueezedLabelPrivate::ellipsis()
 {
-  return QString::fromUtf8("\xe2\x80\xa6");
+    return QString::fromUtf8("\xe2\x80\xa6");
 }
 
 //END qtSqueezedLabelPrivate
@@ -154,19 +154,19 @@ QString qtSqueezedLabelPrivate::ellipsis()
 
 //-----------------------------------------------------------------------------
 qtSqueezedLabel::qtSqueezedLabel(QWidget* parent, Qt::WindowFlags f)
-  : QLabel(parent, f), d_ptr(new qtSqueezedLabelPrivate)
+    : QLabel{parent, f}, d_ptr{new qtSqueezedLabelPrivate}
 {
-  QTE_D(qtSqueezedLabel);
-  d->elideMode = ElideEnd;
+    QTE_D();
+    d->elideMode = ElideEnd;
 }
 
 //-----------------------------------------------------------------------------
 qtSqueezedLabel::qtSqueezedLabel(
-  const QString& text, QWidget* parent, Qt::WindowFlags f)
-  : QLabel(text, parent, f), d_ptr(new qtSqueezedLabelPrivate)
+    QString const& text, QWidget* parent, Qt::WindowFlags f)
+    : QLabel{text, parent, f}, d_ptr{new qtSqueezedLabelPrivate}
 {
-  QTE_D(qtSqueezedLabel);
-  d->elideMode = ElideEnd;
+    QTE_D();
+    d->elideMode = ElideEnd;
 }
 
 //-----------------------------------------------------------------------------
@@ -177,262 +177,251 @@ qtSqueezedLabel::~qtSqueezedLabel()
 //-----------------------------------------------------------------------------
 qtSqueezedLabel::ElideMode qtSqueezedLabel::elideMode() const
 {
-  QTE_D_CONST(qtSqueezedLabel);
-  return d->elideMode;
+    QTE_D();
+    return d->elideMode;
 }
 
 //-----------------------------------------------------------------------------
 void qtSqueezedLabel::setElideMode(qtSqueezedLabel::ElideMode mode)
 {
-  QTE_D(qtSqueezedLabel);
-  if (d->elideMode != mode)
+    QTE_D();
+    if (d->elideMode != mode)
     {
-    d->elideMode = mode;
-    d->length = -1;
-    this->update();
+        d->elideMode = mode;
+        d->length = -1;
+        this->update();
     }
 }
 
 //-----------------------------------------------------------------------------
 QString qtSqueezedLabel::fullText() const
 {
-  QTE_D_CONST(qtSqueezedLabel);
-  return (d->fullText.isNull() ? this->text() : d->fullText);
+    QTE_D();
+    return (d->fullText.isNull() ? this->text() : d->fullText);
 }
 
 //-----------------------------------------------------------------------------
-void qtSqueezedLabel::setFullText(const QString& text)
+void qtSqueezedLabel::setFullText(QString const& text)
 {
-  QTE_D(qtSqueezedLabel);
-  d->fullText = text;
+    QTE_D();
+    d->fullText = text;
 }
 
 //-----------------------------------------------------------------------------
 void qtSqueezedLabel::setText(
-  const QString& text, qtSqueezedLabel::SetTextMode mode)
+    QString const& text, qtSqueezedLabel::SetTextMode mode)
 {
-  this->setText(mode.testFlag(SimplifyText) ? text.simplified() : text);
-  if (mode.testFlag(SetFullText))
-    {
-    this->setFullText(text);
-    }
-  if (mode.testFlag(SetToolTip))
-    {
-    this->setToolTip(text);
-    }
+    this->setText(mode.testFlag(SimplifyText) ? text.simplified() : text);
+    if (mode.testFlag(SetFullText))
+        this->setFullText(text);
+    if (mode.testFlag(SetToolTip))
+        this->setToolTip(text);
 }
 
 //-----------------------------------------------------------------------------
-void qtSqueezedLabel::setToolTip(const QString& text, SetToolTipMode mode)
+void qtSqueezedLabel::setToolTip(QString const& text, SetToolTipMode mode)
 {
-  if (mode.testFlag(PlainText))
+    if (mode.testFlag(PlainText))
     {
-    QString formattedText = Qt::convertFromPlainText(text);
-    if (mode.testFlag(AutoWrap))
-      {
-      const QRegExp re(QString::fromUtf8("(\xc2\xa0*)\xc2\xa0"));
-      formattedText.replace(re, "\\1 ");
-      }
-    this->setToolTip(formattedText);
+        auto formattedText = Qt::convertFromPlainText(text);
+        if (mode.testFlag(AutoWrap))
+        {
+            auto const re = QRegExp{QString::fromUtf8("(\xc2\xa0*)\xc2\xa0")};
+            formattedText.replace(re, "\\1 ");
+        }
+        this->setToolTip(formattedText);
     }
-  else
+    else
     {
-    this->setToolTip(text);
+        this->setToolTip(text);
     }
 }
 
 //-----------------------------------------------------------------------------
 void qtSqueezedLabel::copy()
 {
-  qApp->clipboard()->setText(this->fullText());
+    qApp->clipboard()->setText(this->fullText());
 }
 
 //-----------------------------------------------------------------------------
 QSize qtSqueezedLabel::minimumSizeHint() const
 {
-  const QString& text = this->text();
-  if (text.isEmpty())
-    {
-    return {0, 0};
-    }
+    QString const& text = this->text();
+    if (text.isEmpty())
+        return {0, 0};
 
-  QTE_D_CONST(qtSqueezedLabel);
+    QTE_D();
 
-  const QFontMetrics& fm = this->fontMetrics();
+    QFontMetrics const& fm = this->fontMetrics();
 
-  // Calculate minimum width; lesser of full text (in case it is very short) or
-  // enough to elide the text
-  int width = fm.width(text);
-  if (d->elideMode.testFlag(ElideFade))
+    // Calculate minimum width; lesser of full text (in case it is very short)
+    // or enough to elide the text
+    auto width = fm.width(text);
+    if (d->elideMode.testFlag(ElideFade))
     {
-    // Fade minimum size is 3x height
-    width = qMin(width, fm.height() * 3);
+        // Fade minimum size is 3x height
+        width = qMin(width, fm.height() * 3);
     }
-  else
+    else
     {
-    // Ellipsis minimum size is enough to show just the ellipsis
-    width = qMin(width, fm.width(qtSqueezedLabelPrivate::ellipsis()));
+        // Ellipsis minimum size is enough to show just the ellipsis
+        width = qMin(width, fm.width(qtSqueezedLabelPrivate::ellipsis()));
     }
-  return {width, fm.height()};
+    return {width, fm.height()};
 }
 
 //-----------------------------------------------------------------------------
 bool qtSqueezedLabel::event(QEvent* e)
 {
-  if (e->type() == QEvent::WindowActivate ||
-      e->type() == QEvent::WindowDeactivate)
+    if (e->type() == QEvent::WindowActivate ||
+        e->type() == QEvent::WindowDeactivate)
     {
-    QTE_D(qtSqueezedLabel);
-    d->invalidate(this);
+        QTE_D();
+        d->invalidate(this);
     }
 
-  return QLabel::event(e);
+    return QLabel::event(e);
 }
 
 
 //-----------------------------------------------------------------------------
 void qtSqueezedLabel::changeEvent(QEvent* e)
 {
-  if (e->type() == QEvent::FontChange || e->type() == QEvent::EnabledChange)
+    if (e->type() == QEvent::FontChange || e->type() == QEvent::EnabledChange)
     {
-    QTE_D(qtSqueezedLabel);
-    d->invalidate(this);
+        QTE_D();
+        d->invalidate(this);
     }
 
-  QLabel::changeEvent(e);
+    QLabel::changeEvent(e);
 }
 
 //-----------------------------------------------------------------------------
 void qtSqueezedLabel::contextMenuEvent(QContextMenuEvent* e)
 {
-  if (this->contextMenuPolicy() == Qt::DefaultContextMenu)
+    if (this->contextMenuPolicy() == Qt::DefaultContextMenu)
     {
-    QMenu* menu = new QMenu(this);
-    menu->setAttribute(Qt::WA_DeleteOnClose);
+        auto* const menu = new QMenu(this);
+        menu->setAttribute(Qt::WA_DeleteOnClose);
 
-    QAction* action = menu->addAction("&Copy Full Text");
-    action->setEnabled(!this->fullText().isEmpty());
-    connect(action, SIGNAL(triggered()), this, SLOT(copy()));
+        auto* const action = menu->addAction("&Copy Full Text");
+        action->setEnabled(!this->fullText().isEmpty());
+        connect(action, SIGNAL(triggered()), this, SLOT(copy()));
 
-    menu->popup(e->globalPos());
-    e->accept();
-    return;
+        menu->popup(e->globalPos());
+        e->accept();
+        return;
     }
 
-  QLabel::contextMenuEvent(e);
+    QLabel::contextMenuEvent(e);
 }
 
 //-----------------------------------------------------------------------------
 void qtSqueezedLabel::moveEvent(QMoveEvent* e)
 {
-  QTE_D(qtSqueezedLabel);
+    QTE_D();
 
-  // Parent render calls move; don't get stuck in a recursion loop!
-  if (!d->cacheBackground)
-    {
-    d->invalidate(this);
-    }
+    // Parent render calls move; don't get stuck in a recursion loop!
+    if (!d->cacheBackground)
+        d->invalidate(this);
 
-  QLabel::moveEvent(e);
+    QLabel::moveEvent(e);
 }
 
 //-----------------------------------------------------------------------------
 void qtSqueezedLabel::resizeEvent(QResizeEvent* e)
 {
-  QTE_D(qtSqueezedLabel);
+    QTE_D();
 
-  // Parent render calls resize; don't get stuck in a recursion loop!
-  if (!d->cacheBackground)
-    {
-    d->invalidate(this);
-    }
+    // Parent render calls resize; don't get stuck in a recursion loop!
+    if (!d->cacheBackground)
+        d->invalidate(this);
 
-  QLabel::resizeEvent(e);
+    QLabel::resizeEvent(e);
 }
 
 //-----------------------------------------------------------------------------
 void qtSqueezedLabel::paintEvent(QPaintEvent* e)
 {
-  QTE_D(qtSqueezedLabel);
+    QTE_D();
 
-  // Do nothing if drawing background for cache
-  if (d->cacheBackground)
+    // Do nothing if drawing background for cache
+    if (d->cacheBackground)
+        return;
+
+    // If invalid, or text has changed, recalculate portion to elide
+    QString const& text = this->text();
+    if (!d->isValid(text))
     {
-    return;
+        d->cachedText = text;
+        d->recalculate(this->size(), this->fontMetrics());
     }
 
-  // If invalid, or text has changed, recalculate portion to elide
-  const QString& text = this->text();
-  if (!d->isValid(text))
+    // Check if text fits
+    if (!d->elided)
     {
-    d->cachedText = text;
-    d->recalculate(this->size(), this->fontMetrics());
+        // If so, let ordinary label handle the painting
+        QLabel::paintEvent(e);
+        return;
     }
 
-  // Check if text fits
-  if (!d->elided)
+    e->accept();
+
+    // Prepare to paint text
+    QStyle* style = this->style();
+    QPainter painter(this);
+
+    Qt::Alignment const align =
+        QStyle::visualAlignment(this->layoutDirection(), this->alignment());
+    QPalette::ColorRole const role = this->foregroundRole();
+
+    QStyleOption opt;
+    opt.initFrom(this);
+
+    // Paint text
+    if (d->elideMode.testFlag(ElideFade))
     {
-    // If so, let ordinary label handle the painting
-    QLabel::paintEvent(e);
-    return;
+        auto const& rect = this->rect();
+        auto const width = rect.width();
+        auto const& elidedText = text.mid(d->offset, d->length);
+
+        // Draw text
+        style->drawItemText(&painter, rect, align, opt.palette,
+                            this->isEnabled(), elidedText, role);
+
+        // Set up fade gradient
+        int x1, x2;
+        if (align.testFlag(Qt::AlignLeft))
+        {
+            x1 = qMax(0, width - d->fadeWidth);
+            x2 = width;
+        }
+        else
+        {
+            x1 = qMin(width, d->fadeWidth);
+            x2 = 0;
+        }
+        QLinearGradient grad(x1, 0, x2, 0);
+        grad.setColorAt(0.0, Qt::transparent);
+        grad.setColorAt(0.9, Qt::black);
+
+        // Fade out background for overpainting
+        QImage fadeImage(d->background);
+        QBrush brush(grad);
+        QPainter imagePainter(&fadeImage);
+        imagePainter.setCompositionMode(
+            QPainter::CompositionMode_DestinationIn);
+        imagePainter.fillRect(0, 0, rect.width(), rect.height(), brush);
+
+        // Fade out text by overpainting with blended fade image
+        painter.drawImage(rect.topLeft(), fadeImage);
     }
-
-  e->accept();
-
-  // Prepare to paint text
-  QStyle* style = this->style();
-  QPainter painter(this);
-
-  const Qt::Alignment align =
-    QStyle::visualAlignment(this->layoutDirection(), this->alignment());
-  const QPalette::ColorRole role = this->foregroundRole();
-
-  QStyleOption opt;
-  opt.initFrom(this);
-
-  // Paint text
-  if (d->elideMode.testFlag(ElideFade))
-    {
-    const QRect rect = this->rect();
-    const int width = rect.width();
-    const QString elidedText = text.mid(d->offset, d->length);
-
-    // Draw text
-    style->drawItemText(&painter, rect, align, opt.palette,
-                        this->isEnabled(), elidedText, role);
-
-    // Set up fade gradient
-    int x1, x2;
-    if (align.testFlag(Qt::AlignLeft))
-      {
-      x1 = qMax(0, width - d->fadeWidth);
-      x2 = width;
-      }
     else
-      {
-      x1 = qMin(width, d->fadeWidth);
-      x2 = 0;
-      }
-    QLinearGradient grad(x1, 0, x2, 0);
-    grad.setColorAt(0.0, Qt::transparent);
-    grad.setColorAt(0.9, Qt::black);
-
-    // Fade out background for overpainting
-    QImage fadeImage(d->background);
-    QBrush brush(grad);
-    QPainter imagePainter(&fadeImage);
-    imagePainter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-    imagePainter.fillRect(0, 0, rect.width(), rect.height(), brush);
-
-    // Fade out text by overpainting with blended fade image
-    painter.drawImage(rect.topLeft(), fadeImage);
-    }
-  else
     {
-    const QString elidedText =
-      text.mid(d->offset, d->length) + qtSqueezedLabelPrivate::ellipsis();
-    style->drawItemText(&painter, this->rect(), align, opt.palette,
-                        this->isEnabled(), elidedText, role);
+        auto const& elidedText =
+            text.mid(d->offset, d->length) + qtSqueezedLabelPrivate::ellipsis();
+        style->drawItemText(&painter, this->rect(), align, opt.palette,
+                            this->isEnabled(), elidedText, role);
     }
 }
 

@@ -26,8 +26,8 @@ template <typename Container, typename Key>
 auto qtGet(Container const& c, Key const& key)
     -> decltype(std::addressof(*c.find(key)))
 {
-  auto const iter = c.find(key);
-  return (iter == c.end() ? nullptr : std::addressof(*iter));
+    auto const iter = c.find(key);
+    return (iter == c.end() ? nullptr : std::addressof(*iter));
 }
 
 //-----------------------------------------------------------------------------
@@ -36,8 +36,8 @@ template <typename Container, typename Key>
 auto qtGet(Container& c, Key const& key)
     -> decltype(std::addressof(*c.find(key)))
 {
-  auto const iter = c.find(key);
-  return (iter == c.end() ? nullptr : std::addressof(*iter));
+    auto const iter = c.find(key);
+    return (iter == c.end() ? nullptr : std::addressof(*iter));
 }
 
 //-----------------------------------------------------------------------------
