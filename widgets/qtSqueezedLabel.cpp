@@ -130,9 +130,9 @@ void qtSqueezedLabelPrivate::recalculate(
 
         // Determine maximum number of characters that can fit
         this->offset = 0;
-        this->length = this->fullText.length();
+        this->length = this->cachedText.length();
         auto width = fullWidth;
-        while (width > availableWidth)
+        while (this->length > 0 && width > availableWidth)
         {
             --this->length;
             width = fm.width(this->cachedText, this->length);
