@@ -66,6 +66,8 @@ public:
 
     virtual QSize minimumSizeHint() const;
 
+    void setTextMargins(qreal leftMargin, qreal rightMargin);
+
 public slots:
     void setFullText(QString const&);
     void copy();

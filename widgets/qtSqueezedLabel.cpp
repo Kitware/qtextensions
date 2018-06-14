@@ -35,6 +35,11 @@ public:
     void invalidate(QWidget* self);
     void recalculate(QSize const&, QFontMetrics const&);
 
+    int marginsWidth(QFontMetrics const&) const;
+    QRect contentsRect(QRect const&, QFontMetrics const&) const;
+
+    QString elidedText(QString const& text) const;
+
     static QString ellipsis();
 
     QString cachedText;
@@ -43,6 +48,9 @@ public:
 
     bool cacheBackground = false;
     QImage background;
+
+    qreal marginLeft = 0.0;
+    qreal marginRight = 0.0;
 
     int fadeWidth;
     int offset, length;
@@ -86,7 +94,8 @@ void qtSqueezedLabelPrivate::recalculate(
 {
     // Check if text fits
     auto const fullWidth = fm.width(this->cachedText);
-    if (fullWidth <= size.width())
+    auto const availableWidth = size.width() - this->marginsWidth(fm);
+    if (fullWidth <= availableWidth)
     {
         this->length = this->cachedText.length();
         this->offset = 0;
@@ -102,7 +111,6 @@ void qtSqueezedLabelPrivate::recalculate(
         this->fadeWidth = fm.height() * 3;
 
         // \TODO support modes other then ElideEnd
-        auto const availableWidth = size.width();
 
         // Determine number of characters needed to fill label
         this->offset = 0;
@@ -117,9 +125,9 @@ void qtSqueezedLabelPrivate::recalculate(
     else
     {
         // \TODO support modes other then ElideEnd
-        auto const availableWidth =
-            size.width() - fm.width(qtSqueezedLabelPrivate::ellipsis());
-        if (availableWidth <= 0)
+        auto const ellipsisWidth =
+            fm.width(qtSqueezedLabelPrivate::ellipsis());
+        if (availableWidth <= ellipsisWidth)
         {
             // Nothing at all fits... will only happen if we are smaller than
             // our minimumSizeHint(), but deal with it
@@ -131,13 +139,43 @@ void qtSqueezedLabelPrivate::recalculate(
         // Determine maximum number of characters that can fit
         this->offset = 0;
         this->length = this->cachedText.length();
-        auto width = fullWidth;
+        auto width = fullWidth + ellipsisWidth;
         while (this->length > 0 && width > availableWidth)
         {
             --this->length;
-            width = fm.width(this->cachedText, this->length);
+            width = fm.width(this->cachedText, this->length) + ellipsisWidth;
         }
     }
+}
+
+//-----------------------------------------------------------------------------
+QString qtSqueezedLabelPrivate::elidedText(QString const& text) const
+{
+    if (!this->elided)
+        return text;
+
+    if (this->elideMode.testFlag(qtSqueezedLabel::ElideFade))
+        return text.mid(this->offset, this->length);
+    else
+        return text.mid(this->offset, this->length) + this->ellipsis();
+}
+
+//-----------------------------------------------------------------------------
+int qtSqueezedLabelPrivate::marginsWidth(QFontMetrics const& fm) const
+{
+    auto const margins = this->marginLeft + this->marginRight;
+    return static_cast<int>(static_cast<qreal>(fm.height()) * margins);
+}
+
+//-----------------------------------------------------------------------------
+QRect qtSqueezedLabelPrivate::contentsRect(
+    QRect const& rect, QFontMetrics const& fm) const
+{
+    auto const m = static_cast<qreal>(fm.height());
+    auto const ml = static_cast<int>(m * this->marginLeft);
+    auto const mr = static_cast<int>(m * this->marginRight);
+
+    return rect.adjusted(ml, 0, -mr, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -238,6 +276,22 @@ void qtSqueezedLabel::setToolTip(QString const& text, SetToolTipMode mode)
 }
 
 //-----------------------------------------------------------------------------
+void qtSqueezedLabel::setTextMargins(qreal left, qreal right)
+{
+    QTE_D();
+
+    left = qMax(0.0, left);
+    right = qMax(0.0, right);
+
+    if (d->marginLeft != left || d->marginRight != right)
+    {
+        d->marginLeft = left;
+        d->marginRight = right;
+        d->invalidate(this);
+    }
+}
+
+//-----------------------------------------------------------------------------
 void qtSqueezedLabel::copy()
 {
     qApp->clipboard()->setText(this->fullText());
@@ -267,7 +321,7 @@ QSize qtSqueezedLabel::minimumSizeHint() const
         // Ellipsis minimum size is enough to show just the ellipsis
         width = qMin(width, fm.width(qtSqueezedLabelPrivate::ellipsis()));
     }
-    return {width, fm.height()};
+    return {width + d->marginsWidth(fm), fm.height()};
 }
 
 //-----------------------------------------------------------------------------
@@ -359,14 +413,6 @@ void qtSqueezedLabel::paintEvent(QPaintEvent* e)
         d->recalculate(this->size(), this->fontMetrics());
     }
 
-    // Check if text fits
-    if (!d->elided)
-    {
-        // If so, let ordinary label handle the painting
-        QLabel::paintEvent(e);
-        return;
-    }
-
     e->accept();
 
     // Prepare to paint text
@@ -381,11 +427,11 @@ void qtSqueezedLabel::paintEvent(QPaintEvent* e)
     opt.initFrom(this);
 
     // Paint text
-    if (d->elideMode.testFlag(ElideFade))
+    auto const& elidedText = d->elidedText(text);
+    auto const& rect = d->contentsRect(this->rect(), this->fontMetrics());
+    if (d->elided && d->elideMode.testFlag(ElideFade))
     {
-        auto const& rect = this->rect();
         auto const width = rect.width();
-        auto const& elidedText = text.mid(d->offset, d->length);
 
         // Draw text
         style->drawItemText(&painter, rect, align, opt.palette,
@@ -420,9 +466,7 @@ void qtSqueezedLabel::paintEvent(QPaintEvent* e)
     }
     else
     {
-        auto const& elidedText =
-            text.mid(d->offset, d->length) + qtSqueezedLabelPrivate::ellipsis();
-        style->drawItemText(&painter, this->rect(), align, opt.palette,
+        style->drawItemText(&painter, rect, align, opt.palette,
                             this->isEnabled(), elidedText, role);
     }
 }
