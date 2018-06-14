@@ -287,7 +287,9 @@ bool qtSqueezedLabel::event(QEvent* e)
 //-----------------------------------------------------------------------------
 void qtSqueezedLabel::changeEvent(QEvent* e)
 {
-    if (e->type() == QEvent::FontChange || e->type() == QEvent::EnabledChange)
+    if (e->type() == QEvent::FontChange ||
+        e->type() == QEvent::EnabledChange ||
+        e->type() == QEvent::PaletteChange)
     {
         QTE_D();
         d->invalidate(this);
