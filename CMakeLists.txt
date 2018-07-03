@@ -264,7 +264,7 @@ target_link_libraries(${PROJECT_NAME}
   ${ONCE_THREAD_LIBRARY}
 )
 
-if(MSVC)
+if(MSVC AND QTE_QT_VERSION LESS 5)
   set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS /Zc:wchar_t-)
 endif()
 
