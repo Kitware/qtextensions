@@ -12,7 +12,8 @@ function(qte_amc_wrap_ui outvar name)
     list(APPEND outfiles "${CMAKE_CURRENT_BINARY_DIR}/am_${outfile}.h")
   endforeach()
   set(outfile "${CMAKE_CURRENT_BINARY_DIR}/${name}.h")
-  set_source_files_properties(${outfiles} ${outfile} PROPERTIES GENERATED TRUE)
+  set_source_files_properties(${outfiles} ${outfile}
+    PROPERTIES GENERATED TRUE SKIP_AUTOMOC TRUE)
 
   if (NOT CMAKE_VERSION VERSION_LESS 3.1)
     if (WIN32)
