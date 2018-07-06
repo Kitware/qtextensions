@@ -17,7 +17,12 @@ function(qte_amc_wrap_ui outvar name)
 
   if (NOT CMAKE_VERSION VERSION_LESS 3.1)
     if (WIN32)
-      if(NOT DEFINED QT_QMAKE_EXECUTABLE)
+      if(TARGET Qt5::qmake)
+        get_property(QT_QMAKE_EXECUTABLE
+          TARGET Qt5::qmake
+          PROPERTY IMPORTED_LOCATION
+        )
+      elseif(NOT DEFINED QT_QMAKE_EXECUTABLE)
         message(FATAL_ERROR "Qt must be found before using qte_amc_wrap_ui")
       endif()
       get_filename_component(QT_BIN_DIR "${QT_QMAKE_EXECUTABLE}" DIRECTORY)
