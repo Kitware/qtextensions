@@ -133,6 +133,7 @@ set(qtExtensionsInstallHeaders
     core/qtDebugImpl.h
     core/qtEnableSharedFromThis.h
     core/qtEnumerate.h
+    core/qtGet.h
     core/qtGlobal.h
     core/qtIndexRange.h
     core/qtMath.h
