@@ -25,8 +25,8 @@ qte_add_test(testColorButton        INTERACTIVE TestColorButton.cpp)
 qte_add_test(testConfirmationDialog INTERACTIVE TestConfirmationDialog.cpp)
 qte_add_test(testGradientEditor     INTERACTIVE TestGradientEditor.cpp)
 qte_add_test(testGradientWidget     INTERACTIVE TestGradientWidget.cpp)
-qte_add_test(testThrobber           INTERACTIVE TestThrobber.cpp)
 qte_add_test(testProgressWidget     INTERACTIVE TestProgressWidget.cpp)
+qte_add_test(testThrobber           INTERACTIVE TestThrobber.cpp)
 
 # Automated tests
 qte_add_test(qtExtensions-Kst testKst
@@ -34,4 +34,5 @@ qte_add_test(qtExtensions-Kst testKst
              ARGS ${CMAKE_CURRENT_SOURCE_DIR}/testdata.kst
 )
 
-qte_add_test(qtExtensions-UiState testUiState TestUiState.cpp)
+qte_add_test(qtExtensions-NaturalSort testNaturalSort TestNaturalSort.cpp)
+qte_add_test(qtExtensions-UiState     testUiState     TestUiState.cpp)

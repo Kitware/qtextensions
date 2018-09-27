@@ -67,6 +67,7 @@ set(qtExtensionsSources
     util/qtDockControllerPrivate.cpp
     util/qtGradient.cpp
     util/qtJson.cpp
+    util/qtNaturalSort.cpp
     util/qtPrioritizedMenuProxy.cpp
     util/qtPrioritizedToolBarProxy.cpp
     util/qtProcess.cpp
@@ -157,6 +158,7 @@ set(qtExtensionsInstallHeaders
     util/qtDockController.h
     util/qtGradient.h
     util/qtJson.h
+    util/qtNaturalSort.h
     util/qtPrioritizedMenuProxy.h
     util/qtPrioritizedToolBarProxy.h
     util/qtProcess.h
