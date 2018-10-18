@@ -565,10 +565,6 @@
 ///       \p container. You should not modify \p container (i.e. by adding or
 ///       removing items) within the loop. It is safe to modify items in place.
 ///
-/// \note
-///   Most uses that do not need to modify the items during iteration can be
-///   replaced with #foreach and qtEnumerate.
-///
 /// \par Example:
 /// \code{.cpp}
 /// typedef QHash<int, QString> MyMap;
@@ -578,7 +574,8 @@
 /// \endcode
 ///
 /// \deprecated
-///   New code should use range-based \c for with #qtEnumerate instead.
+///   New code should use range-based \c for with #qtEnumerate or
+///   #qtEnumerateMutable instead.
 #  define foreach_iter(iterator_type, variable, container)
 /// Declare a critical code section.
 ///
