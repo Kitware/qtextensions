@@ -71,7 +71,7 @@ set(qtExtensionsSources
     util/qtPrioritizedMenuProxy.cpp
     util/qtPrioritizedToolBarProxy.cpp
     util/qtProcess.cpp
-    util/qtScopedSettingGroup.cpp
+    util/qtScopedSettingsGroup.cpp
     util/qtSettings.cpp
     util/qtStatusForwarder.cpp
     util/qtStatusManager.cpp
@@ -163,7 +163,7 @@ set(qtExtensionsInstallHeaders
     util/qtPrioritizedToolBarProxy.h
     util/qtProcess.h
     util/qtRand.h
-    util/qtScopedSettingGroup.h
+    util/qtScopedSettingsGroup.h
     util/qtSettings.h
     util/qtSettingsImpl.h
     util/qtStatusForwarder.h
@@ -345,7 +345,7 @@ set(qtExtensionsWrapObjects
     qtPrioritizedMenuProxy
     qtPrioritizedToolBarProxy
     qtProcess
-    qtScopedSettingGroup
+    qtScopedSettingsGroup
     qtStatusForwarder
     qtStatusManager
     qtStatusNotifier

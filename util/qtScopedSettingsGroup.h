@@ -1,22 +1,22 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
 
-#ifndef __qtScopedSettingGroup_h
-#define __qtScopedSettingGroup_h
+#ifndef __qtScopedSettingsGroup_h
+#define __qtScopedSettingsGroup_h
 
 #include "../core/qtGlobal.h"
 
 class QSettings;
 class QString;
 
-class QTE_EXPORT qtScopedSettingGroup
+class QTE_EXPORT qtScopedSettingsGroup
 {
 public:
-  explicit qtScopedSettingGroup(QSettings&, const QString&);
-  ~qtScopedSettingGroup();
+  explicit qtScopedSettingsGroup(QSettings&, const QString&);
+  ~qtScopedSettingsGroup();
 
 protected:
   QSettings& store;
