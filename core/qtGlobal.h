@@ -504,6 +504,9 @@
 /// foreach_child (QTreeWidgetItem* item, tree->invisibleRootItem())
 ///     processItem(item);
 /// \endcode
+///
+/// \deprecated
+///   New code should use range-based \c for with #qtChildren instead.
 #  define foreach_child(variable, parent)
 /// Iterate over container.
 ///

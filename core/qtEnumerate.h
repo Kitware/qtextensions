@@ -71,6 +71,45 @@ protected:
     Iterator i;
 };
 
+//-----------------------------------------------------------------------------
+template <typename Item> class qtChildEnumerator
+{
+public:
+    class iterator;
+
+    qtChildEnumerator(Item* parent) : p{parent} {}
+
+    iterator begin() const { return {p, 0}; }
+    iterator end() const { return {p, p->childCount()}; }
+
+protected:
+    Item* const p;
+};
+
+//-----------------------------------------------------------------------------
+template <typename Item> class qtChildEnumerator<Item>::iterator
+{
+public:
+    using ChildItem = decltype(std::declval<Item>().child(0));
+    using IndexType = decltype(std::declval<Item>().childCount());
+
+    ChildItem operator*() const { return p->child(i); }
+    iterator& operator++() { ++i; return *this; }
+
+    bool operator==(iterator const& other) const
+    { return p == other.p && i == other.i; }
+
+    bool operator!=(iterator const& other) const
+    { return p != other.p || i != other.i; }
+
+protected:
+    friend class qtChildEnumerator<Item>;
+    iterator(Item* parent, IndexType index) : p{parent}, i{index} {}
+
+    Item* const p;
+    IndexType i;
+};
+
 #endif
 
 //-----------------------------------------------------------------------------
@@ -94,8 +133,8 @@ protected:
 /// \code{.cpp}
 /// typedef QHash<int, QString> MyMap;
 /// MyMap map = createMap();
-/// foreach(auto const iter, qtEnumerate(map))
-///   qDebug() << "key" << iter.key() << "value" << iter.value();
+/// for (auto const iter : qtEnumerate(map))
+///     qDebug() << "key" << iter.key() << "value" << iter.value();
 /// \endcode
 ///
 /// \sa qtEnumerateMutable
@@ -117,6 +156,27 @@ template <typename Range>
 qtEnumerator<Range> qtEnumerateMutable(Range& range)
 {
     return {range};
+}
+
+//-----------------------------------------------------------------------------
+/// Construct an enumerating adapter over a parent item.
+///
+/// This function constructs an enumerable adapter (i.e. one that is compatible
+/// with #foreach or range-based \c for loop) over an object which has children
+/// (that is, which implements the methods \c child and \c childCount). This
+/// is intended to be used with e.g. QTreeWidgetItem.
+///
+/// \par Example:
+/// \code{.cpp}
+/// typedef QHash<int, QString> MyMap;
+/// MyMap map = createMap();
+/// for (auto* const child, qtChildren(tree->invisibleRootItem()))
+///     qDebug() << child->text(0);
+/// \endcode
+template <typename Item>
+qtChildEnumerator<Item> qtChildren(Item* parent)
+{
+    return {parent};
 }
 
 #ifndef DOXYGEN
