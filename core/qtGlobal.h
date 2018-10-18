@@ -475,15 +475,36 @@
          _end = (container).end(); \
          variable != _end; ++variable)
 
+#if __cplusplus >= 201703L || defined(DOXYGEN)
+/// Alias for #using.
+///
+/// This macro is a synonym for #using that is guaranteed to be available.
+/// (If QT_NO_KEYWORDS is defined, the more convenient #using is hidden to
+/// avoid namespace pollution.)
+#  define QTE_USING(...) if(__VA_ARGS__; true)
+#else
+#  define QTE_USING(...) \
+    QTE_WITH_IMPL(_qte_scope_flag ## __LINE__, __VA_ARGS__)
+
+#  define QTE_WITH_IMPL(guard, ...) \
+    for (int guard = 0; !guard;) \
+        for (__VA_ARGS__; !guard; ++guard)
+#endif
+
+/// Alias for #with.
+///
+/// This macro is a synonym for #with that is guaranteed to be available.
+/// (If QT_NO_KEYWORDS is defined, the more convenient #with is hidden to
+/// avoid namespace pollution.)
+#define QTE_WITH(...) \
+    QTE_USING(auto&& _with ## __LINE__ QTE_UNUSED = __VA_ARGS__)
+
 /// Alias for #synchronized.
 ///
 /// This macro is a synonym for #synchronized that is guaranteed to be
 /// available. (If QT_NO_KEYWORDS is defined, the more convenient #synchronized
 /// is hidden to avoid namespace pollution.)
-#define QTE_SYNCHRONIZED(mutex) \
-    for (int _qte_critical_section_flag = 0; !_qte_critical_section_flag;) \
-        for (QMutexLocker _qte_critical_section_lock(mutex); \
-             !_qte_critical_section_flag; ++_qte_critical_section_flag)
+#define QTE_SYNCHRONIZED(mutex) QTE_WITH(QMutexLocker{mutex})
 
 #ifdef DOXYGEN
 /// Iterate over children.
@@ -580,6 +601,43 @@
 ///   New code should use range-based \c for with #qtEnumerate or
 ///   #qtEnumerateMutable instead.
 #  define foreach_iter(iterator_type, variable, container)
+/// Use a declaration in a scope.
+///
+/// This macro creates a scope within which a declaration is active. If the
+/// code section is a single statement, the use of braces around the code
+/// section is optional.
+///
+/// \param decl Declaration statement that will be active within the scope.
+///
+/// \par Example:
+/// \code{.cpp}
+/// using(QFile f)
+/// {
+///     f.open(path);
+///     ...
+/// }
+/// \endcode
+#  define using(decl)
+/// Use an expression in a scope.
+///
+/// This macro creates a scope within which an expression is active. This is
+/// useful for RAII types where management of the object's lifetime is
+/// critical, but the object itself does not need to be accessed. If the code
+/// section is a single statement, the use of braces around the code section is
+/// optional.
+///
+/// \param expr Assignable expression that will be active within the scope.
+///
+/// \par Example:
+/// \code{.cpp}
+/// with(qtScopedSettingsGroup{s, "group"})
+/// {
+///     ...
+/// }
+/// \endcode
+///
+/// \sa #synchronized
+#  define with(expr)
 /// Declare a critical code section.
 ///
 /// This macro declares a critical section of code that is protected by the
@@ -606,6 +664,12 @@
 #    endif
 #    ifndef foreach_iter
 #      define foreach_iter QTE_FOREACH_ITER
+#    endif
+#    ifndef using
+#      define using(...) QTE_USING(__VA_ARGS__)
+#    endif
+#    ifndef with
+#      define with QTE_WITH
 #    endif
 #    ifndef synchronized
 #      define synchronized QTE_SYNCHRONIZED
