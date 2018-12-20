@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -8,6 +8,13 @@
 #define __qtTransferablePointer_h
 
 #include <QScopedPointer>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+namespace QtMetaTypePrivate
+{
+  template <typename, bool> struct QMetaTypeFunctionHelper;
+}
+#endif
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -78,7 +85,12 @@ public:
     }
 
 protected:
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  template <typename, bool>
+  friend struct QtMetaTypePrivate::QMetaTypeFunctionHelper;
+#else
   template <typename FT> friend void* qMetaTypeConstructHelper(const FT*);
+#endif
 
   inline qtTransferablePointer(qtTransferablePointer<T, Cleanup> const& o)
     : QScopedPointer<T, Cleanup>(0)
