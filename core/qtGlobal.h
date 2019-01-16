@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -11,17 +11,45 @@
 
 #include <qtExports.h>
 
-#if __cplusplus >= 201103L || defined(DOXYGEN)
+#if __cplusplus < 201103L
+#  error qtExtensions requires C++11 or later
+#endif
+
+#if __cplusplus >= 201703L
+#  define QTE_UNUSED [[mayube_unused]]
+#elif defined(__GNUC__)
+#  define QTE_UNUSED [[gnu::unused]]
+#else
+#  define QTE_UNUSED
+#endif
 
 /// Annotation for overrides of virtual methods.
 /// \showinitializer
 ///
 /// This symbol can be used to annotate overrides of virtual methods. As well
 /// as serving as a hint to developers, it will also request compiler
-/// verification that a method is being overridden, where supported (e.g. C++11
-/// compilers).
-#  define QTE_OVERRIDE override
-#  define QTE_CONSTEXPR constexpr
+/// verification that a method is being overridden.
+///
+/// \deprecated
+///   This macro predates qtExtensions requiring a C++11 compiler. New code
+///   should use \c override directly.
+#define QTE_OVERRIDE override
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+/// Thread-safe constant with opportunistic static storage.
+///
+/// This macro declares a constant variable, using static storage if it is
+/// known that such will be thread safe, and local storage otherwise. This is
+/// meant to be used as an opportunistic optimization for constant variables
+/// with non-trivial initialization for which a static is desirable, but not
+/// required.
+///
+/// \note
+///   Since C++11, initialization of statics is required to be thread safe.
+///   However, Visual Studio did not implement this until VS 2015.
+///
+/// \param T Data type of variable to be declared.
+#  define QTE_THREADSAFE_STATIC_CONST(T) static T const
 
 /// Declare a private singleton.
 ///
@@ -52,24 +80,24 @@
 /// class MySingleton
 /// {
 /// public:
-///   void greet() { qDebug() << "Hello, world!"; }
+///     void greet() { qDebug() << "Hello, world!"; }
 /// };
 /// QTE_PRIVATE_SINGLETON(MySingleton, myself)
 ///
 /// int main()
 /// {
-///   myself()->greet();
-///   return 0;
+///     myself()->greet();
+///     return 0;
 /// }
 /// \endcode
 #  define QTE_PRIVATE_SINGLETON(type, name) \
-  namespace \
+    namespace \
     { \
-    type* name() \
-      { \
-      static type theInstance; \
-      return &theInstance; \
-      } \
+        type* name() \
+        { \
+            static type theInstance; \
+            return &theInstance; \
+        } \
     }
 
 /// Declare a private singleton, with arguments.
@@ -82,26 +110,24 @@
 /// QTE_PRIVATE_SINGLETON_WITH_ARGS(complex<double>, imaginary, (0.0, 1.0))
 /// \endcode
 #  define QTE_PRIVATE_SINGLETON_WITH_ARGS(type, name, args) \
-  namespace \
+    namespace \
     { \
-    type* name() \
-      { \
-      static type theInstance args; \
-      return &theInstance; \
-      } \
+        type* name() \
+        { \
+            static type theInstance args; \
+            return &theInstance; \
+        } \
     }
 
 #else
 
 #  include <QtGlobal>
 
-#  define QTE_OVERRIDE
-#  define QTE_CONSTEXPR const
-
 #  define QTE_PRIVATE_SINGLETON(type, name) \
-  namespace { Q_GLOBAL_STATIC(type, name) }
+    namespace { Q_GLOBAL_STATIC(type, name) }
 #  define QTE_PRIVATE_SINGLETON_WITH_ARGS(type, name, args) \
-  namespace { Q_GLOBAL_STATIC_WITH_ARGS(type, name, args) }
+    namespace { Q_GLOBAL_STATIC_WITH_ARGS(type, name, args) }
+#  define QTE_THREADSAFE_STATIC_CONST(T) T const
 
 #endif
 
@@ -117,9 +143,9 @@
 /// class Foo
 /// {
 /// public:
-///   ...
+///     ...
 /// private:
-///   QTE_DISABLE_COPY(Foo)
+///     QTE_DISABLE_COPY(Foo)
 /// };
 /// \endcode
 ///
@@ -130,9 +156,9 @@
 ///       a non-copyable base class. Doing so produces better error messages
 ///       when trying to copy or assign such a class, and makes it more obvious
 ///       to users that your class is not intended to be copyable.
-#  define QTE_DISABLE_COPY(class_name) \
-  class_name(const class_name&) = delete; \
-  class_name& operator=(const class_name&) = delete; \
+#define QTE_DISABLE_COPY(class_name) \
+    class_name(const class_name&) = delete; \
+    class_name& operator=(const class_name&) = delete; \
 
 /// Implement constant d-function with aliased name of private class.
 ///
@@ -140,7 +166,7 @@
 /// of the private class to be specified with \p private_name, which is
 /// necessary if the private class is not named <i>Base</i>Private.
 #define QTE_IMPLEMENT_ALIASED_D_FUNC_CONST(public_name, private_name) \
-  inline const private_name* public_name::d_func() const \
+    inline const private_name* public_name::d_func() const \
     { return static_cast<const private_name*>(qGetPtrHelper(this->d_ptr)); }
 
 /// Implement d-function with aliased name of private class.
@@ -149,9 +175,9 @@
 /// the private class to be specified with \p private_name, which is necessary
 /// if the private class is not named <i>Base</i>Private.
 #define QTE_IMPLEMENT_ALIASED_D_FUNC(public_name, private_name) \
-  inline private_name* public_name::d_func() \
+    inline private_name* public_name::d_func() \
     { return static_cast<private_name*>(qGetPtrHelper(this->d_ptr)); } \
-  QTE_IMPLEMENT_ALIASED_D_FUNC_CONST(public_name, private_name)
+    QTE_IMPLEMENT_ALIASED_D_FUNC_CONST(public_name, private_name)
 
 /// Implement constant d-function.
 ///
@@ -160,26 +186,26 @@
 /// <code>d_func()</code> is defined. This is useful if your class does not
 /// provide a mutable implementation.
 #define QTE_IMPLEMENT_D_FUNC_CONST(class_name) \
-  QTE_IMPLEMENT_ALIASED_D_FUNC_CONST(class_name, class_name##Private)
+    QTE_IMPLEMENT_ALIASED_D_FUNC_CONST(class_name, class_name##Private)
 
 /// Implement d-function.
 ///
 /// This implements the d-function (<code>d_func()</code>) of a class using
 /// \ref QTE_D.
 #define QTE_IMPLEMENT_D_FUNC(class_name) \
-  QTE_IMPLEMENT_ALIASED_D_FUNC(class_name, class_name##Private)
+    QTE_IMPLEMENT_ALIASED_D_FUNC(class_name, class_name##Private)
 
 /// Implement d-function for implicitly shared class.
 ///
 /// This implements the d-function (<code>d_func()</code>) for
 /// \ref qte_d_implicitly_shared using QtExtensions' support for the same.
 #define QTE_IMPLEMENT_D_FUNC_SHARED(class_name) \
-  inline class_name##Data* class_name::d_func(bool detach) \
+    inline class_name##Data* class_name::d_func(bool detach) \
     { \
-    if (detach) this->d_ptr.detach(); \
-    return static_cast<class_name##Data*>(this->d_ptr.data()); \
+        if (detach) this->d_ptr.detach(); \
+        return static_cast<class_name##Data*>(this->d_ptr.data()); \
     } \
-  inline const class_name##Data* class_name::d_func() const \
+    inline const class_name##Data* class_name::d_func() const \
     { return static_cast<const class_name##Data*>(this->d_ptr.constData()); }
 
 /// Declare accessor functions for private class.
@@ -188,9 +214,9 @@
 /// private class of \p class_name. The private class is also declared as a
 /// friend.
 #define QTE_DECLARE_PRIVATE(class_name) \
-  inline class_name##Private* d_func(); \
-  inline const class_name##Private* d_func() const; \
-  friend class class_name##Private;
+    inline class_name##Private* d_func(); \
+    inline const class_name##Private* d_func() const; \
+    friend class class_name##Private;
 
 /// Declare \c const accessor function for private class.
 ///
@@ -200,17 +226,17 @@
 ///
 /// Use this when mutable access to the class's is not permitted.
 #define QTE_DECLARE_PRIVATE_CONST(class_name) \
-  inline const class_name##Private* d_func() const; \
-  friend class class_name##Private;
+    inline const class_name##Private* d_func() const; \
+    friend class class_name##Private;
 
 /// Declare accessor functions for implicitly shared class.
 ///
 /// This declares the data class accessor functions for an implicitly shared
 /// class \p class_name. The data class is also declared as a friend.
 #define QTE_DECLARE_SHARED(class_name) \
-  inline class_name##Data* d_func(bool); \
-  inline const class_name##Data* d_func() const; \
-  friend class class_name##Data;
+    inline class_name##Data* d_func(bool); \
+    inline const class_name##Data* d_func() const; \
+    friend class class_name##Data;
 
 /// Define accessor functions for public class.
 ///
@@ -218,11 +244,11 @@
 /// \p class_name of a corresponding private class. The public class is also
 /// declared as a friend.
 #define QTE_DECLARE_PUBLIC(class_name) \
-  inline class_name* q_func() \
+    inline class_name* q_func() \
     { return static_cast<class_name*>(q_ptr); } \
-  inline const class_name* q_func() const \
+    inline const class_name* q_func() const \
     { return static_cast<class_name*>(q_ptr); } \
-  friend class class_name;
+    friend class class_name;
 
 /// Declare simple pointer to private class.
 ///
@@ -233,7 +259,7 @@
 /// In most cases, you should use #QTE_DECLARE_PRIVATE_RPTR instead, to reduce
 /// the risk of errors due to the need to perform manual memory management.
 #define QTE_DECLARE_PRIVATE_PTR(class_name) \
-  class_name##Private* const d_ptr;
+    class_name##Private* const d_ptr;
 
 /// Declare mutable simple pointer to private class.
 ///
@@ -247,7 +273,7 @@
 /// In most cases, you should use #QTE_DECLARE_PRIVATE_MRPTR instead, to reduce
 /// the risk of errors due to the need to perform manual memory management.
 #define QTE_DECLARE_PRIVATE_MPTR(class_name) \
-  class_name##Private* d_ptr;
+    class_name##Private* d_ptr;
 
 /// Declare shared pointer to private class.
 ///
@@ -260,7 +286,7 @@
 /// This should only be used in special situations; for example, when creating
 /// \ref qte_d_shared_explicit.
 #define QTE_DECLARE_PRIVATE_SPTR(class_name) \
-  QSharedPointer<class_name##Private> d_ptr;
+    QSharedPointer<class_name##Private> d_ptr;
 
 /// Declare scoped pointer to private class.
 ///
@@ -274,7 +300,7 @@
 /// beyond the convenience of ensuring clean-up for you. Therefore, this is
 /// preferred over #QTE_DECLARE_PRIVATE_PTR in most cases.
 #define QTE_DECLARE_PRIVATE_RPTR(class_name) \
-  QScopedPointer<class_name##Private> const d_ptr;
+    QScopedPointer<class_name##Private> const d_ptr;
 
 /// Declare mutable scoped pointer to private class.
 ///
@@ -291,7 +317,7 @@
 /// Unlike #QTE_DECLARE_PRIVATE_RPTR, the pointer can be modified after class
 /// construction.
 #define QTE_DECLARE_PRIVATE_MRPTR(class_name) \
-  QScopedPointer<class_name##Private> d_ptr;
+    QScopedPointer<class_name##Private> d_ptr;
 
 /// Declare implicitly-managed pointer to data class of implicitly shared class.
 ///
@@ -302,7 +328,7 @@
 /// The data class is automatically copied when requesting a mutable instance
 /// (e.g. via #QTE_D_MUTABLE), and freed when its last reference is released.
 #define QTE_DECLARE_SHARED_PTR(class_name) \
-  QSharedDataPointer<class_name##Data> d_ptr;
+    QSharedDataPointer<class_name##Data> d_ptr;
 
 /// Declare explicitly-managed pointer to data class of implicitly shared class.
 ///
@@ -318,14 +344,14 @@
 /// multiple objects. Use #QTE_D_DETACH to obtain a non-shared instance of the
 /// data class (which will make a copy if necessary).
 #define QTE_DECLARE_SHARED_EPTR(class_name) \
-  QExplicitlySharedDataPointer<class_name##Data> d_ptr;
+    QExplicitlySharedDataPointer<class_name##Data> d_ptr;
 
 /// Declare pointer to public class.
 ///
 /// This declares a simple pointer (<code>Public* const</code>) to the public
 /// class \p class_name of a private class.
 #define QTE_DECLARE_PUBLIC_PTR(class_name) \
-  class_name* const q_ptr;
+    class_name* const q_ptr;
 
 /// Get pointer to private class.
 ///
@@ -428,25 +454,16 @@
 /// available. (If QT_NO_KEYWORDS is defined, the more convenient
 /// #foreach_child is hidden to avoid namespace pollution.)
 #define QTE_FOREACH_CHILD(variable, parent) \
-  for (int _ii = 0, _ij = 0, _ik = (parent)->childCount(); \
-       _ii == _ij && _ii < _ik; ++_ij) \
-    for (variable = (parent)->child(_ii); _ii == _ij; ++_ii)
+    for (int _ii = 0, _ij = 0, _ik = (parent)->childCount(); \
+         _ii == _ij && _ii < _ik; ++_ij) \
+        for (variable = (parent)->child(_ii); _ii == _ij; ++_ii)
 
-#if __cplusplus >= 201103L || defined(DOXYGEN)
 /// Alias for #foreach.
 ///
 /// This macro is a synonym for #foreach that is guaranteed to be available.
 /// (If QT_NO_KEYWORDS is defined, the more convenient #foreach is hidden to
 /// avoid namespace pollution.)
 #  define QTE_FOREACH(decl, container) for (decl : container)
-#else
-#  define QTE_FOREACH(decl, container) \
-  for (auto _oguard = 1; _oguard;) \
-    for (auto&& _container = (container); _oguard; _oguard = 0) \
-      for (auto _iter = _container.begin(), _end = _container.end(), \
-           _iguard = _container.begin(); _iguard != _end; ++_iguard) \
-        for (decl = *_iter; _iter == _iguard; ++_iter)
-#endif
 
 /// Alias for #foreach_iter.
 ///
@@ -454,18 +471,40 @@
 /// available. (If QT_NO_KEYWORDS is defined, the more convenient
 /// #foreach_iter is hidden to avoid namespace pollution.)
 #define QTE_FOREACH_ITER(iterator_type, variable, container) \
-  for (iterator_type variable = (container).begin(), _end = (container).end(); \
-       variable != _end; ++variable)
+    for (iterator_type variable = (container).begin(), \
+         _end = (container).end(); \
+         variable != _end; ++variable)
+
+#if __cplusplus >= 201703L || defined(DOXYGEN)
+/// Alias for #using.
+///
+/// This macro is a synonym for #using that is guaranteed to be available.
+/// (If QT_NO_KEYWORDS is defined, the more convenient #using is hidden to
+/// avoid namespace pollution.)
+#  define QTE_USING(...) if(__VA_ARGS__; true)
+#else
+#  define QTE_USING(...) \
+    QTE_WITH_IMPL(_qte_scope_flag ## __LINE__, __VA_ARGS__)
+
+#  define QTE_WITH_IMPL(guard, ...) \
+    for (int guard = 0; !guard;) \
+        for (__VA_ARGS__; !guard; ++guard)
+#endif
+
+/// Alias for #with.
+///
+/// This macro is a synonym for #with that is guaranteed to be available.
+/// (If QT_NO_KEYWORDS is defined, the more convenient #with is hidden to
+/// avoid namespace pollution.)
+#define QTE_WITH(...) \
+    QTE_USING(auto&& _with ## __LINE__ QTE_UNUSED = __VA_ARGS__)
 
 /// Alias for #synchronized.
 ///
 /// This macro is a synonym for #synchronized that is guaranteed to be
 /// available. (If QT_NO_KEYWORDS is defined, the more convenient #synchronized
 /// is hidden to avoid namespace pollution.)
-#define QTE_SYNCHRONIZED(mutex) \
-  for (int _qte_critical_section_flag = 0; !_qte_critical_section_flag;) \
-    for (QMutexLocker _qte_critical_section_lock(mutex); \
-         !_qte_critical_section_flag; ++_qte_critical_section_flag)
+#define QTE_SYNCHRONIZED(mutex) QTE_WITH(QMutexLocker{mutex})
 
 #ifdef DOXYGEN
 /// Iterate over children.
@@ -484,16 +523,18 @@
 /// // Iterate over each top-level item in 'tree'
 /// QTreeWidget* tree;
 /// foreach_child (QTreeWidgetItem* item, tree->invisibleRootItem())
-///   processItem(item);
+///     processItem(item);
 /// \endcode
+///
+/// \deprecated
+///   New code should use range-based \c for with #qtChildren instead.
 #  define foreach_child(variable, parent)
 /// Iterate over container.
 ///
 /// This macro provides for simple iteration over the elements in a container.
-/// It has the same semantics as C++11
+/// It is an alias for a
 /// <a href="http://en.cppreference.com/w/cpp/language/range-for">range-based
-/// for</a> (and in C++11 mode, expands to the same), but also provides an
-/// implementation for pre-C++11 compilers.
+/// for</a> loop.
 ///
 /// \note Unlike %Qt's \c foreach, QtExtensions' \c foreach does \em not make a
 ///       copy of \p container. You should not modify \p container (i.e. by
@@ -504,15 +545,17 @@
 /// \code{.cpp}
 /// // QStringList getStrings();
 /// foreach(auto const& s, getStrings())
-///   qDebug() << s;
+///     qDebug() << s;
 /// \endcode
 ///
 /// \par Example 2:
 /// \code{.cpp}
 /// // QStringList strings;
 /// foreach(auto& s, strings)
-///   s = s.toLower();
+///     s = s.toLower();
 /// \endcode
+///
+/// \deprecated New code should use range-based \c for instead.
 #  define foreach(declaration, container)
 /// Iterate over a copy of a container.
 ///
@@ -535,10 +578,8 @@
 /// non-unique keys (e.g. QMultiMap).
 ///
 /// \param iterator_type
-///   The typename of the iterator object; typically \c T::const_iterator where
-///   \c T is the container type. Note that \p iterator_type must not contain
-///   commas; use a typedef if you need to declare an iterator on a container
-///   type taking more than one template argument.
+///   The typename of the iterator object; typically \c auto. Note that
+///   \p iterator_type must not contain commas.
 /// \param variable Name of the iterator variable.
 /// \param container
 ///   Container over which to iterate. This should be a constant expression
@@ -548,18 +589,55 @@
 ///       \p container. You should not modify \p container (i.e. by adding or
 ///       removing items) within the loop. It is safe to modify items in place.
 ///
-/// \note
-///   Most uses that do not need to modify the items during iteration can be
-///   replaced with #foreach and qtEnumerate.
-///
 /// \par Example:
 /// \code{.cpp}
 /// typedef QHash<int, QString> MyMap;
 /// MyMap map = createMap();
 /// foreach_iter(MyMap::const_iterator, iter, map)
-///   qDebug() << "key" << iter.key() << "value" << iter.value();
+///     qDebug() << "key" << iter.key() << "value" << iter.value();
 /// \endcode
+///
+/// \deprecated
+///   New code should use range-based \c for with #qtEnumerate or
+///   #qtEnumerateMutable instead.
 #  define foreach_iter(iterator_type, variable, container)
+/// Use a declaration in a scope.
+///
+/// This macro creates a scope within which a declaration is active. If the
+/// code section is a single statement, the use of braces around the code
+/// section is optional.
+///
+/// \param decl Declaration statement that will be active within the scope.
+///
+/// \par Example:
+/// \code{.cpp}
+/// using(QFile f)
+/// {
+///     f.open(path);
+///     ...
+/// }
+/// \endcode
+#  define using(decl)
+/// Use an expression in a scope.
+///
+/// This macro creates a scope within which an expression is active. This is
+/// useful for RAII types where management of the object's lifetime is
+/// critical, but the object itself does not need to be accessed. If the code
+/// section is a single statement, the use of braces around the code section is
+/// optional.
+///
+/// \param expr Assignable expression that will be active within the scope.
+///
+/// \par Example:
+/// \code{.cpp}
+/// with(qtScopedSettingsGroup{s, "group"})
+/// {
+///     ...
+/// }
+/// \endcode
+///
+/// \sa #synchronized
+#  define with(expr)
 /// Declare a critical code section.
 ///
 /// This macro declares a critical section of code that is protected by the
@@ -587,27 +665,16 @@
 #    ifndef foreach_iter
 #      define foreach_iter QTE_FOREACH_ITER
 #    endif
+#    ifndef using
+#      define using(...) QTE_USING(__VA_ARGS__)
+#    endif
+#    ifndef with
+#      define with QTE_WITH
+#    endif
 #    ifndef synchronized
 #      define synchronized QTE_SYNCHRONIZED
 #    endif
 #  endif
-#endif
-
-#if (__cplusplus >= 201103L && !defined(_MSC_VER)) || \
-    defined(__GNUC__) || \
-    defined(DOXYGEN)
-/// Thread-safe constant with opportunistic static storage.
-///
-/// This macro declares a constant variable, using static storage if it is
-/// known that such will be thread safe, and local storage otherwise. This is
-/// meant to be used as an opportunistic optimization for constant variables
-/// with non-trivial initialization for which a static is desirable, but not
-/// required.
-///
-/// \param T Data type of variable to be declared.
-#  define QTE_THREADSAFE_STATIC_CONST(T) static T const
-#else
-#  define QTE_THREADSAFE_STATIC_CONST(T) T const
 #endif
 
 /// Shorthand to register a metatype with %Qt.

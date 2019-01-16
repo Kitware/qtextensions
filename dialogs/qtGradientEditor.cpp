@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -13,6 +13,7 @@
 #include "../util/qtColorUtil.h"
 #include "../util/qtGradient.h"
 
+#include "../core/qtEnumerate.h"
 #include "../core/qtUtil.h"
 
 QTE_IMPLEMENT_D_FUNC(qtGradientEditor)
@@ -229,7 +230,7 @@ void qtGradientEditor::updateStops()
     d->ui.stops->sortByColumn(1, Qt::AscendingOrder);
 
     auto stops = QList<qtGradient::Stop>{};
-    foreach_child (auto const item, d->ui.stops->invisibleRootItem())
+    for (auto const item : qtChildren(d->ui.stops->invisibleRootItem()))
     {
         auto const& color = item->data(0, Qt::EditRole).value<QColor>();
         auto const pos = item->data(1, Qt::EditRole).toReal();
