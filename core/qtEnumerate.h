@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2019 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -179,9 +179,20 @@ qtChildEnumerator<Item> qtChildren(Item* parent)
     return {parent};
 }
 
-#ifndef DOXYGEN
+#if !defined(DOXYGEN) && !(__GNUC__ == 4 && __GNUC_MINOR__ < 9)
 
+//-----------------------------------------------------------------------------
 // Delete dangerous specializations
+//
+// These explicitly deleted overloads exists to prevent users from calling
+// qtEnumerate[Mutable] on a temporary container, which would lead to a
+// dangling reference. Unfortunately, GCC 4.8 has a bug in overload resolution
+// related to r-value references, which causes use of qtEnumerate[Mutable] to
+// be ambiguous if these overloads are present. Since they exists only to
+// prevent users from using the function in a broken manner, they aren't
+// necessary for correct use, so just omit them when compiling with GCC 4.8.
+// Correct code will still work; users of GCC 4.8 will just lose out on
+// incorrect code being caught as an error.
 template <typename T> void qtEnumerate(T&&) = delete;
 template <typename T> void qtEnumerateMutable(T&&) = delete;
 
