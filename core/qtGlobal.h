@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2019 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -12,7 +12,12 @@
 #include <qtExports.h>
 
 #if __cplusplus < 201103L
-#  error qtExtensions requires C++11 or later
+// Visual studio does not bump their reported standard version until VS 2017
+// 15.7 (_MSC_VER == 1914), even though VS 2015 (14.0; _MSC_VER == 1900) has
+// "good enough" C++11 support for our purposes.
+#  if !(_MSC_VER >= 1900 && _MSC_VER < 1914)
+#    error qtExtensions requires C++11 or later
+#  endif
 #endif
 
 #if __cplusplus >= 201703L
@@ -35,7 +40,6 @@
 ///   should use \c override directly.
 #define QTE_OVERRIDE override
 
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
 /// Thread-safe constant with opportunistic static storage.
 ///
 /// This macro declares a constant variable, using static storage if it is
@@ -44,20 +48,24 @@
 /// with non-trivial initialization for which a static is desirable, but not
 /// required.
 ///
-/// \note
-///   Since C++11, initialization of statics is required to be thread safe.
-///   However, Visual Studio did not implement this until VS 2015.
+/// \deprecated
+///   Since C++11, initialization of statics is required to be thread safe,
+///   but Visual Studio did not implement this until VS 2015. Since we now
+///   require at least VS 2015, this macro is no longer needed. New code should
+///   use <code>static Type const</code> directly.
 ///
 /// \param T Data type of variable to be declared.
 #  define QTE_THREADSAFE_STATIC_CONST(T) static T const
 
 /// Declare a private singleton.
 ///
-/// This macro declares a private singleton instance. The singleton is created
-/// on first use in a thread-safe manner; that is, it is guaranteed that the
-/// accessor function will return the same instance when called from multiple
-/// threads simultaneously. The singleton will be destroyed in an unspecified
-/// order when your application or library unloads.
+/// This macro declares a private singleton instance. Unlike a global variable
+/// that merely has static duration, the singleton is not created until a
+/// request for it is made. Upon such request, the singleton is created in a
+/// thread-safe manner; that is, it is guaranteed that the accessor function
+/// will return the same instance when called from multiple threads
+/// simultaneously. The singleton will be destroyed in an unspecified order
+/// when your application or library unloads.
 ///
 /// The singleton accessor function is private to the execution unit in which
 /// the singleton is declared.
@@ -69,11 +77,14 @@
 ///   template argument.
 /// \param name Name of the accessor function.
 ///
-/// \note If multiple threads try to simultaneously access the not-yet-created
-///       singleton, the constructor for \p type may be called more than once.
-///       If this occurs, one instance will be chosen as the One True
-///       Singleton, and the others will be immediately destroyed. You should
-///       ensure that your singleton class is well behaved if this occurs.
+/// \note You should only use this macro if your singleton needs global scope.
+///       Singletons with function-local scope should just declare a static
+///       variable instead, which (since C++11) has the same semantics.
+///
+/// \note Since C++11, it is guaranteed that the singleton will only be
+///       constructed once. If multiple threads try to simultaneously access
+///       the not-yet-created singleton, one thread will be chosen to complete
+///       the initialization while the other threads block.
 ///
 /// \par Example:
 /// \code{.cpp}
@@ -118,18 +129,6 @@
             return &theInstance; \
         } \
     }
-
-#else
-
-#  include <QtGlobal>
-
-#  define QTE_PRIVATE_SINGLETON(type, name) \
-    namespace { Q_GLOBAL_STATIC(type, name) }
-#  define QTE_PRIVATE_SINGLETON_WITH_ARGS(type, name, args) \
-    namespace { Q_GLOBAL_STATIC_WITH_ARGS(type, name, args) }
-#  define QTE_THREADSAFE_STATIC_CONST(T) T const
-
-#endif
 
 /// Declare a class non-copyable.
 ///
