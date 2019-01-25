@@ -55,7 +55,7 @@
 ///   use <code>static Type const</code> directly.
 ///
 /// \param T Data type of variable to be declared.
-#  define QTE_THREADSAFE_STATIC_CONST(T) static T const
+#define QTE_THREADSAFE_STATIC_CONST(T) static T const
 
 /// Declare a private singleton.
 ///
@@ -101,7 +101,7 @@
 ///     return 0;
 /// }
 /// \endcode
-#  define QTE_PRIVATE_SINGLETON(type, name) \
+#define QTE_PRIVATE_SINGLETON(type, name) \
     namespace \
     { \
         type* name() \
@@ -120,7 +120,7 @@
 /// \code{.cpp}
 /// QTE_PRIVATE_SINGLETON_WITH_ARGS(complex<double>, imaginary, (0.0, 1.0))
 /// \endcode
-#  define QTE_PRIVATE_SINGLETON_WITH_ARGS(type, name, args) \
+#define QTE_PRIVATE_SINGLETON_WITH_ARGS(type, name, args) \
     namespace \
     { \
         type* name() \
