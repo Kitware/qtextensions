@@ -55,7 +55,7 @@
 ///   use <code>static Type const</code> directly.
 ///
 /// \param T Data type of variable to be declared.
-#  define QTE_THREADSAFE_STATIC_CONST(T) static T const
+#define QTE_THREADSAFE_STATIC_CONST(T) static T const
 
 /// Declare a private singleton.
 ///
@@ -101,7 +101,7 @@
 ///     return 0;
 /// }
 /// \endcode
-#  define QTE_PRIVATE_SINGLETON(type, name) \
+#define QTE_PRIVATE_SINGLETON(type, name) \
     namespace \
     { \
         type* name() \
@@ -120,7 +120,7 @@
 /// \code{.cpp}
 /// QTE_PRIVATE_SINGLETON_WITH_ARGS(complex<double>, imaginary, (0.0, 1.0))
 /// \endcode
-#  define QTE_PRIVATE_SINGLETON_WITH_ARGS(type, name, args) \
+#define QTE_PRIVATE_SINGLETON_WITH_ARGS(type, name, args) \
     namespace \
     { \
         type* name() \
@@ -475,14 +475,14 @@
          variable != _end; ++variable)
 
 #if __cplusplus >= 201703L || defined(DOXYGEN)
-/// Alias for #using.
+/// Alias for #with_var.
 ///
-/// This macro is a synonym for #using that is guaranteed to be available.
-/// (If QT_NO_KEYWORDS is defined, the more convenient #using is hidden to
+/// This macro is a synonym for #with_var that is guaranteed to be available.
+/// (If QT_NO_KEYWORDS is defined, the more convenient #with_var is hidden to
 /// avoid namespace pollution.)
-#  define QTE_USING(...) if(__VA_ARGS__; true)
+#  define QTE_WITH_VAR(...) if(__VA_ARGS__; true)
 #else
-#  define QTE_USING(...) \
+#  define QTE_WITH_VAR(...) \
     QTE_WITH_IMPL(_qte_scope_flag ## __LINE__, __VA_ARGS__)
 
 #  define QTE_WITH_IMPL(guard, ...) \
@@ -490,20 +490,20 @@
         for (__VA_ARGS__; !guard; ++guard)
 #endif
 
-/// Alias for #with.
+/// Alias for #with_expr.
 ///
-/// This macro is a synonym for #with that is guaranteed to be available.
-/// (If QT_NO_KEYWORDS is defined, the more convenient #with is hidden to
+/// This macro is a synonym for #with_expr that is guaranteed to be available.
+/// (If QT_NO_KEYWORDS is defined, the more convenient #with_expr is hidden to
 /// avoid namespace pollution.)
-#define QTE_WITH(...) \
-    QTE_USING(auto&& _with ## __LINE__ QTE_UNUSED = __VA_ARGS__)
+#define QTE_WITH_EXPR(...) \
+    QTE_WITH_VAR(auto&& _with ## __LINE__ QTE_UNUSED = __VA_ARGS__)
 
 /// Alias for #synchronized.
 ///
 /// This macro is a synonym for #synchronized that is guaranteed to be
 /// available. (If QT_NO_KEYWORDS is defined, the more convenient #synchronized
 /// is hidden to avoid namespace pollution.)
-#define QTE_SYNCHRONIZED(mutex) QTE_WITH(QMutexLocker{mutex})
+#define QTE_SYNCHRONIZED(mutex) QTE_WITH_EXPR(QMutexLocker{mutex})
 
 #ifdef DOXYGEN
 /// Iterate over children.
@@ -610,13 +610,13 @@
 ///
 /// \par Example:
 /// \code{.cpp}
-/// using(QFile f)
+/// with_var(QFile f)
 /// {
 ///     f.open(path);
 ///     ...
 /// }
 /// \endcode
-#  define using(decl)
+#  define with_var(decl)
 /// Use an expression in a scope.
 ///
 /// This macro creates a scope within which an expression is active. This is
@@ -629,14 +629,14 @@
 ///
 /// \par Example:
 /// \code{.cpp}
-/// with(qtScopedSettingsGroup{s, "group"})
+/// with_expr(qtScopedSettingsGroup{s, "group"})
 /// {
 ///     ...
 /// }
 /// \endcode
 ///
 /// \sa #synchronized
-#  define with(expr)
+#  define with_expr(expr)
 /// Declare a critical code section.
 ///
 /// This macro declares a critical section of code that is protected by the
@@ -664,11 +664,11 @@
 #    ifndef foreach_iter
 #      define foreach_iter QTE_FOREACH_ITER
 #    endif
-#    ifndef using
-#      define using(...) QTE_USING(__VA_ARGS__)
+#    ifndef with_var
+#      define with_var(...) QTE_WITH_VAR(__VA_ARGS__)
 #    endif
-#    ifndef with
-#      define with QTE_WITH
+#    ifndef with_expr
+#      define with_expr QTE_WITH_EXPR
 #    endif
 #    ifndef synchronized
 #      define synchronized QTE_SYNCHRONIZED
