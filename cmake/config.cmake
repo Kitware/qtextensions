@@ -83,7 +83,10 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 # Set extra compiler flags
-if(NOT MSVC)
+if(MSVC)
+  # Don't lie about the value of __cplusplus
+  qte_add_cxx_flags(-Zc:__cplusplus)
+else()
   # Determine what flags (if any) are needed for required C++ language support
   # Note: MSVC always uses latest known C++ extensions
   qte_add_cxx_flags_priority(-std=c++11 -std=c++0x)
