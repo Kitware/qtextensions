@@ -317,8 +317,11 @@ if(QTE_BUILD_DESIGNER_PLUGIN)
       Qt5::Core
       Qt5::Gui
       Qt5::Widgets
-      Qt5::Designer
       Qt5::UiPlugin
+    )
+  else()
+    target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
+      Qt4::QtDesigner
     )
   endif()
 
