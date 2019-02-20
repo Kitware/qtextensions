@@ -7,7 +7,6 @@ function(qte_verbose_try_compile variable file message)
   try_compile(${variable}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/configcheck/${file}
-    CMAKE_FLAGS "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}"
   )
   if(${variable})
     message(STATUS "Checking if ${message} - yes")
@@ -29,7 +28,7 @@ function(qte_add_cxx_flags_priority)
     string(REGEX REPLACE "[^a-zA-Z0-9]" "_" varname "${flag}")
     check_cxx_compiler_flag("${flag}" CMAKE_CXX_COMPILER_SUPPORTS_${varname})
     if(CMAKE_CXX_COMPILER_SUPPORTS_${varname})
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}" PARENT_SCOPE)
+      add_compile_options("${flag}")
       set(ADDED_FLAG "${flag}" PARENT_SCOPE)
       return()
     endif()
@@ -43,7 +42,6 @@ function(qte_add_cxx_flags)
   foreach(flag ${ARGN})
     qte_add_cxx_flags_priority("${flag}")
   endforeach()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" PARENT_SCOPE)
 endfunction()
 
 #------------------------------------------------------------------------------
@@ -84,13 +82,12 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 # Set extra compiler flags
 if(MSVC)
-  # Don't lie about the value of __cplusplus
+  # Determine what flags (if any) are needed to prevent the compiler from lying
+  # about it's level of C++ language support (i.e. __cplusplus)
   qte_add_cxx_flags(-Zc:__cplusplus)
-else()
-  # Determine what flags (if any) are needed for required C++ language support
-  # Note: MSVC always uses latest known C++ extensions
-  qte_add_cxx_flags_priority(-std=c++11 -std=c++0x)
   set(QTE_REQUIRED_CXX_FLAGS "${ADDED_FLAG}" CACHE INTERNAL "")
+else()
+  set(QTE_REQUIRED_CXX_FLAGS "" CACHE INTERNAL "")
 
   # Turn on extra warnings if requested
   option(QTE_EXTRA_WARNINGS "Enable extra warnings" ON)
