@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2019 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -162,13 +162,22 @@ void qtColorButton::paintEvent(QPaintEvent* e)
   QStyle* s = this->style();
   QStyleOptionFrameV3 opt;
 
+  opt.initFrom(this);
   opt.frameShape = QFrame::StyledPanel;
+  opt.features = QStyleOptionFrameV3::None;
   opt.state |= QStyle::State_Sunken;
   opt.lineWidth = s->pixelMetric(QStyle::PM_DefaultFrameWidth, &opt);
   opt.palette = d->fillPalette(this->palette());
 
+  // Work around Oxygen style being overly clever
+  auto tinyFont = this->font();
+  tinyFont.setPixelSize(2);
+  opt.fontMetrics = QFontMetrics{tinyFont};
+
+  // Compute rectangle for swatch
   int adjust = s->pixelMetric(QStyle::PM_ButtonMargin);
   opt.rect = this->rect().adjusted(adjust, adjust, -adjust, -adjust);
 
+  // Draw swatch
   s->drawPrimitive(QStyle::PE_PanelLineEdit, &opt, &painter);
 }
