@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -246,7 +246,8 @@ else()
   set(ONCE_THREAD_LIBRARY -lpthread)
 endif()
 
-target_compile_options(${PROJECT_NAME} INTERFACE ${QTE_REQUIRED_CXX_FLAGS})
+target_compile_options(${PROJECT_NAME}Headers INTERFACE
+  ${QTE_REQUIRED_CXX_FLAGS})
 
 target_include_directories(${PROJECT_NAME}Headers SYSTEM INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
