@@ -29,7 +29,7 @@ function(qte_amc_wrap_ui outvar name)
 
       set(QTE_AMC_ENVIRONMENT
         ${CMAKE_COMMAND} -E env "\"PATH=${QT_BIN_DIR}\\;%PATH%\"")
-    elseif (APPLE)
+    else()
       if(QTE_QT_VERSION EQUAL 5)
         if(NOT TARGET Qt5::Core)
           message(FATAL_ERROR "Qt must be found before using qte_amc_wrap_ui")
@@ -42,11 +42,13 @@ function(qte_amc_wrap_ui outvar name)
       endif()
       get_filename_component(QT_LIB_DIR "${QT_QTCORE_LIBRARY}" DIRECTORY)
 
-      set(QTE_AMC_ENVIRONMENT
-        ${CMAKE_COMMAND} -E env "\"DYLD_FALLBACK_LIBRARY_PATH=${QT_LIB_DIR}:\${DYLD_FALLBACK_LIBRARY_PATH}\"")
-    else()
-      # TODO need to set library path?
-      set(QTE_AMC_ENVIRONMENT)
+      if(APPLE)
+        set(QTE_AMC_ENVIRONMENT
+          ${CMAKE_COMMAND} -E env "\"DYLD_FALLBACK_LIBRARY_PATH=${QT_LIB_DIR}:\${DYLD_FALLBACK_LIBRARY_PATH}\"")
+      else()
+        set(QTE_AMC_ENVIRONMENT
+          ${CMAKE_COMMAND} -E env "\"LD_LIBRARY_PATH=${QT_LIB_DIR}:\${LD_LIBRARY_PATH}\"")
+      endif()
     endif()
   endif()
 
