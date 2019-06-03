@@ -74,6 +74,7 @@ option(QTE_BUILD_DESIGNER_PLUGIN "Build plugin for Designer" ON)
 # Use RPATH on OS/X
 if(APPLE)
   set(CMAKE_MACOSX_RPATH TRUE)
+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 endif()
 
 # Set compiler flags for exports (e.g. -fvisibility=hidden)
