@@ -84,7 +84,7 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 if(MSVC)
   # Determine what flags (if any) are needed to prevent the compiler from lying
   # about it's level of C++ language support (i.e. __cplusplus)
-  qte_add_cxx_flags(-Zc:__cplusplus)
+  qte_add_cxx_flags_priority(-Zc:__cplusplus)
   set(QTE_REQUIRED_CXX_FLAGS "${ADDED_FLAG}" CACHE INTERNAL "")
 else()
   set(QTE_REQUIRED_CXX_FLAGS "" CACHE INTERNAL "")
