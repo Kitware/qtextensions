@@ -16,32 +16,26 @@ function(qte_verbose_try_compile variable file message)
 endfunction()
 
 #------------------------------------------------------------------------------
-# Add first of specified flags that is supported by the compiler
-function(qte_add_cxx_flags_priority)
-  string(REPLACE " " ";" initial_flags "${CMAKE_CXX_FLAGS}")
-  foreach(flag ${ARGN})
-    list(FIND initial_flags ${flag} FLAG_INDEX)
-    if(NOT FLAG_INDEX EQUAL -1)
-      set(ADDED_FLAG "${flag}" PARENT_SCOPE)
-      return()
-    endif()
-    string(REGEX REPLACE "[^a-zA-Z0-9]" "_" varname "${flag}")
-    check_cxx_compiler_flag("${flag}" CMAKE_CXX_COMPILER_SUPPORTS_${varname})
-    if(CMAKE_CXX_COMPILER_SUPPORTS_${varname})
-      add_compile_options("${flag}")
-      set(ADDED_FLAG "${flag}" PARENT_SCOPE)
-      return()
-    endif()
-  endforeach()
-  set(ADDED_FLAG "" PARENT_SCOPE)
-endfunction()
-
-#------------------------------------------------------------------------------
 # Add specified flags, if supported by the compiler
 function(qte_add_cxx_flags)
+  set(ADDED_FLAGS "")
+  string(REPLACE " " ";" initial_flags "${CMAKE_CXX_FLAGS}")
+
   foreach(flag ${ARGN})
-    qte_add_cxx_flags_priority("${flag}")
+    list(FIND initial_flags ${flag} FLAG_INDEX)
+    if(FLAG_INDEX EQUAL -1)
+      string(REGEX REPLACE "[^a-zA-Z0-9]" "_" varname "${flag}")
+      check_cxx_compiler_flag("${flag}" CMAKE_CXX_COMPILER_SUPPORTS_${varname})
+      if(CMAKE_CXX_COMPILER_SUPPORTS_${varname})
+        add_compile_options("${flag}")
+        list(APPEND ADDED_FLAGS "${flag}")
+      endif()
+    else()
+      list(APPEND ADDED_FLAGS "${flag}")
+    endif()
   endforeach()
+
+  set(ADDED_FLAGS "${ADDED_FLAGS}" PARENT_SCOPE)
 endfunction()
 
 #------------------------------------------------------------------------------
@@ -85,7 +79,7 @@ if(MSVC)
   # Determine what flags (if any) are needed to prevent the compiler from lying
   # about it's level of C++ language support (i.e. __cplusplus)
   qte_add_cxx_flags(-Zc:__cplusplus)
-  set(QTE_REQUIRED_CXX_FLAGS "${ADDED_FLAG}" CACHE INTERNAL "")
+  set(QTE_REQUIRED_CXX_FLAGS "${ADDED_FLAGS}" CACHE INTERNAL "")
 else()
   set(QTE_REQUIRED_CXX_FLAGS "" CACHE INTERNAL "")
 
