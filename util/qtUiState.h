@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2019 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -13,6 +13,7 @@ class QAbstractButton;
 class QAction;
 class QDoubleSpinBox;
 class QGroupBox;
+class QHeaderView;
 class QLineEdit;
 class QMainWindow;
 class QSettings;
@@ -169,6 +170,12 @@ public:
   /// layout of children) of a QSplitter.
   /// \sa QSplitter::saveState, QSplitter::restoreState
   void mapState(const QString& key, QSplitter*);
+  /// Define mapping of a QHeaderView's state.
+  ///
+  /// This method defines a mapping to save and restore the state (section
+  /// sizes and sorting) of a QHeaderView.
+  /// \sa QHeaderView::saveState, QHeaderView::restoreState
+  void mapState(const QString& key, QHeaderView*);
 
   /// Define mapping of a widget's geometry.
   ///
