@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2019 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -62,7 +62,7 @@ namespace qtNaturalSort
     /// Alternate digit forms, including those which require multi-unit
     /// encoding in UTF-16, are handled properly. Additionally, numeric
     /// comparison is performed digit by digit, allowing a correct result to be
-    /// produces in the face of arbitrarily long digit sequences.
+    /// produced in the face of arbitrarily long digit sequences.
     ///
     /// \note
     ///   General purpose natural sorting is an impossible problem. In order to
