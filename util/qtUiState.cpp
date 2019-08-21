@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2019 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -13,6 +13,7 @@
 #include <QDoubleSpinBox>
 #include <QGroupBox>
 #include <QHash>
+#include <QHeaderView>
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QRegExp>
@@ -395,6 +396,16 @@ void qtUiState::mapState(const QString& key, QSplitter* widget)
   qtUiState::AbstractItem* item =
     new qtUiStatePrivate::StateItem<QSplitter>(
     widget, &QSplitter::saveState, &QSplitter::restoreState);
+  d->map(key, item);
+}
+
+//-----------------------------------------------------------------------------
+void qtUiState::mapState(const QString& key, QHeaderView* view)
+{
+  QTE_D(qtUiState);
+  qtUiState::AbstractItem* item =
+    new qtUiStatePrivate::StateItem<QHeaderView>(
+    view, &QHeaderView::saveState, &QHeaderView::restoreState);
   d->map(key, item);
 }
 
