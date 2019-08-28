@@ -683,4 +683,63 @@
 /// textual name, saving the users having to type the name twice.
 #define QTE_REGISTER_METATYPE(type) qRegisterMetaType<type>(#type)
 
+#ifdef Q_MOC_RUN
+
+#  define QTE_BEGIN_META_NAMESPACE(exportdecl, name) \
+    class exportdecl name \
+    { \
+        Q_GADGET \
+    public:
+
+#  define QTE_END_META_NAMESPACE() };
+
+#  define QTE_ENUM_NS(x) Q_ENUM(x)
+#  define QTE_FLAG_NS(x) Q_FLAG(x)
+
+#else
+
+/// Begin an exported inline namespace with QTE_ENUM/QTE_FLAG support.
+///
+/// This macro declares the start of a namespace in which #QTE_ENUM and
+/// #QTE_FLAG may be used. It is useful for working around the inability to
+/// properly export a Q_NAMESPACE-decorated namespace (prior to the
+/// introduction of Q_NAMESPACE_EXPORT in Qt 5.14), but use of inline
+/// namespaces also works around the limitation that Q_NAMESPACE can only be
+/// used in a single header. (The inline namespace names must be unique, but
+/// their declarations will appear in the parent scope.)
+///
+/// \param exportdecl Export decoration symbol to use to export the namespace.
+/// \param name Name of the inline sub-namespace to be declared.
+///
+/// \sa QTE_END_META_NAMESPACE, Q_NAMESPACE
+#  define QTE_BEGIN_META_NAMESPACE(exportdecl, name) \
+    inline namespace name \
+    { \
+        extern exportdecl const QMetaObject staticMetaObject;
+
+/// End an exported namespace with QTE_ENUM/QTE_FLAG support.
+///
+/// \sa QTE_BEGIN_META_NAMESPACE
+#  define QTE_END_META_NAMESPACE() }
+
+/// Register an enumeration in a namespace with the type system.
+///
+/// This adds Qt meta-object functionality to the specified enumeration, which
+/// resides within a namespace. This macro is equivalent to Q_ENUM_NS, but may
+/// be used inside #QTE_BEGIN_META_NAMESPACE / #QTE_END_META_NAMESPACE.
+///
+/// \sa Q_ENUM_NS
+#  define QTE_ENUM_NS(name) Q_ENUM_NS(name)
+
+/// Register a flags type in a namespace with the type system.
+///
+/// This adds Qt meta-object functionality to the specified flags type, which
+/// resides within a namespace. This macro is equivalent to Q_FLAG_NS, but may
+/// be used inside #QTE_BEGIN_META_NAMESPACE / #QTE_END_META_NAMESPACE.
+///
+/// \sa Q_FLAG_NS
+#  define QTE_FLAG_NS(name) Q_FLAG_NS(name)
+
+#endif
+
 #endif
