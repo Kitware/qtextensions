@@ -21,6 +21,7 @@ qte_add_test(testSqueezedLabel INTERACTIVE
   SOURCES TestSqueezedLabel.cpp
 )
 
+qte_add_test(testCloseButton        INTERACTIVE TestCloseButton.cpp)
 qte_add_test(testColorButton        INTERACTIVE TestColorButton.cpp)
 qte_add_test(testConfirmationDialog INTERACTIVE TestConfirmationDialog.cpp)
 qte_add_test(testGradientEditor     INTERACTIVE TestGradientEditor.cpp)
