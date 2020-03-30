@@ -88,6 +88,7 @@ set(qtExtensionsSources
     io/qtKstSeparator.cpp
     io/qtTemporaryFile.cpp
     # Widgets
+    widgets/qtCloseButton.cpp
     widgets/qtColorButton.cpp
     widgets/qtDoubleSlider.cpp
     widgets/qtDrawer.cpp
@@ -181,6 +182,7 @@ set(qtExtensionsInstallHeaders
     io/qtStringStream.h
     io/qtTemporaryFile.h
     # Widgets
+    widgets/qtCloseButton.h
     widgets/qtColorButton.h
     widgets/qtDoubleSlider.h
     widgets/qtDrawer.h
@@ -289,6 +291,7 @@ qte_install_library_targets(${PROJECT_NAME} ${PROJECT_NAME}Headers)
 if(QTE_BUILD_DESIGNER_PLUGIN)
   # Explicitly wrap pure interface headers (that don't have source files)
   qte_wrap_cpp(qtExtensionsDesignerPluginMocSources
+    designer/qtCloseButtonInterface.h
     designer/qtColorButtonInterface.h
     designer/qtDoubleSliderInterface.h
     designer/qtExpanderInterface.h
@@ -360,6 +363,7 @@ set(qtExtensionsWrapObjects
     # IO
     qtTemporaryFile
     # Widgets
+    qtCloseButton
     qtColorButton
     qtDrawerWidget
     qtExpander
