@@ -105,6 +105,7 @@ set(qtExtensionsSources
     itemviews/qtColorButtonItemWidget.cpp
     itemviews/qtComboBoxDelegate.cpp
     itemviews/qtDoubleSpinBoxDelegate.cpp
+    itemviews/qtHeaderView.cpp
     itemviews/qtListDelegate.cpp
     itemviews/qtRichTextDelegate.cpp
     itemviews/qtSpinBoxDelegate.cpp
@@ -200,6 +201,7 @@ set(qtExtensionsInstallHeaders
     itemviews/qtComboBoxDelegate.h
     itemviews/qtDoubleSpinBoxDelegate.h
     itemviews/qtFlagListDelegate.h
+    itemviews/qtHeaderView.h
     itemviews/qtListDelegate.h
     itemviews/qtNumericTreeWidgetItem.h
     itemviews/qtRichTextDelegate.h
@@ -377,6 +379,7 @@ set(qtExtensionsWrapObjects
     qtColorButtonItemWidget
     qtComboBoxDelegate
     qtDoubleSpinBoxDelegate
+	qtHeaderView
     #qtFlagListDelegate - not wrapped for now; template class, maybe impossible
     qtListDelegate
     qtNumericTreeWidgetItem

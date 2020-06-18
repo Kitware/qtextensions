@@ -7,6 +7,8 @@
 #include "qtUiState.h"
 #include "qtUiStateItem.h"
 
+#include "qtHeaderView.h"
+
 #include <QAbstractButton>
 #include <QAction>
 #include <QDebug>
@@ -406,6 +408,16 @@ void qtUiState::mapState(const QString& key, QHeaderView* view)
   qtUiState::AbstractItem* item =
     new qtUiStatePrivate::StateItem<QHeaderView>(
     view, &QHeaderView::saveState, &QHeaderView::restoreState);
+  d->map(key, item);
+}
+
+//-----------------------------------------------------------------------------
+void qtUiState::mapState(const QString& key, qtHeaderView* view)
+{
+  QTE_D(qtUiState);
+  qtUiState::AbstractItem* item =
+    new qtUiStatePrivate::StateItem<qtHeaderView>(
+      view, &qtHeaderView::saveState, &qtHeaderView::restoreState);
   d->map(key, item);
 }
 

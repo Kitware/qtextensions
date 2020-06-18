@@ -27,6 +27,7 @@ class QWidget;
 
 class QVariant;
 
+class qtHeaderView;
 class qtUiStatePrivate;
 
 //-----------------------------------------------------------------------------
@@ -176,6 +177,12 @@ public:
   /// sizes and sorting) of a QHeaderView.
   /// \sa QHeaderView::saveState, QHeaderView::restoreState
   void mapState(const QString& key, QHeaderView*);
+  /// Define mapping of a qtHeaderView's state.
+  ///
+  /// This method defines a mapping to save and restore the state
+  /// (sortability) of a qtHeaderView.
+  /// \sa qtHeaderView::saveState, qtHeaderView::restoreState
+  void qtUiState::mapState(const QString& key, qtHeaderView* view);
 
   /// Define mapping of a widget's geometry.
   ///
