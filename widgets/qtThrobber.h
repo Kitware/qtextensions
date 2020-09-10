@@ -15,37 +15,49 @@ class qtThrobberPrivate;
 
 class QTE_EXPORT qtThrobber : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY(bool active READ isActive WRITE setActive)
-  Q_PROPERTY(int maxThrobberSize READ maxThrobberSize WRITE setMaxThrobberSize)
+    Q_PROPERTY(bool active READ isActive WRITE setActive)
+    Q_PROPERTY(int maxThrobberSize
+               READ maxThrobberSize
+               WRITE setMaxThrobberSize)
+    Q_PROPERTY(Style style READ style WRITE setStyle)
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity)
 
 public:
-  qtThrobber(QWidget* parent = 0);
-  virtual ~qtThrobber();
+    enum Style
+    {
+        BlackAndWhite,
+        TranslucentForeground,
+    };
+    Q_ENUM(Style)
 
-  QSize minimumSizeHint() const;
-  bool isActive() const;
-  int maxThrobberSize() const;
+    qtThrobber(QWidget* parent = 0);
+    virtual ~qtThrobber();
+
+    QSize minimumSizeHint() const;
+    bool isActive() const;
+    Style style() const;
+    qreal opacity() const;
+    int maxThrobberSize() const;
 
 signals:
-  void toggled(bool);
+    void toggled(bool);
 
 public slots:
-  void setActive(bool);
-  void setMaxThrobberSize(int);
-
-protected slots:
-  void step();
+    void setActive(bool);
+    void setStyle(Style);
+    void setOpacity(qreal);
+    void setMaxThrobberSize(int);
 
 protected:
-  QTE_DECLARE_PRIVATE_RPTR(qtThrobber)
+    QTE_DECLARE_PRIVATE_RPTR(qtThrobber)
 
-  void paintEvent(QPaintEvent*);
+    void paintEvent(QPaintEvent*);
 
 private:
-  QTE_DECLARE_PRIVATE(qtThrobber)
-  QTE_DISABLE_COPY(qtThrobber)
+    QTE_DECLARE_PRIVATE(qtThrobber)
+    QTE_DISABLE_COPY(qtThrobber)
 };
 
 #endif
