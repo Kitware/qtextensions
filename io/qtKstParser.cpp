@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -318,7 +318,7 @@ static bool parseReal(double& out, const QString& ss, QString sip, QString sfp,
   // Calculate a cutoff; up to this value we will shift around digits and
   // adjust the exponent so that the accumulator is always an integer, to
   // minimize rounding error
-  quint64 cutoff = (1LL << 48) / base;
+  quint64 cutoff = (1ULL << 48) / static_cast<unsigned>(base);
   long double macc = 0.0;
 
   while (!sip.isEmpty() || !sfp.isEmpty())
@@ -351,8 +351,8 @@ static bool parseReal(double& out, const QString& ss, QString sip, QString sfp,
     // At this point, we are either out of digits, or the remaining digits will
     // start losing precision... in either case apply the exponent to what we
     // have so far
-    long double ev = pow(static_cast<long double>(base),
-                         static_cast<long double>(exponent));
+    long double ev = std::pow(static_cast<long double>(base),
+                              static_cast<long double>(exponent));
     acc *= ev;
 
     if (macc == 0.0)
@@ -377,7 +377,7 @@ static bool parseReal(double& out, const QString& ss, QString sip, QString sfp,
       }
     }
 
-  out = (negative ? -macc : macc);
+  out = static_cast<double>(negative ? -macc : macc);
   return true;
 }
 
@@ -409,7 +409,7 @@ static bool parseArcLong(qint64& out, const QString& sign,
 
   if (!min.isEmpty())
     {
-    quint64 acc = min.left(min.length() - 1).toLongLong(&okay) / 6;
+    quint64 acc = min.left(min.length() - 1).toULongLong(&okay) / 6;
     if (!okay)
       {
       return false;
@@ -423,7 +423,7 @@ static bool parseArcLong(qint64& out, const QString& sign,
 
   if (!sip.isEmpty())
     {
-    quint64 acc = sip.left(sip.length() - 2).toLongLong(&okay) / 36;
+    quint64 acc = sip.left(sip.length() - 2).toULongLong(&okay) / 36;
     if (!okay)
       {
       return false;

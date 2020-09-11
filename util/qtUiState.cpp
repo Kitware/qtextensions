@@ -267,7 +267,7 @@ void qtUiState::save(const QStringList& keys) const
     {
     matchingKeys += QSet<QString>::fromList(d->matchingKeys(pattern));
     }
-  d->save(matchingKeys.toList());
+  d->save(matchingKeys.values());
 }
 
 //-----------------------------------------------------------------------------
@@ -294,7 +294,7 @@ void qtUiState::restore(const QStringList& keys) const
     {
     matchingKeys += QSet<QString>::fromList(d->matchingKeys(pattern));
     }
-  d->restore(matchingKeys.toList());
+  d->restore(matchingKeys.values());
 }
 
 //-----------------------------------------------------------------------------

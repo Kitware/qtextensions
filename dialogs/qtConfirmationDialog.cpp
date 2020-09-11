@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -76,6 +76,7 @@ void qtConfirmationDialog::setScope(AskPreferenceScope scope)
     {
     case qtConfirmationDialog::RememberSession:
       d->UI.noAskSession->setChecked(true);
+      Q_FALLTHROUGH();
     case qtConfirmationDialog::RememberForever:
       d->UI.noAskEver->setChecked(true);
     default:

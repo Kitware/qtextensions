@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -170,7 +170,7 @@ void qtGradientEditor::setGradient(qtGradient const& gradient)
     static auto const ifs = minBit(ifm);
     static auto const css = minBit(csm);
 
-    auto const im = gradient.interpolationMode();
+    auto const im = static_cast<int>(gradient.interpolationMode());
     d->ui.mode->setCurrentIndex((im & ifm) >> ifs);
     d->ui.colorSpace->setCurrentIndex((im & csm) >> css);
 

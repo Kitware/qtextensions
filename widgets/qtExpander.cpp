@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -116,7 +116,7 @@ void qtExpander::paintEvent(QPaintEvent*)
 
     // Draw text
     p.drawItemText(opt.rect.adjusted(aw, 0, 0, 0), Qt::AlignCenter,
-                   this->palette(), this->isEnabledToTLW(), text,
+                   this->palette(), this->isEnabled(), text,
                    QPalette::ButtonText);
 
     // Shrink rect to just cover arrow
