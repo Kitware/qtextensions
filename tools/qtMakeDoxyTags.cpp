@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -111,10 +111,10 @@ QDomNode parseInput(
     QDomDocument html;
     QString error;
     int el, ec;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    // At least Qt 5.9.4 has invalid generated XHTML due to a broken element in
-    // the copyright footer. Work around the problem by correcting the
-    // malformed element before passing the content on to QDomDocument.
+#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
+    // Some older versions of Qt5 have invalid generated XHTML due to a broken
+    // element in the copyright footer. Work around the problem by correcting
+    // the malformed element before passing the content on to QDomDocument.
     // See https://bugreports.qt.io/browse/QTBUG-68459.
     auto const& content = file.readAll().replace("<br>", "<br/>");
     if (!html.setContent(content, &error, &el, &ec))

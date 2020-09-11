@@ -54,13 +54,14 @@ endfunction()
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
-set(QTE_QT_VERSION "4" CACHE STRING "Qt version to use")
-set_property(CACHE QTE_QT_VERSION PROPERTY STRINGS 4 5)
+# TODO support Qt6?
+set(QTE_QT_VERSION "5" CACHE STRING "Qt version to use")
+set_property(CACHE QTE_QT_VERSION PROPERTY STRINGS 5)
 
-cmake_dependent_option(
-  QTE_ENABLE_PYTHON "Enable qtExtensions Python (PySide) bindings" OFF
-  "QTE_QT_VERSION EQUAL 4" OFF # TODO Support PySide2
-)
+# TODO port to PySide2
+# option(
+#   QTE_ENABLE_PYTHON "Enable qtExtensions Python (PySide) bindings" OFF
+# )
 
 option(QTE_BUILD_DOCUMENTATION "Build API documentation" OFF)
 option(QTE_BUILD_DESIGNER_PLUGIN "Build plugin for Designer" ON)

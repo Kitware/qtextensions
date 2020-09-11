@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -7,9 +7,9 @@
 #ifndef __qtUiStateItem_h
 #define __qtUiStateItem_h
 
-#include "qtPointer.h"
 #include "qtUiState.h"
 
+#include <QPointer>
 #include <QVariant>
 
 //-----------------------------------------------------------------------------
@@ -62,7 +62,7 @@ public:
     virtual void setValue(QVariant const&) QTE_OVERRIDE;
 
 protected:
-    qtPointer<O> object;
+    QPointer<O> object;
     ReadMethod const read;
     WriteRefMethod const writeRef;
     WriteValMethod const writeVal;

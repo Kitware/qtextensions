@@ -18,7 +18,7 @@ if(QTE_BUILD_DOCUMENTATION)
 endif()
 
 # Find Qt5
-find_package(Qt5 5.4 COMPONENTS ${Qt5_REQUIRED_MODULES} REQUIRED)
+find_package(Qt5 5.10 COMPONENTS ${Qt5_REQUIRED_MODULES} REQUIRED)
 
 # Set list of modules to link against
 set(QT_LIBRARIES)
@@ -37,10 +37,4 @@ get_property(QT_QMAKE_EXECUTABLE
 # Define version-compatibility macros
 macro(qte_wrap_cpp)
   qt5_wrap_cpp(${ARGN})
-endmacro()
-macro(qte_wrap_ui)
-  qt5_wrap_ui(${ARGN})
-endmacro()
-macro(qte_add_resources)
-  qt5_add_resources(${ARGN})
 endmacro()

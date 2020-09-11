@@ -14,10 +14,6 @@
 #include "qtSqueezedLabelInterface.h"
 #include "qtThrobberInterface.h"
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN2(qtExtensionsDesignerPlugin, qtDesignerPlugin)
-#endif
-
 //-----------------------------------------------------------------------------
 qtDesignerPlugin::qtDesignerPlugin(QObject* parent) : QObject(parent)
 {

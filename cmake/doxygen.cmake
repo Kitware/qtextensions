@@ -155,29 +155,20 @@ if(QTE_BUILD_DOCUMENTATION)
       HINTS ${QT_BINARY_DIR})
   endif()
 
-  if (QTE_QT_VERSION EQUAL 4)
-    # Find Qt4 tag file
-    find_file(QT_TAG_FILE
-      NAMES qt4.tags qt4.tag qt.tags qt.tag
-      PATHS "${QT_DOC_DIR}"
-      PATH_SUFFIXES html
-    )
-  else()
-    # Find Qt5::QtCore tag file
-    if (NOT QT_DOC_DIR)
-      qte_query_qmake(QT_INSTALL_DOCS qt_doc_dir)
-      set(QT_DOC_DIR
-        ${qt_doc_dir}
-        CACHE PATH "The location of the Qt docs" FORCE
-      )
-    endif()
-
-    find_file(QT_TAG_FILE
-      NAMES qtcore.tags
-      PATHS "${QT_DOC_DIR}"
-      PATH_SUFFIXES qtcore
+  # Find Qt5::QtCore tag file
+  if (NOT QT_DOC_DIR)
+    qte_query_qmake(QT_INSTALL_DOCS qt_doc_dir)
+    set(QT_DOC_DIR
+      ${qt_doc_dir}
+      CACHE PATH "The location of the Qt docs" FORCE
     )
   endif()
+
+  find_file(QT_TAG_FILE
+    NAMES qtcore.tags
+    PATHS "${QT_DOC_DIR}"
+    PATH_SUFFIXES qtcore
+  )
   get_filename_component(QT_DOC_DIR_FULL
     "${QT_TAG_FILE}" DIRECTORY
   )

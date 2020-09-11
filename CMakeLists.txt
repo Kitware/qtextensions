@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -54,7 +56,6 @@ set(qtExtensionsSources
     core/qtDebug.cpp
     core/qtOnce.cpp
     core/qtScopedValueChange.cpp
-    core/qtStlUtil.cpp
     core/qtTest.cpp
     core/qtThread.cpp
     core/qtUtil.cpp
@@ -122,12 +123,6 @@ set(qtExtensionsSources
     sax/qtSaxWriter.cpp
 )
 
-set(qtExtensionsUiFiles
-    dialogs/qtActionManagerDialog.ui
-    dialogs/qtConfirmationDialog.ui
-    dialogs/qtGradientEditor.ui
-)
-
 set(qtExtensionsInstallHeaders
     # Core
     core/qtCliArgs.h
@@ -144,7 +139,6 @@ set(qtExtensionsInstallHeaders
     core/qtIndexRange.h
     core/qtMath.h
     core/qtOnce.h
-    core/qtPointer.h
     core/qtScopedValueChange.h
     core/qtStlUtil.h
     core/qtTest.h
@@ -226,8 +220,6 @@ set(qtExtensionsInstallHeaders
 
 # BEGIN qtExtensions library build rules
 
-qte_wrap_ui(qtExtensionsUiSources ${qtExtensionsUiFiles})
-
 source_group("Generated" FILES
   ${qtExtensionsUiSources}
 )
@@ -275,10 +267,6 @@ target_link_libraries(${PROJECT_NAME}
   ${ONCE_THREAD_LIBRARY}
 )
 
-if(MSVC AND QTE_QT_VERSION LESS 5)
-  set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS /Zc:wchar_t-)
-endif()
-
 qte_install_includes(include/QtE ${qtExtensionsInstallHeaders} qtExports.h)
 qte_install_library_targets(${PROJECT_NAME} ${PROJECT_NAME}Headers)
 
@@ -316,18 +304,12 @@ if(QTE_BUILD_DESIGNER_PLUGIN)
     ${PROJECT_NAME}
   )
 
-  if (QTE_QT_VERSION EQUAL 5)
-    target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
-      Qt5::Core
-      Qt5::Gui
-      Qt5::Widgets
-      Qt5::UiPlugin
-    )
-  else()
-    target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
-      Qt4::QtDesigner
-    )
-  endif()
+  target_link_libraries(${PROJECT_NAME}DesignerPlugin PRIVATE
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::UiPlugin
+  )
 
   install(TARGETS ${PROJECT_NAME}DesignerPlugin LIBRARY
     COMPONENT Development
