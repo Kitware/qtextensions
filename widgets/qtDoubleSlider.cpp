@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -110,16 +110,18 @@ QStyle::SubControl qtDoubleSliderPrivate::hitTest(const QPoint& pos) const
 bool qtDoubleSliderPrivate::isAbsoluteSetButton(Qt::MouseButtons b) const
 {
   QTE_Q_CONST(qtDoubleSlider);
-  int sh = q->style()->styleHint(QStyle::SH_Slider_AbsoluteSetButtons);
-  return ((sh & b) == b);
+  auto const bi = static_cast<int>(b);
+  auto const sh = q->style()->styleHint(QStyle::SH_Slider_AbsoluteSetButtons);
+  return ((sh & bi) == bi);
 }
 
 //-----------------------------------------------------------------------------
 bool qtDoubleSliderPrivate::isPageSetButton(Qt::MouseButtons b) const
 {
   QTE_Q_CONST(qtDoubleSlider);
+  auto const bi = static_cast<int>(b);
   int sh = q->style()->styleHint(QStyle::SH_Slider_PageSetButtons);
-  return ((sh & b) == b);
+  return ((sh & bi) == bi);
 }
 
 //END qtDoubleSliderPrivate

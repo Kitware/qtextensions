@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2019 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -162,7 +162,7 @@ public:
   virtual void setValue(const QVariant&);
 
 protected:
-  qtPointer<O> object;
+  QPointer<O> object;
   int version;
   const ReadMethod read;
   const ReadVersionedMethod readVersioned;
@@ -267,7 +267,7 @@ void qtUiState::save(const QStringList& keys) const
     {
     matchingKeys += QSet<QString>::fromList(d->matchingKeys(pattern));
     }
-  d->save(matchingKeys.toList());
+  d->save(matchingKeys.values());
 }
 
 //-----------------------------------------------------------------------------
@@ -294,7 +294,7 @@ void qtUiState::restore(const QStringList& keys) const
     {
     matchingKeys += QSet<QString>::fromList(d->matchingKeys(pattern));
     }
-  d->restore(matchingKeys.toList());
+  d->restore(matchingKeys.values());
 }
 
 //-----------------------------------------------------------------------------

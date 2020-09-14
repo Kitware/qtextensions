@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2013 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -15,7 +15,7 @@ namespace // anonymous
 {
 
 //-----------------------------------------------------------------------------
-int itemMargin(const QStyleOptionViewItemV4& opt)
+int itemMargin(const QStyleOptionViewItem& opt)
 {
   QStyle* const style =
     (opt.widget ? opt.widget->style() : QApplication::style());
@@ -23,7 +23,7 @@ int itemMargin(const QStyleOptionViewItemV4& opt)
 }
 
 //-----------------------------------------------------------------------------
-void buildItemDocument(QTextDocument& doc, const QStyleOptionViewItemV4& opt)
+void buildItemDocument(QTextDocument& doc, const QStyleOptionViewItem& opt)
 {
   doc.setHtml(opt.text);
   doc.setDocumentMargin(0);
@@ -48,7 +48,7 @@ void qtRichTextDelegate::paint(
   QPainter* painter, const QStyleOptionViewItem& option,
   const QModelIndex& index) const
 {
-  QStyleOptionViewItemV4 opt = option;
+  QStyleOptionViewItem opt = option;
   this->initStyleOption(&opt, index);
 
   QStyle* const style =
@@ -86,7 +86,7 @@ void qtRichTextDelegate::paint(
 QSize qtRichTextDelegate::sizeHint(
   const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-  QStyleOptionViewItemV4 opt = option;
+  QStyleOptionViewItem opt = option;
   this->initStyleOption(&opt, index);
 
   // Build HTML document from text
@@ -94,8 +94,8 @@ QSize qtRichTextDelegate::sizeHint(
   buildItemDocument(doc, opt);
 
   // Get document size
-  const QSize documentSize(doc.idealWidth(), doc.size().height());
+  auto const documentSize = QSizeF{doc.idealWidth(), doc.size().height()};
 
   // Return document size adjusted by item margin
-  return documentSize + QSize(2 * itemMargin(opt), 0);
+  return documentSize.toSize() + QSize{2 * itemMargin(opt), 0};
 }

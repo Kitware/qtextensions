@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -770,7 +770,7 @@ char** qtCliArgs::qtArgv()
   while (k--)
     {
     QByteArray arg = d->qtArgs[k].toLocal8Bit();
-    int al = arg.size();
+    auto al = static_cast<size_t>(arg.size());
     char* parg = new char[al + 1];
     memcpy(parg, arg.constData(), sizeof(char) * (al + 1));
     argv[k] = parg;

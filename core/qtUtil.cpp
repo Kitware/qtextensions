@@ -1,8 +1,10 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
+
+#include "qtUtil.h"
 
 #include <QAction>
 #include <QApplication>
@@ -15,7 +17,7 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItemIterator>
 
-#include "qtUtil.h"
+#include <algorithm>
 
 namespace qtUtil
 {
@@ -30,7 +32,7 @@ bool localeLess(const QString& a, const QString& b)
 QStringList localeSort(const QStringList& list)
 {
   QStringList result = list;
-  qSort(result.begin(), result.end(), &localeLess);
+  std::sort(result.begin(), result.end(), &localeLess);
   return result;
 }
 
@@ -156,7 +158,7 @@ void resizeColumnsToContents(QTreeWidget* tree, bool includeCollapsedItems)
 
       // Calculate size of text and icon
       QFontMetrics fm(font);
-      int tw = fm.width(text);
+      int tw = fm.boundingRect(text).width();
       if (!icon.isNull())
         {
         tw += icon.actualSize(tree->iconSize()).width();

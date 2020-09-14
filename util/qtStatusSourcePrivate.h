@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -7,9 +7,9 @@
 #include "qtStatusSource.h"
 
 #include "qtEnableSharedFromThis.h"
-#include "qtPointer.h"
 
 #include <QObject>
+#include <QPointer>
 
 class qtStatusSourcePrivate
     : public qtEnableSharedFromThis<qtStatusSourcePrivate, QObject>
@@ -32,7 +32,7 @@ private:
   friend QDebug& operator<<(QDebug&, const qtStatusSource&);
 
   QObject* owner;
-  qtPointer<QObject> ownerRef;
+  QPointer<QObject> ownerRef;
   QString ownerIdentifier;
   QString displayIdentifier;
 };

@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -14,9 +14,7 @@
 #include <QStack>
 #include <QThreadStorage>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QMessageLogContext>
-#endif
 
 namespace // anonymous
 {
@@ -42,8 +40,6 @@ static void qtMessageHandler(
     }
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-
 //-----------------------------------------------------------------------------
 static void qtMessageHandler(
     QtMsgType type, QMessageLogContext const& context, QString const& msg)
@@ -51,17 +47,6 @@ static void qtMessageHandler(
     Q_UNUSED(context);
     qtMessageHandler(type, msg, qtTest::StreamPointer());
 }
-
-#else
-
-//-----------------------------------------------------------------------------
-static void qtMessageHandler(QtMsgType type, char const* msg)
-{
-    qtMessageHandler(type, QString::fromLocal8Bit(msg),
-                     qtTest::StreamPointer());
-}
-
-#endif
 
 } // namespace <anonymous>
 
@@ -113,11 +98,7 @@ void qtTest::init()
     if (!initialized)
     {
         initialized = true;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         qInstallMessageHandler(&qtMessageHandler);
-#else
-        qInstallMsgHandler(&qtMessageHandler);
-#endif
     }
 }
 

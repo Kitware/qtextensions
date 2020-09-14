@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -293,7 +293,8 @@ void qtStatusManager::setStatusText(qtStatusSource source, QString text)
 void qtStatusManager::setProgress(qtStatusSource source, bool available,
                                   qreal value)
 {
-  this->setProgress(source, available, value * 10000.0, 0, 10000);
+  this->setProgress(
+    source, available, static_cast<int>(value * 10000.0), 0, 10000);
 }
 
 //-----------------------------------------------------------------------------

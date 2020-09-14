@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -12,12 +12,10 @@
 #include <QScopedPointer>
 #include <QtAlgorithms>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 namespace QtMetaTypePrivate
 {
   template <typename, bool> struct QMetaTypeFunctionHelper;
 }
-#endif
 
 template <typename T> class QList;
 
@@ -190,12 +188,8 @@ public:
     }
 
 protected:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   template <typename, bool>
   friend struct QtMetaTypePrivate::QMetaTypeFunctionHelper;
-#else
-  template <typename FT> friend void* qMetaTypeConstructHelper(const FT*);
-#endif
 
   inline qtTransferablePointerArray(const ThisClass& o)
     : BaseClass(0)

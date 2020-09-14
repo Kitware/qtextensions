@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -170,13 +170,6 @@ int testCompare(qtTest& t_obj)
 int main()
 {
   qtTest t_obj;
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  // Set locale, so debugging works correctly (at least on UTF-8 systems;
-  // others almost certainly won't be able to display U+1D7FB anyway)...
-  // Only needed for Qt 4; Qt 5 already sets this correctly
-  QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-#endif
 
   t_obj.runSuite("Cracking", testCracking);
   t_obj.runSuite("Comparisons", testCompare);

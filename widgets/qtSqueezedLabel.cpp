@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2018 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -93,7 +93,7 @@ void qtSqueezedLabelPrivate::recalculate(
     QSize const& size, QFontMetrics const& fm)
 {
     // Check if text fits
-    auto const fullWidth = fm.width(this->cachedText);
+    auto const fullWidth = fm.boundingRect(this->cachedText).width();
     auto const availableWidth = size.width() - this->marginsWidth(fm);
     if (fullWidth <= availableWidth)
     {
@@ -119,14 +119,15 @@ void qtSqueezedLabelPrivate::recalculate(
         while (width < availableWidth)
         {
             ++this->length;
-            width = fm.width(this->cachedText, this->length);
+            auto const& part = this->cachedText.left(this->length);
+            width = fm.boundingRect(part).width();
         }
     }
     else
     {
         // \TODO support modes other then ElideEnd
         auto const ellipsisWidth =
-            fm.width(qtSqueezedLabelPrivate::ellipsis());
+            fm.boundingRect(qtSqueezedLabelPrivate::ellipsis()).width();
         if (availableWidth <= ellipsisWidth)
         {
             // Nothing at all fits... will only happen if we are smaller than
@@ -143,7 +144,9 @@ void qtSqueezedLabelPrivate::recalculate(
         while (this->length > 0 && width > availableWidth)
         {
             --this->length;
-            width = fm.width(this->cachedText, this->length) + ellipsisWidth;
+            auto const& part = this->cachedText.left(this->length) +
+                               qtSqueezedLabelPrivate::ellipsis();
+            width = fm.boundingRect(part).width();
         }
     }
 }
@@ -310,7 +313,7 @@ QSize qtSqueezedLabel::minimumSizeHint() const
 
     // Calculate minimum width; lesser of full text (in case it is very short)
     // or enough to elide the text
-    auto width = fm.width(text);
+    auto width = fm.boundingRect(text).width();
     if (d->elideMode.testFlag(ElideFade))
     {
         // Fade minimum size is 3x height
@@ -319,7 +322,9 @@ QSize qtSqueezedLabel::minimumSizeHint() const
     else
     {
         // Ellipsis minimum size is enough to show just the ellipsis
-        width = qMin(width, fm.width(qtSqueezedLabelPrivate::ellipsis()));
+        auto const ellipsisWidth =
+            fm.boundingRect(qtSqueezedLabelPrivate::ellipsis()).width();
+        width = qMin(width, ellipsisWidth);
     }
     return {width + d->marginsWidth(fm), fm.height()};
 }
@@ -434,8 +439,8 @@ void qtSqueezedLabel::paintEvent(QPaintEvent* e)
         auto const width = rect.width();
 
         // Draw text
-        style->drawItemText(&painter, rect, align, opt.palette,
-                            this->isEnabled(), elidedText, role);
+        style->drawItemText(&painter, rect, static_cast<int>(align),
+                            opt.palette, this->isEnabled(), elidedText, role);
 
         // Set up fade gradient
         int x1, x2;
@@ -466,8 +471,8 @@ void qtSqueezedLabel::paintEvent(QPaintEvent* e)
     }
     else
     {
-        style->drawItemText(&painter, rect, align, opt.palette,
-                            this->isEnabled(), elidedText, role);
+        style->drawItemText(&painter, rect, static_cast<int>(align),
+                            opt.palette, this->isEnabled(), elidedText, role);
     }
 }
 
