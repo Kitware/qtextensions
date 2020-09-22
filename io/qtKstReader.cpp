@@ -1,17 +1,18 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
+
+#include "qtKstReader.h"
+
+#include "qtKstParser.h"
+#include "qtKstSeparator.h"
 
 #include <QFile>
 #include <QDebug>
 
 #include <limits>
-
-#include "qtKstReader.h"
-#include "qtKstParser.h"
-#include "qtKstSeparator.h"
 
 QTE_IMPLEMENT_D_FUNC(qtKstReader)
 

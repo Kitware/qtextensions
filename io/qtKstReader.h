@@ -1,5 +1,5 @@
 /*ckwg +5
- * Copyright 2015 by Kitware, Inc. All Rights Reserved. Please refer to
+ * Copyright 2020 by Kitware, Inc. All Rights Reserved. Please refer to
  * KITWARE_LICENSE.TXT for licensing information, or contact General Counsel,
  * Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
  */
@@ -7,12 +7,13 @@
 #ifndef __qtKstReader_h
 #define __qtKstReader_h
 
-#include <QString>
-#include <QRegExp>
-#include <QList>
-#include <QUrl>
-
 #include "../core/qtGlobal.h"
+
+#include <QList>
+#include <QRegExp>
+#include <QScopedPointer>
+#include <QString>
+#include <QUrl>
 
 class qtKstReaderPrivate;
 
