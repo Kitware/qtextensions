@@ -29,6 +29,7 @@ void qtColorScheme::load(QPalette::ColorGroup group, const QString& groupName,
 {
   this->load(group, groupName, ARGS(Base), settings);
   this->load(group, groupName, ARGS(Text), settings);
+  this->load(group, groupName, ARGS(PlaceholderText), settings);
   this->load(group, groupName, ARGS(AlternateBase), settings);
   this->load(group, groupName, ARGS(Window), settings);
   this->load(group, groupName, ARGS(WindowText), settings);
@@ -41,6 +42,11 @@ void qtColorScheme::load(QPalette::ColorGroup group, const QString& groupName,
   this->load(group, groupName, ARGS(Link), settings);
   this->load(group, groupName, ARGS(LinkVisited), settings);
   this->load(group, groupName, ARGS(BrightText), settings);
+  this->load(group, groupName, ARGS(Light), settings);
+  this->load(group, groupName, ARGS(Midlight), settings);
+  this->load(group, groupName, ARGS(Mid), settings);
+  this->load(group, groupName, ARGS(Dark), settings);
+  this->load(group, groupName, ARGS(Shadow), settings);
 }
 
 //-----------------------------------------------------------------------------
@@ -69,6 +75,7 @@ void qtColorScheme::save(QPalette::ColorGroup group, const QString& groupName,
 {
   this->save(group, groupName, ARGS(Base), settings);
   this->save(group, groupName, ARGS(Text), settings);
+  this->save(group, groupName, ARGS(PlaceholderText), settings);
   this->save(group, groupName, ARGS(AlternateBase), settings);
   this->save(group, groupName, ARGS(Window), settings);
   this->save(group, groupName, ARGS(WindowText), settings);
@@ -81,6 +88,11 @@ void qtColorScheme::save(QPalette::ColorGroup group, const QString& groupName,
   this->save(group, groupName, ARGS(Link), settings);
   this->save(group, groupName, ARGS(LinkVisited), settings);
   this->save(group, groupName, ARGS(BrightText), settings);
+  this->save(group, groupName, ARGS(Light), settings);
+  this->save(group, groupName, ARGS(Midlight), settings);
+  this->save(group, groupName, ARGS(Mid), settings);
+  this->save(group, groupName, ARGS(Dark), settings);
+  this->save(group, groupName, ARGS(Shadow), settings);
 }
 
 //-----------------------------------------------------------------------------
