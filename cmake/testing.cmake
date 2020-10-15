@@ -25,25 +25,11 @@ function(qte_add_test)
   endif()
 
   # Extract arguments
-  set(_opts "SOURCES;MOC_HEADERS;RESOURCES;UI;LINK_LIBRARIES;ARGS")
+  set(_opts "SOURCES;MOC_HEADERS;LINK_LIBRARIES;ARGS")
   cmake_parse_arguments("" "" "" "${_opts}" ${ARGN})
   list(APPEND _SOURCES ${_UNPARSED_ARGUMENTS}) # Use leftover args as sources
 
   if(NOT TARGET ${_EXECUTABLE})
-    # Handle Qt executables
-    if(NOT "x_${_MOC_HEADERS}" STREQUAL "x_")
-      qte_wrap_cpp(_MOC_SOURCES ${_MOC_HEADERS})
-      list(APPEND _SOURCES ${_MOC_SOURCES})
-    endif()
-    if(NOT "x_${_UI}" STREQUAL "x_")
-      qte_wrap_ui(_UI_SOURCES ${_UI})
-      list(APPEND _SOURCES ${_UI_SOURCES})
-    endif()
-    if(NOT "x_${_RESOURCES}" STREQUAL "x_")
-      qte_add_resources(_RESOURCE_SOURCES ${_RESOURCES})
-      list(APPEND _SOURCES ${_RESOURCE_SOURCES})
-    endif()
-
     # Generate test executable
     add_executable(${_EXECUTABLE} ${_SOURCES})
     target_link_libraries(${_EXECUTABLE}

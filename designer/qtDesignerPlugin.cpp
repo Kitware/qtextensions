@@ -10,18 +10,20 @@
 #include "qtExpanderInterface.h"
 #include "qtOverlayWidgetInterface.h"
 #include "qtSqueezedLabelInterface.h"
+#include "qtSvgWidgetInterface.h"
 #include "qtThrobberInterface.h"
 
 //-----------------------------------------------------------------------------
 qtDesignerPlugin::qtDesignerPlugin(QObject* parent) : QObject(parent)
 {
-    m_widgets.append(new qtCloseButtonInterface(this));
-    m_widgets.append(new qtColorButtonInterface(this));
-    m_widgets.append(new qtDoubleSliderInterface(this));
-    m_widgets.append(new qtExpanderInterface(this));
-    m_widgets.append(new qtOverlayWidgetInterface(this));
-    m_widgets.append(new qtSqueezedLabelInterface(this));
-    m_widgets.append(new qtThrobberInterface(this));
+    m_widgets.append(new qtCloseButtonInterface{this});
+    m_widgets.append(new qtColorButtonInterface{this});
+    m_widgets.append(new qtDoubleSliderInterface{this});
+    m_widgets.append(new qtExpanderInterface{this});
+    m_widgets.append(new qtOverlayWidgetInterface{this});
+    m_widgets.append(new qtSqueezedLabelInterface{this});
+    m_widgets.append(new qtSvgWidgetInterface{this});
+    m_widgets.append(new qtThrobberInterface{this});
 }
 
 //-----------------------------------------------------------------------------
