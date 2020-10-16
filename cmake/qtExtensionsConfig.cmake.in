@@ -1,3 +1,13 @@
+include(CMakeFindDependencyMacro)
+
+if("@QTE_QT_VERSION@" EQUAL 5)
+  if(NOT Qt5_DIR)
+    set(Qt5_DIR "@Qt5_DIR@")
+  endif()
+  set(QTE_REQUIRED_QT_COMPONENTS @Qt5_LINK_MODULES@)
+  find_dependency(Qt5 COMPONENTS ${QTE_REQUIRED_QT_COMPONENTS})
+endif()
+
 # Import library targets
 include(${CMAKE_CURRENT_LIST_DIR}/qtExtensionsConfigTargets.cmake)
 
