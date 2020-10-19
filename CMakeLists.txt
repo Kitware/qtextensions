@@ -100,6 +100,7 @@ set(qtExtensionsSources
     widgets/qtOverlayWidget.cpp
     widgets/qtProgressWidget.cpp
     widgets/qtSqueezedLabel.cpp
+    widgets/qtSvgWidget.cpp
     widgets/qtThrobber.cpp
     # ItemViews
     itemviews/qtAbstractListDelegate.cpp
@@ -187,6 +188,7 @@ set(qtExtensionsInstallHeaders
     widgets/qtOverlayWidget.h
     widgets/qtProgressWidget.h
     widgets/qtSqueezedLabel.h
+    widgets/qtSvgWidget.h
     widgets/qtThrobber.h
     # ItemViews
     itemviews/qtAbstractListDelegate.h
@@ -286,6 +288,7 @@ if(QTE_BUILD_DESIGNER_PLUGIN)
     designer/qtOverlayWidgetInterface.h
     designer/qtProgressWidgetInterface.h
     designer/qtSqueezedLabelInterface.h
+    designer/qtSvgWidgetInterface.h
     designer/qtThrobberInterface.h
     TARGET ${PROJECT_NAME}DesignerPlugin
   )
@@ -308,6 +311,7 @@ if(QTE_BUILD_DESIGNER_PLUGIN)
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
+    Qt5::Svg
     Qt5::UiPlugin
   )
 
@@ -353,6 +357,7 @@ set(qtExtensionsWrapObjects
     qtMenu
     qtOverlayWidget
     qtProgressWidget
+    qtSvgWidget
     qtThrobber
     # ItemViews
     qtAbstractListDelegate

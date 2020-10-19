@@ -1,6 +1,7 @@
 # Build list of required Qt modules
 set(Qt5_LINK_MODULES
   Widgets
+  Svg
   Xml
 )
 

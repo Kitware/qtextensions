@@ -4,8 +4,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # Interactive tests
 qte_add_test(testDrawers INTERACTIVE
-  SOURCES TestDrawers.cpp qtEditableLabel.cpp
-  RESOURCES icons.qrc
+  SOURCES TestDrawers.cpp qtEditableLabel.cpp icons.qrc
 )
 
 qte_add_test(testExpander INTERACTIVE
@@ -14,7 +13,6 @@ qte_add_test(testExpander INTERACTIVE
 
 qte_add_test(testDoubleSlider INTERACTIVE
   SOURCES TestDoubleSlider.cpp
-  UI testDoubleSlider.ui
 )
 
 qte_add_test(testSqueezedLabel INTERACTIVE
@@ -27,6 +25,7 @@ qte_add_test(testConfirmationDialog INTERACTIVE TestConfirmationDialog.cpp)
 qte_add_test(testGradientEditor     INTERACTIVE TestGradientEditor.cpp)
 qte_add_test(testGradientWidget     INTERACTIVE TestGradientWidget.cpp)
 qte_add_test(testProgressWidget     INTERACTIVE TestProgressWidget.cpp)
+qte_add_test(testSvgWidget          INTERACTIVE TestSvgWidget.cpp)
 qte_add_test(testThrobber           INTERACTIVE TestThrobber.cpp)
 
 # Automated tests
