@@ -10,7 +10,7 @@
 
 //-----------------------------------------------------------------------------
 qtComboBoxDelegate::qtComboBoxDelegate(QObject* parent)
-  : qtAbstractListDelegate(parent)
+    : qtAbstractListDelegate(parent)
 {
 }
 
@@ -22,63 +22,58 @@ qtComboBoxDelegate::~qtComboBoxDelegate()
 //-----------------------------------------------------------------------------
 QWidget* qtComboBoxDelegate::createListEditor(QWidget* parent) const
 {
-  // Create combo box
-  QComboBox* box = new QComboBox(parent);
-  box->setFocusPolicy(Qt::StrongFocus);
-  connect(box, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(editorValueChanged()));
+    // Create combo box
+    auto* const box = new QComboBox{parent};
+    box->setFocusPolicy(Qt::StrongFocus);
+    connect(box, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &qtComboBoxDelegate::editorValueChanged);
 
-  // Fill combo box
-  foreach (auto const& name, this->valueNames())
-    box->addItem(name, this->valueData(name));
+    // Fill combo box
+    for (auto const& name : this->valueNames())
+        box->addItem(name, this->valueData(name));
 
-  // Flag box to show pop-up once we know the geometry
-  box->setProperty("firstShow", true);
+    // Queue request for box to show pop-up (needs to be delayed because we
+    // don't know the geometry yet)
+    QMetaObject::invokeMethod(box, &QComboBox::showPopup,
+                              Qt::QueuedConnection);
 
-  // Done
-  return box;
+    // Done
+    return box;
 }
 
 //-----------------------------------------------------------------------------
 void qtComboBoxDelegate::setListEditorData(
-  QWidget* editor, const QVariant& newData) const
+    QWidget* editor, QVariant const& newData) const
 {
-  QComboBox* box = qobject_cast<QComboBox*>(editor);
+    auto* const box = qobject_cast<QComboBox*>(editor);
 
-  int i = -1;
-  foreach (int const j, qtIndexRange(box->count()))
+    auto i = decltype(box->count()){-1};
+    for (auto const j : qtIndexRange(box->count()))
     {
-    if (this->compareData(newData, box->itemData(j)))
-      {
-      i = j;
-      break;
-      }
+        if (this->compareData(newData, box->itemData(j)))
+        {
+            i = j;
+            break;
+        }
     }
-  box->setCurrentIndex(i);
+    box->setCurrentIndex(i);
 }
 
 //-----------------------------------------------------------------------------
 void qtComboBoxDelegate::setModelData(
-  QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
+    QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
-  QComboBox* box = qobject_cast<QComboBox*>(editor);
-  QVariant newData = box->itemData(box->currentIndex());
-  this->setModelData(editor, box->currentText(), newData, model, index);
+    auto* const box = qobject_cast<QComboBox*>(editor);
+    auto const& newData = box->itemData(box->currentIndex());
+    this->setModelData(editor, box->currentText(), newData, model, index);
 }
 
 //-----------------------------------------------------------------------------
 void qtComboBoxDelegate::updateEditorGeometry(
-  QWidget* editor,
-  const QStyleOptionViewItem& option,
-  const QModelIndex&) const
+    QWidget* editor,
+    QStyleOptionViewItem const& option,
+    QModelIndex const&) const
 {
-  QComboBox* box = qobject_cast<QComboBox*>(editor);
-  box->setGeometry(option.rect);
-
-  // Show pop-up at creation after the geometry is initialized
-  if (box->property("firstShow").toBool())
-    {
-    box->showPopup();
-    box->setProperty("firstShow", false);
-    }
+    auto* const box = qobject_cast<QComboBox*>(editor);
+    box->setGeometry(option.rect);
 }
