@@ -6,7 +6,35 @@
 
 #include "../core/qtIndexRange.h"
 
+#include <QApplication>
 #include <QComboBox>
+#include <QTimer>
+
+//-----------------------------------------------------------------------------
+class qtDelegateComboBox : public QComboBox
+{
+public:
+    qtDelegateComboBox(QWidget* parent) : QComboBox{parent}
+    {
+        this->blockHidePopupTimer.setSingleShot(true);
+    }
+
+    void showPopup() override
+    {
+        this->blockHidePopupTimer.start(QApplication::doubleClickInterval());
+        QComboBox::showPopup();
+
+    }
+
+    void hidePopup() override
+    {
+        if (!this->blockHidePopupTimer.isActive())
+            QComboBox::hidePopup();
+    }
+
+private:
+    QTimer blockHidePopupTimer;
+};
 
 //-----------------------------------------------------------------------------
 qtComboBoxDelegate::qtComboBoxDelegate(QObject* parent)
@@ -23,7 +51,7 @@ qtComboBoxDelegate::~qtComboBoxDelegate()
 QWidget* qtComboBoxDelegate::createListEditor(QWidget* parent) const
 {
     // Create combo box
-    auto* const box = new QComboBox{parent};
+    auto* const box = new qtDelegateComboBox{parent};
     box->setFocusPolicy(Qt::StrongFocus);
     connect(box, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &qtComboBoxDelegate::editorValueChanged);
@@ -34,7 +62,7 @@ QWidget* qtComboBoxDelegate::createListEditor(QWidget* parent) const
 
     // Queue request for box to show pop-up (needs to be delayed because we
     // don't know the geometry yet)
-    QMetaObject::invokeMethod(box, &QComboBox::showPopup,
+    QMetaObject::invokeMethod(box, &qtDelegateComboBox::showPopup,
                               Qt::QueuedConnection);
 
     // Done
