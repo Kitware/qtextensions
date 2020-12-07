@@ -25,15 +25,14 @@ public:
   virtual ~qtActionManager();
 
   qtActionFactory* registerAction(
-    QString settingsKey, QString text,
-    QString displayGroup = QString(), QString icon = QString(),
-    QKeySequence defaultShortcut = QKeySequence());
+    QString settingsKey, QString text, QString displayGroup = {},
+    QString icon = {}, QKeySequence defaultShortcut = {});
   qtActionFactory* registerAction(
     QString settingsKey, QString text, QString displayGroup, QString icon,
     QList<QKeySequence> defaultShortcuts);
 
   void setupAction(QSettings& settings, QAction* action, QString settingsKey,
-                   QString icon = QString());
+                   QString icon = {});
 
 protected slots:
   void unregisterStaticAction(QObject*);

@@ -85,7 +85,7 @@ public:
   /// element's "id" attribute is set to \p id.
   explicit qtDomElement(QDomDocument& doc,
                         const QString& tagName,
-                        const QString& id = QString());
+                        const QString& id = {});
 
   /// Construct a qtDomElement from a QDomElement.
   ///

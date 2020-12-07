@@ -24,8 +24,8 @@ public:
   qtCliOption& add(const QString& name, qtCliOption::Flags);
   qtCliOption& add(const QString& name, const QString& description,
                    qtCliOption::Flags);
-  qtCliOption& add(const QString& name, QString description = QString(),
-                   QString defaultValue = QString(), qtCliOption::Flags = {});
+  qtCliOption& add(const QString& name, QString description = {},
+                   QString defaultValue = {}, qtCliOption::Flags = {});
 
   bool isEmpty() const;
   QList<qtCliOption> options() const;

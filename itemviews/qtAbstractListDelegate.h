@@ -34,7 +34,7 @@ protected:
   virtual QWidget* createListEditor(QWidget* parent) const = 0;
   virtual void setListEditorData(QWidget* editor, const QVariant&) const = 0;
 
-  void setMapping(QStringList names, QVariantList values = QVariantList());
+  void setMapping(QStringList names, QVariantList values = {});
   QStringList valueNames() const;
   QVariant valueData(const QString&) const;
 

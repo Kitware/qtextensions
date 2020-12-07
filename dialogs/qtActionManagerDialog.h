@@ -21,7 +21,7 @@ public:
   virtual ~qtActionManagerDialog();
 
 protected slots:
-  void filterChanged(QString text = QString());
+  void filterChanged(QString text = {});
 
 protected:
   QTE_DECLARE_PRIVATE_PTR(qtActionManagerDialog)

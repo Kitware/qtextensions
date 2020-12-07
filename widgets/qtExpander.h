@@ -21,9 +21,7 @@ public:
   QSize minimumSizeHint() const;
   using QWidget::size;
 
-  static QSize size(QStyle* style,
-                    QString text = QString(),
-                    QFont font = QFont());
+  static QSize size(QStyle* style, QString text = {}, QFont font = {});
 
 protected:
   static QSize arrowSize();

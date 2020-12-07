@@ -28,7 +28,7 @@ typedef QHash<QString, ObjectProperties> ActionMap;
 typedef QMultiHash<QString, QString> ActionGroupMap;
 
 //-----------------------------------------------------------------------------
-QDebug out(QtMsgType type = QtDebugMsg, QString file = QString(),
+QDebug out(QtMsgType type = QtDebugMsg, QString file = {},
            uint line = 0, uint col = 0)
 {
   QString prefix = "qte-amc:";
@@ -53,13 +53,13 @@ QDebug out(QtMsgType type = QtDebugMsg, QString file = QString(),
 }
 
 //-----------------------------------------------------------------------------
-QDebug err(QString file = QString(), uint line = 0, uint col = 0)
+QDebug err(QString file = {}, uint line = 0, uint col = 0)
 {
   return out(QtCriticalMsg, file, line, col) << "error:";
 }
 
 //-----------------------------------------------------------------------------
-QDebug warn(QString file = QString(), uint line = 0, uint col = 0)
+QDebug warn(QString file = {}, uint line = 0, uint col = 0)
 {
   return out(QtWarningMsg, file, line, col) << "warning:";
 }

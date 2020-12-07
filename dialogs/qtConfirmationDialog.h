@@ -39,10 +39,10 @@ public:
   static bool getConfirmation(
     QWidget* parent, const QString& askKey, const QString& prompt,
     const QString& confirmText, AskPreferenceScope scope,
-    QString title = QString(), Qt::WindowFlags flags = {});
+    QString title = {}, Qt::WindowFlags flags = {});
   static bool getConfirmation(
     QWidget* parent, const QString& askKey, const QString& prompt,
-    QString title = QString(), QString confirmText = QString(),
+    QString title = {}, QString confirmText = {},
     AskPreferenceScope scope = UserCanChoose, Qt::WindowFlags flags = {});
 
   static bool willAsk(const QString& key);

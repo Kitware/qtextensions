@@ -36,7 +36,7 @@ public:
   void transferOwnership(const QObject* from, qtStatusSource to);
 
 public slots:
-  void setStatusText(qtStatusSource source, QString text = QString());
+  void setStatusText(qtStatusSource source, QString text = {});
   void setProgress(qtStatusSource source, bool available = false,
                    qreal value = -1);
   void setProgress(qtStatusSource source, bool available, int value,
