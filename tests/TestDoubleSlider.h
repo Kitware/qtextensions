@@ -12,7 +12,7 @@ class TestDoubleSliderWidget : public QWidget
   Q_OBJECT
 
 public:
-  explicit TestDoubleSliderWidget(QWidget* parent = 0);
+  explicit TestDoubleSliderWidget(QWidget* parent = nullptr);
   ~TestDoubleSliderWidget() {}
 
 protected slots:

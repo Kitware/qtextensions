@@ -20,18 +20,18 @@ class QTE_EXPORT qtDoubleInputDialog : protected QDialog
 public:
   static double getDouble(
     QWidget* parent, const QString& title, const QString& label, double value,
-    double minValue, double maxValue, bool* okay = 0,
+    double minValue, double maxValue, bool* okay = nullptr,
     Qt::WindowFlags flags = {});
 
   static double getDouble(
     QWidget* parent, const QString& title, const QString& label, double value,
     double minValue, double maxValue, int decimals = 1, double step = 1.0,
-    bool* okay = 0, Qt::WindowFlags flags = {});
+    bool* okay = nullptr, Qt::WindowFlags flags = {});
 
   static double getDouble(
     QWidget* parent, const QString& title, const QString& label, double value,
     double minValue, double maxValue, const QString& specialValueText,
-    int decimals = 1, double step = 1.0, bool* okay = 0,
+    int decimals = 1, double step = 1.0, bool* okay = nullptr,
     Qt::WindowFlags flags = {});
 
 protected:

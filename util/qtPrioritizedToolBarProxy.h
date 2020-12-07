@@ -40,7 +40,7 @@ public:
   ///   Flags specifying if and where separators should be added to the menu
   ///   when actions are inserted via the proxy.
   qtPrioritizedToolBarProxy(
-    QToolBar* toolBar, QAction* followingAction = 0,
+    QToolBar* toolBar, QAction* followingAction = nullptr,
     qtUtil::SeparatorBehavior separators = qtUtil::NoSeparators);
 
   ~qtPrioritizedToolBarProxy();

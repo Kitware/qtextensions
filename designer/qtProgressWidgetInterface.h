@@ -16,7 +16,7 @@ class qtProgressWidgetInterface :
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    qtProgressWidgetInterface(QObject* parent = 0)
+    qtProgressWidgetInterface(QObject* parent = nullptr)
         : qtDesignerWidgetInterfaceHelper<qtProgressWidget>(parent)
     {
     }

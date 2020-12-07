@@ -16,7 +16,7 @@ class qtExpanderInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    qtExpanderInterface(QObject* parent = 0)
+    qtExpanderInterface(QObject* parent = nullptr)
         : qtDesignerWidgetInterfaceHelper<qtExpander>(parent)
     {
     }

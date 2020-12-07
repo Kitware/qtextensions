@@ -17,7 +17,8 @@ class QTE_EXPORT qtActionManagerDialog : public QDialog
   Q_OBJECT
 
 public:
-  qtActionManagerDialog(QWidget* parent = 0, Qt::WindowFlags flags = {});
+  qtActionManagerDialog(QWidget* parent = nullptr,
+                        Qt::WindowFlags flags = {});
   virtual ~qtActionManagerDialog();
 
 protected slots:

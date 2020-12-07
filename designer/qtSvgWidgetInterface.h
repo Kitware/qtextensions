@@ -16,7 +16,7 @@ class qtSvgWidgetInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    qtSvgWidgetInterface(QObject* parent = 0)
+    qtSvgWidgetInterface(QObject* parent = nullptr)
         : qtDesignerWidgetInterfaceHelper<qtSvgWidget>(parent)
     {
     }

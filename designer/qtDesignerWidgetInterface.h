@@ -17,7 +17,7 @@ class qtDesignerWidgetInterface : public QObject,
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    qtDesignerWidgetInterface(QObject* parent = 0);
+    qtDesignerWidgetInterface(QObject* parent = nullptr);
 
     virtual bool isInitialized() const QTE_OVERRIDE;
 

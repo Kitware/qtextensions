@@ -19,7 +19,7 @@ class QTE_EXPORT qtCloseButton : public QToolButton
                WRITE setVisibleWhenDisabled)
 
 public:
-    qtCloseButton(QWidget* parent = 0);
+    qtCloseButton(QWidget* parent = nullptr);
     ~qtCloseButton();
 
     QSize sizeHint() const override;

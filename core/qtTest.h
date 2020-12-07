@@ -40,17 +40,17 @@ public:
 
     inline int test(
         bool exprValue, QString const& exprText, int line = 0,
-        char const* file = 0, char const* func = 0);
+        char const* file = nullptr, char const* func = nullptr);
     template <typename T>
     inline int testEqual(
         T expectedValue, T actualValue, QString const& exprText,
-        int line = 0, char const* file = 0, char const* func = 0);
+        int line = 0, char const* file = nullptr, char const* func = nullptr);
     int testEqual(
         float expectedValue, float actualValue, QString const& exprText,
-        int line = 0, char const* file = 0, char const* func = 0);
+        int line = 0, char const* file = nullptr, char const* func = nullptr);
     int testEqual(
         double expectedValue, double actualValue, QString const& exprText,
-        int line = 0, char const* file = 0, char const* func = 0);
+        int line = 0, char const* file = nullptr, char const* func = nullptr);
 
     int testResult() const;
     int setTestResult(int);
@@ -76,8 +76,8 @@ private:
 class QTE_EXPORT qtTestTrace
 {
 public:
-    qtTestTrace(qtTest& test, int line = 0, char const* file = 0,
-                char const* func = 0);
+    qtTestTrace(qtTest& test, int line = 0, char const* file = nullptr,
+                char const* func = nullptr);
     ~qtTestTrace();
 
 protected:

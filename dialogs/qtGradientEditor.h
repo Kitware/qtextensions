@@ -18,7 +18,7 @@ class QTE_EXPORT qtGradientEditor : public QDialog
     Q_OBJECT
 
 public:
-    qtGradientEditor(QWidget* parent = 0, Qt::WindowFlags flags = {});
+    qtGradientEditor(QWidget* parent = nullptr, Qt::WindowFlags flags = {});
     virtual ~qtGradientEditor();
 
     qtGradient gradient() const;

@@ -23,8 +23,8 @@ public:
     UserCanChoose
     };
 
-  qtConfirmationDialog(
-    const QString& askKey, QWidget* parent = 0, Qt::WindowFlags flags = {});
+  qtConfirmationDialog(const QString& askKey, QWidget* parent = nullptr,
+                       Qt::WindowFlags flags = {});
   virtual ~qtConfirmationDialog();
 
   void setPrompt(const QString&);

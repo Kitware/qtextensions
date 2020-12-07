@@ -16,7 +16,7 @@ class QTE_EXPORT qtSpinBoxDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  qtSpinBoxDelegate(QObject* parent = 0);
+  qtSpinBoxDelegate(QObject* parent = nullptr);
   virtual ~qtSpinBoxDelegate();
 
   void setDataRole(Qt::ItemDataRole);

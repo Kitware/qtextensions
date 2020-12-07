@@ -76,10 +76,11 @@ namespace qtUtil
   /// "standard" icons for okay, cancel, etc. rather than the system icons.
   QTE_EXPORT void setStandardIcons(QDialogButtonBox*);
 
-  QTE_EXPORT void setApplicationIcon(const QString& name, QMainWindow* = 0);
+  QTE_EXPORT void setApplicationIcon(
+    const QString& name, QMainWindow* = nullptr);
 
-  QTE_EXPORT void resizeColumnsToContents(QTreeWidget*,
-                                          bool includeCollapsedItems = true);
+  QTE_EXPORT void resizeColumnsToContents(
+    QTreeWidget*, bool includeCollapsedItems = true);
 
   /// Make widget transparent.
   ///

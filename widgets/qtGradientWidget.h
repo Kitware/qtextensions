@@ -21,7 +21,7 @@ class QTE_EXPORT qtGradientWidget : public QWidget
   Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation)
 
 public:
-  qtGradientWidget(QWidget* parent = 0);
+  qtGradientWidget(QWidget* parent = nullptr);
   virtual ~qtGradientWidget();
 
   Qt::Orientation orientation() const;

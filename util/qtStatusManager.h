@@ -22,7 +22,7 @@ class QTE_EXPORT qtStatusManager : public QObject
   Q_OBJECT
 
 public:
-  explicit qtStatusManager(QObject* parent = 0);
+  explicit qtStatusManager(QObject* parent = nullptr);
   ~qtStatusManager();
 
   void addStatusLabel(QLabel*);

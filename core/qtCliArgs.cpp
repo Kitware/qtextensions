@@ -682,19 +682,19 @@ void qtCliArgs::usageError(const QString& message) const
 bool qtCliArgs::isSet(const QString& name) const
 {
   QTE_D_CONST(qtCliArgs);
-  qtCliOption* option = d->optionMap.value(name, 0);
+  qtCliOption* option = d->optionMap.value(name, nullptr);
   if (option)
     {
     return option->isSet();
     }
   else if (name.length() > 4 && name.startsWith("no-"))
     {
-    qtCliOption* option = d->optionMap.value(name.mid(3), 0);
+    qtCliOption* option = d->optionMap.value(name.mid(3), nullptr);
     return (option ? !option->isSet() : false);
     }
   else
     {
-    qtCliOption* option = d->optionMap.value("no-" + name, 0);
+    qtCliOption* option = d->optionMap.value("no-" + name, nullptr);
     return (option ? !option->isSet() : false);
     }
 }
@@ -703,7 +703,7 @@ bool qtCliArgs::isSet(const QString& name) const
 QString qtCliArgs::value(const QString& name) const
 {
   QTE_D_CONST(qtCliArgs);
-  qtCliOption* option = d->optionMap.value(name, 0);
+  qtCliOption* option = d->optionMap.value(name, nullptr);
   return (option ? option->value() : QString());
 }
 
@@ -711,7 +711,7 @@ QString qtCliArgs::value(const QString& name) const
 QStringList qtCliArgs::values(const QString& name) const
 {
   QTE_D_CONST(qtCliArgs);
-  qtCliOption* option = d->optionMap.value(name, 0);
+  qtCliOption* option = d->optionMap.value(name, nullptr);
   return (option ? option->values() : QStringList());
 }
 
@@ -764,7 +764,7 @@ char** qtCliArgs::qtArgv()
   // Build new mutable argv vector
   int k = d->qtArgs.count();
   char** argv = new char*[k + 1];
-  argv[k] = 0;
+  argv[k] = nullptr;
   while (k--)
     {
     QByteArray arg = d->qtArgs[k].toLocal8Bit();

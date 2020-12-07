@@ -50,7 +50,7 @@ QAction* qtActionPriorityList::insertAction(QAction* action, int priority)
   QTE_D_MUTABLE(qtActionPriorityList);
 
   const qtActionPriorityListData::iterator iter = ++d->insert(priority, action);
-  return (iter == d->end() ? 0 : iter.value());
+  return (iter == d->end() ? nullptr : iter.value());
 }
 
 //-----------------------------------------------------------------------------
@@ -59,5 +59,5 @@ QAction* qtActionPriorityList::followingAction(int priority) const
   QTE_D_SHARED(qtActionPriorityList);
 
   const qtActionPriorityListData::const_iterator iter = d->lowerBound(priority);
-  return (iter == d->constEnd() ? 0 : iter.value());
+  return (iter == d->constEnd() ? nullptr : iter.value());
 }

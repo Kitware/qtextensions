@@ -38,7 +38,7 @@ public:
   ///   Flags specifying if and where separators should be added to the menu
   ///   when actions are inserted via the proxy.
   qtPrioritizedMenuProxy(
-    QMenu* menu, QAction* followingAction = 0,
+    QMenu* menu, QAction* followingAction = nullptr,
     qtUtil::SeparatorBehavior separators = qtUtil::NoSeparators);
 
   ~qtPrioritizedMenuProxy();

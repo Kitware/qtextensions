@@ -35,7 +35,7 @@ public:
     QuantizeAbsolute
     };
 
-  explicit qtDoubleSlider(QWidget* parent = 0);
+  explicit qtDoubleSlider(QWidget* parent = nullptr);
   virtual ~qtDoubleSlider();
 
   double minimum() const;

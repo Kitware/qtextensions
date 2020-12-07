@@ -29,7 +29,7 @@ public:
   ///
   /// \param followingAction Pointer to an action which will follow (come
   ///                        after) actions inserted into this list.
-  qtActionPriorityList(QAction* followingAction = 0);
+  qtActionPriorityList(QAction* followingAction = nullptr);
 
   /// Copy constructor.
   qtActionPriorityList(const qtActionPriorityList&);

@@ -14,8 +14,8 @@ class QTE_EXPORT qtExpander : public QToolButton
   Q_OBJECT
 
 public:
-  qtExpander(QWidget* parent = 0);
-  qtExpander(bool initiallyExpanded, QWidget* parent = 0);
+  qtExpander(QWidget* parent = nullptr);
+  qtExpander(bool initiallyExpanded, QWidget* parent = nullptr);
 
   QSize sizeHint() const;
   QSize minimumSizeHint() const;

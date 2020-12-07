@@ -16,7 +16,7 @@ class qtOverlayWidgetInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    qtOverlayWidgetInterface(QObject* parent = 0)
+    qtOverlayWidgetInterface(QObject* parent = nullptr)
         : qtDesignerWidgetInterfaceHelper<qtOverlayWidget>(parent)
     {
     }

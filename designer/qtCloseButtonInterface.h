@@ -16,7 +16,7 @@ class qtCloseButtonInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    qtCloseButtonInterface(QObject* parent = 0)
+    qtCloseButtonInterface(QObject* parent = nullptr)
         : qtDesignerWidgetInterfaceHelper<qtCloseButton>(parent)
     {
     }

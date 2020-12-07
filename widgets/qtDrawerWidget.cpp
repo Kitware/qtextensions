@@ -13,7 +13,7 @@ QTE_IMPLEMENT_D_FUNC(qtDrawerWidget)
 class qtDrawerWidgetPrivate
 {
 public:
-  qtDrawerWidgetPrivate() : root(0) {}
+  qtDrawerWidgetPrivate() : root{nullptr} {}
 
   qtDrawer* root;
 };

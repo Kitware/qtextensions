@@ -27,7 +27,7 @@ public:
     ExpanderAlwaysShown = 1
     };
 
-  explicit qtDrawer(qtDrawer* parent, qtDrawer* nextSibling = 0);
+  explicit qtDrawer(qtDrawer* parent, qtDrawer* nextSibling = nullptr);
   virtual ~qtDrawer();
 
   qtDrawer* parent();
@@ -51,13 +51,13 @@ protected:
 
   qtDrawer(qtDrawerWidget* container, QGridLayout* layout);
 
-  virtual void addChild(qtDrawer* child, qtDrawer* before = 0);
+  virtual void addChild(qtDrawer* child, qtDrawer* before = nullptr);
   virtual void removeChild(qtDrawer* child);
-  void setChildVisibility(qtDrawer* child = 0);
+  void setChildVisibility(qtDrawer* child = nullptr);
 
   int countDescendants() const;
-  void shiftChildrenDown(qtDrawer* afterChild = 0);
-  void shiftChildrenUp(qtDrawer* afterChild = 0);
+  void shiftChildrenDown(qtDrawer* afterChild = nullptr);
+  void shiftChildrenUp(qtDrawer* afterChild = nullptr);
   void shiftDown();
   void shiftUp();
   void shift();
