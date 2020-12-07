@@ -519,7 +519,7 @@ bool qtCliArgs::parse(ParseOptions options)
 //-----------------------------------------------------------------------------
 void qtCliArgs::parseOrDie(int exitCode)
 {
-  this->parseOrDie(static_cast<ParseOptions>(0), exitCode);
+  this->parseOrDie({}, exitCode);
 }
 
 //-----------------------------------------------------------------------------

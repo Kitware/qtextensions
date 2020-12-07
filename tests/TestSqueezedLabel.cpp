@@ -56,7 +56,7 @@ TestSqueezedLabelWidget::TestSqueezedLabelWidget(QWidget* parent)
 //-----------------------------------------------------------------------------
 void TestSqueezedLabelWidget::setElideMode()
 {
-  qtSqueezedLabel::ElideMode mode = 0;
+  auto mode = qtSqueezedLabel::ElideMode{};
 //   if (this->elideStart->isChecked())
 //     mode |= qtSqueezedLabel::ElideStart;
   if (this->elideEnd->isChecked())

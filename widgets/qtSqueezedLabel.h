@@ -46,9 +46,9 @@ public:
     };
     Q_DECLARE_FLAGS(SetToolTipMode, SetToolTipFlag)
 
-    qtSqueezedLabel(QWidget* parent = nullptr, Qt::WindowFlags = 0);
+    qtSqueezedLabel(QWidget* parent = nullptr, Qt::WindowFlags = {});
     qtSqueezedLabel(QString const& text, QWidget* parent = nullptr,
-                    Qt::WindowFlags = 0);
+                    Qt::WindowFlags = {});
     virtual ~qtSqueezedLabel();
 
     ElideMode elideMode() const;

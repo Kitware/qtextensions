@@ -24,7 +24,7 @@ public:
     };
 
   qtConfirmationDialog(
-    const QString& askKey, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    const QString& askKey, QWidget* parent = 0, Qt::WindowFlags flags = {});
   virtual ~qtConfirmationDialog();
 
   void setPrompt(const QString&);
@@ -39,11 +39,11 @@ public:
   static bool getConfirmation(
     QWidget* parent, const QString& askKey, const QString& prompt,
     const QString& confirmText, AskPreferenceScope scope,
-    QString title = QString(), Qt::WindowFlags flags = 0);
+    QString title = QString(), Qt::WindowFlags flags = {});
   static bool getConfirmation(
     QWidget* parent, const QString& askKey, const QString& prompt,
     QString title = QString(), QString confirmText = QString(),
-    AskPreferenceScope scope = UserCanChoose, Qt::WindowFlags flags = 0);
+    AskPreferenceScope scope = UserCanChoose, Qt::WindowFlags flags = {});
 
   static bool willAsk(const QString& key);
   static void setAsk(const QString& key, bool ask, bool persistent);

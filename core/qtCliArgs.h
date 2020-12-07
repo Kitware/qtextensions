@@ -30,7 +30,7 @@ public:
                   bool includeWithCommon = true);
   void addNamedArguments(const qtCliOptions&);
 
-  bool parse(ParseOptions = static_cast<qtCliArgs::ParseOptions>(0));
+  bool parse(ParseOptions = {});
   void parseOrDie(int exitCode = 1);
   void parseOrDie(ParseOption, int exitCode = 1);
   void parseOrDie(ParseOptions, int exitCode = 1);

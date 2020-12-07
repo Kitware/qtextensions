@@ -21,18 +21,18 @@ public:
   static double getDouble(
     QWidget* parent, const QString& title, const QString& label, double value,
     double minValue, double maxValue, bool* okay = 0,
-    Qt::WindowFlags flags = 0);
+    Qt::WindowFlags flags = {});
 
   static double getDouble(
     QWidget* parent, const QString& title, const QString& label, double value,
     double minValue, double maxValue, int decimals = 1, double step = 1.0,
-    bool* okay = 0, Qt::WindowFlags flags = 0);
+    bool* okay = 0, Qt::WindowFlags flags = {});
 
   static double getDouble(
     QWidget* parent, const QString& title, const QString& label, double value,
     double minValue, double maxValue, const QString& specialValueText,
     int decimals = 1, double step = 1.0, bool* okay = 0,
-    Qt::WindowFlags flags = 0);
+    Qt::WindowFlags flags = {});
 
 protected:
   QTE_DECLARE_PRIVATE_PTR(qtDoubleInputDialog)
