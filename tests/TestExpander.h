@@ -19,7 +19,7 @@ class TestExpanderWidget : public QWidget
   Q_OBJECT
 
 public:
-  TestExpanderWidget(QWidget* parent = 0);
+  TestExpanderWidget(QWidget* parent = nullptr);
   virtual ~TestExpanderWidget() {}
 
 public slots:

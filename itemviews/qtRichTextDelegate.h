@@ -14,7 +14,7 @@ class QTE_EXPORT qtRichTextDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  qtRichTextDelegate(QObject* parent = 0);
+  qtRichTextDelegate(QObject* parent = nullptr);
   virtual ~qtRichTextDelegate();
 
 protected:

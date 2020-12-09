@@ -8,7 +8,7 @@
 
 #undef qtDebug
 
-const qtDebugAreaAccessor qtDebug::InvalidArea = 0;
+const qtDebugAreaAccessor qtDebug::InvalidArea = nullptr;
 
 //-----------------------------------------------------------------------------
 class qtDebugAreaPrivate

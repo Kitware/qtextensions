@@ -321,7 +321,7 @@ int main(int argc, char* argv[])
   QApplication app(argc, argv); // Needed to construct widgets
   qtTest t_obj;
 
-  qsrand(static_cast<uint>(time(0)));
+  qsrand(static_cast<uint>(time(nullptr)));
 
   t_obj.runSuite("Custom Mapping Test", testCustomItem);
   t_obj.runSuite("Built-in Mapping Tests", testBuiltin);

@@ -14,16 +14,14 @@ class QTE_EXPORT qtExpander : public QToolButton
   Q_OBJECT
 
 public:
-  qtExpander(QWidget* parent = 0);
-  qtExpander(bool initiallyExpanded, QWidget* parent = 0);
+  qtExpander(QWidget* parent = nullptr);
+  qtExpander(bool initiallyExpanded, QWidget* parent = nullptr);
 
   QSize sizeHint() const;
   QSize minimumSizeHint() const;
   using QWidget::size;
 
-  static QSize size(QStyle* style,
-                    QString text = QString(),
-                    QFont font = QFont());
+  static QSize size(QStyle* style, QString text = {}, QFont font = {});
 
 protected:
   static QSize arrowSize();

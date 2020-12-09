@@ -43,8 +43,7 @@ public:
 protected:
   QTE_DECLARE_PRIVATE_PTR(qtSettings)
 
-  void declareSetting(const QString& key,
-                      const QVariant& defaultValue = QVariant(),
+  void declareSetting(const QString& key, const QVariant& defaultValue = {},
                       Scope = DefaultScope);
   void declareSetting(const QString& key, qtAbstractSetting*);
   QVariant value(const QString& key) const;

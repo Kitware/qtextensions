@@ -23,7 +23,7 @@ class QTE_EXPORT qtAbstractAnimation : public QObject
   Q_PROPERTY(double duration READ duration)
 
 public:
-  qtAbstractAnimation(QObject* parent = 0);
+  qtAbstractAnimation(QObject* parent = nullptr);
   virtual ~qtAbstractAnimation();
 
   QAbstractAnimation::State state() const;

@@ -39,8 +39,10 @@ qtConfirmationDialog::qtConfirmationDialog(
 
   // Set dialog icon
   QStyle* style = this->style();
-  int iconSize = style->pixelMetric(QStyle::PM_MessageBoxIconSize, 0, this);
-  QIcon icon = style->standardIcon(QStyle::SP_MessageBoxWarning, 0, this);
+  int iconSize =
+    style->pixelMetric(QStyle::PM_MessageBoxIconSize, nullptr, this);
+  QIcon icon =
+    style->standardIcon(QStyle::SP_MessageBoxWarning, nullptr, this);
   QPixmap pixmap = icon.pixmap(iconSize, iconSize);
   d->UI.image->setPixmap(pixmap);
   d->UI.image->setFixedSize(pixmap.size());

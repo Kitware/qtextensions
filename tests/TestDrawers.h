@@ -18,7 +18,7 @@ class TestDrawersWidget : public QWidget
   Q_OBJECT
 
 public:
-  TestDrawersWidget(QWidget* parent = 0);
+  TestDrawersWidget(QWidget* parent = nullptr);
   virtual ~TestDrawersWidget();
 
 public slots:

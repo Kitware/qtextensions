@@ -22,7 +22,7 @@ class QTE_EXPORT qtStatusManager : public QObject
   Q_OBJECT
 
 public:
-  explicit qtStatusManager(QObject* parent = 0);
+  explicit qtStatusManager(QObject* parent = nullptr);
   ~qtStatusManager();
 
   void addStatusLabel(QLabel*);
@@ -36,7 +36,7 @@ public:
   void transferOwnership(const QObject* from, qtStatusSource to);
 
 public slots:
-  void setStatusText(qtStatusSource source, QString text = QString());
+  void setStatusText(qtStatusSource source, QString text = {});
   void setProgress(qtStatusSource source, bool available = false,
                    qreal value = -1);
   void setProgress(qtStatusSource source, bool available, int value,

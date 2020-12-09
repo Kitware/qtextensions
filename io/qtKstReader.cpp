@@ -457,7 +457,7 @@ QRegExp qtKstReader::defaultTerminator()
 }
 
 //-----------------------------------------------------------------------------
-qtKstReader::qtKstReader() : d_ptr(0)
+qtKstReader::qtKstReader() : d_ptr{nullptr}
 {
 }
 

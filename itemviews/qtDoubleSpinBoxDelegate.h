@@ -16,7 +16,7 @@ class QTE_EXPORT qtDoubleSpinBoxDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  qtDoubleSpinBoxDelegate(QObject* parent = 0);
+  qtDoubleSpinBoxDelegate(QObject* parent = nullptr);
   virtual ~qtDoubleSpinBoxDelegate();
 
   void setRange(double minimum, double maximum);

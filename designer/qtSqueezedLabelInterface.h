@@ -16,7 +16,7 @@ class qtSqueezedLabelInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    qtSqueezedLabelInterface(QObject* parent = 0)
+    qtSqueezedLabelInterface(QObject* parent = nullptr)
         : qtDesignerWidgetInterfaceHelper<qtSqueezedLabel>(parent)
     {
     }

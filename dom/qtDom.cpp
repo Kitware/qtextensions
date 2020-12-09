@@ -50,7 +50,7 @@ QList<QDomElement> findElements(
 QList<QDomElement> findElements(const QDomNode& root,
                                 const QString& selector)
 {
-  const QStringList selectors = selector.split(' ', QString::SkipEmptyParts);
+  const QStringList selectors = selector.split(' ', Qt::SkipEmptyParts);
   QList<QDomElement> result;
   return findElements(result, root, selectors);
 }

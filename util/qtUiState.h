@@ -100,7 +100,7 @@ public:
   /// If \p store is non-null, the qtUiState takes ownership of the QSettings
   /// object and uses it to save and restore the UI state. Otherwise, qtUiState
   /// uses a default-constructed QSettings.
-  explicit qtUiState(QSettings* store = 0);
+  explicit qtUiState(QSettings* store = nullptr);
 
   virtual ~qtUiState();
 

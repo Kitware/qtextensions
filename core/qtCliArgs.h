@@ -26,18 +26,18 @@ public:
   qtCliArgs(int argc, char** argv);
   ~qtCliArgs();
 
-  void addOptions(const qtCliOptions&, QString group = QString(),
+  void addOptions(const qtCliOptions&, QString group = {},
                   bool includeWithCommon = true);
   void addNamedArguments(const qtCliOptions&);
 
-  bool parse(ParseOptions = static_cast<qtCliArgs::ParseOptions>(0));
+  bool parse(ParseOptions = {});
   void parseOrDie(int exitCode = 1);
   void parseOrDie(ParseOption, int exitCode = 1);
   void parseOrDie(ParseOptions, int exitCode = 1);
 
   void parseError() const;
   void shortUsage() const;
-  void usage(QString group = QString()) const;
+  void usage(QString group = {}) const;
   void usageError(const QString& message) const;
 
   bool isSet(const QString& name) const;

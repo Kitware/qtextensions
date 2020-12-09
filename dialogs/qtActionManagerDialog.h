@@ -17,11 +17,12 @@ class QTE_EXPORT qtActionManagerDialog : public QDialog
   Q_OBJECT
 
 public:
-  qtActionManagerDialog(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+  qtActionManagerDialog(QWidget* parent = nullptr,
+                        Qt::WindowFlags flags = {});
   virtual ~qtActionManagerDialog();
 
 protected slots:
-  void filterChanged(QString text = QString());
+  void filterChanged(QString text = {});
 
 protected:
   QTE_DECLARE_PRIVATE_PTR(qtActionManagerDialog)

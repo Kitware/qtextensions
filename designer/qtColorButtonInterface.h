@@ -16,7 +16,7 @@ class qtColorButtonInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    qtColorButtonInterface(QObject* parent = 0)
+    qtColorButtonInterface(QObject* parent = nullptr)
         : qtDesignerWidgetInterfaceHelper<qtColorButton>(parent)
     {
     }

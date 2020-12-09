@@ -21,9 +21,9 @@ class QTE_EXPORT qtSvgWidget : public QWidget
                READ hasScaledContents WRITE setScaledContents)
 
 public:
-    qtSvgWidget(QWidget* parent = nullptr, Qt::WindowFlags = 0);
+    qtSvgWidget(QWidget* parent = nullptr, Qt::WindowFlags = {});
     qtSvgWidget(QString const& resource, QWidget* parent = nullptr,
-                Qt::WindowFlags = 0);
+                Qt::WindowFlags = {});
     virtual ~qtSvgWidget();
 
     QString resource() const;

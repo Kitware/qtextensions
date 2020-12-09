@@ -16,7 +16,7 @@ class qtDoubleSliderInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    qtDoubleSliderInterface(QObject* parent = 0)
+    qtDoubleSliderInterface(QObject* parent = nullptr)
         : qtDesignerWidgetInterfaceHelper<qtDoubleSlider>(parent)
     {
     }

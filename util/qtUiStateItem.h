@@ -70,7 +70,7 @@ protected:
 template <typename T, typename O>
 qtUiState::Item<T, O>::Item(
     O* object, ReadMethod read, WriteRefMethod write)
-    : object(object), read(read), writeRef(write), writeVal(0)
+    : object(object), read(read), writeRef(write), writeVal(nullptr)
 {
 }
 
@@ -78,7 +78,7 @@ qtUiState::Item<T, O>::Item(
 template <typename T, typename O>
 qtUiState::Item<T, O>::Item(
     O* object, ReadMethod read, WriteValMethod write)
-    : object(object), read(read), writeRef(0), writeVal(write)
+    : object(object), read(read), writeRef(nullptr), writeVal(write)
 {
 }
 

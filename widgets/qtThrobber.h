@@ -30,7 +30,7 @@ public:
     };
     Q_ENUM(Style)
 
-    qtThrobber(QWidget* parent = 0);
+    qtThrobber(QWidget* parent = nullptr);
     virtual ~qtThrobber();
 
     QSize minimumSizeHint() const;

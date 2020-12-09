@@ -20,7 +20,7 @@ class QTE_EXPORT qtMenu : public QMenu
     Q_OBJECT
 
 public:
-    qtMenu(QWidget* parent = 0);
+    qtMenu(QWidget* parent = nullptr);
     virtual ~qtMenu();
 
 protected:

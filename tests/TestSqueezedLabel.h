@@ -20,7 +20,7 @@ class TestSqueezedLabelWidget : public QWidget
   Q_OBJECT
 
 public:
-  TestSqueezedLabelWidget(QWidget* parent = 0);
+  TestSqueezedLabelWidget(QWidget* parent = nullptr);
   virtual ~TestSqueezedLabelWidget() {}
 
 public slots:

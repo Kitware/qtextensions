@@ -30,7 +30,7 @@ public:
 //-----------------------------------------------------------------------------
 qtActionManager* qtActionManager::instance()
 {
-  static qtActionManager* theInstance = 0;
+  static qtActionManager* theInstance = nullptr;
 
   // Create global instance, if it doesn't exist. The global QCoreApplication
   // instance must be created first, as we parent ourselves to it so that it
@@ -83,7 +83,7 @@ qtActionFactory* qtActionManager::registerAction(
 {
   if (settingsKey.isEmpty())
     {
-    return 0;
+    return nullptr;
     }
 
   if (displayGroup.isEmpty())

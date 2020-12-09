@@ -16,7 +16,7 @@ class qtThrobberInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    qtThrobberInterface(QObject* parent = 0)
+    qtThrobberInterface(QObject* parent = nullptr)
         : qtDesignerWidgetInterfaceHelper<qtThrobber>(parent)
     {
     }

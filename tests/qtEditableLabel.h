@@ -16,7 +16,7 @@ class qtEditableLabel : public QLabel
   Q_OBJECT
 
 public:
-  qtEditableLabel(QWidget* parent = 0);
+  qtEditableLabel(QWidget* parent = nullptr);
   virtual ~qtEditableLabel();
 
 public slots:

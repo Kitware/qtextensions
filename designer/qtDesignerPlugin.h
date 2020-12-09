@@ -21,7 +21,7 @@ class qtDesignerPlugin : public QObject,
 
 public:
     typedef QList<QDesignerCustomWidgetInterface*> InterfaceList;
-    qtDesignerPlugin(QObject* parent = 0);
+    qtDesignerPlugin(QObject* parent = nullptr);
 
     virtual InterfaceList customWidgets() const QTE_OVERRIDE;
 

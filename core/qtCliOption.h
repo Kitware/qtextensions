@@ -32,9 +32,8 @@ public:
 
   qtCliOption& add(const QString& name, Flags);
   qtCliOption& add(const QString& name, const QString& description, Flags);
-  qtCliOption& add(QString name, QString description = QString(),
-                   QString defaultValue = QString(),
-                   Flags = static_cast<qtCliOption::Flags>(0));
+  qtCliOption& add(QString name, QString description = {},
+                   QString defaultValue = {}, Flags = {});
 
   QString preferredName() const;
   QStringList shortNames() const;

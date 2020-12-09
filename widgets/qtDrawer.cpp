@@ -52,10 +52,10 @@ private:
 
 //-----------------------------------------------------------------------------
 qtDrawerPrivate::qtDrawerPrivate(qtDrawer* q)
-  : q_ptr(q), expander(0), expanded(false),
+  : q_ptr(q), expander(nullptr), expanded(false),
     expanderPolicy(qtDrawer::ExpanderAsNeeded),
-    container(0), containerLayout(0), parent(0),
-    indentLayout(0), row(-1), indent(-1),
+    container(nullptr), containerLayout(nullptr), parent(nullptr),
+    indentLayout(nullptr), row(-1), indent(-1),
     visibilityFlag(true)
 {
 }
@@ -69,7 +69,7 @@ void qtDrawerPrivate::setExpander(bool shouldExist, bool shouldEnable)
       {
       // Remove expander
       delete this->expander;
-      this->expander = 0;
+      this->expander = nullptr;
       }
     else
       {

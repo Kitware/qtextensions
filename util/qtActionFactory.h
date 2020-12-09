@@ -17,9 +17,10 @@ class qtActionManagerDialog;
 class QTE_EXPORT qtActionFactory
 {
 public:
-  QAction* createAction(QObject* parent, QActionGroup* group = 0) const;
-  QAction* createAction(QSettings&, QObject* parent,
-                        QActionGroup* group = 0) const;
+  QAction* createAction(
+    QObject* parent, QActionGroup* group = nullptr) const;
+  QAction* createAction(
+    QSettings&, QObject* parent, QActionGroup* group = nullptr) const;
 
   void setShortcutContext(Qt::ShortcutContext);
   void setCheckable(bool);

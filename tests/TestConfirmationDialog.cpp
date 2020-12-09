@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     " confirmation; that is because the setting key is blank.\n\nWhen you"
     " select a button, the dialog will go away and the test will end. There"
     " will be no persistent effect either way.";
-  qtConfirmationDialog::getConfirmation(0, "Test", prompt);
+  qtConfirmationDialog::getConfirmation(nullptr, "Test", prompt);
 
   return 0;
 }

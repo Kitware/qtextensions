@@ -112,7 +112,7 @@ void qtUiStatePrivate::save(const QStringList& keys) const
 {
   foreach (auto const& key, keys)
     {
-    qtUiState::AbstractItem* item = this->items.value(key, 0);
+    qtUiState::AbstractItem* item = this->items.value(key, nullptr);
     if (item)
       {
       this->store->setValue(key, item->value());
@@ -129,7 +129,7 @@ void qtUiStatePrivate::restore(const QStringList& keys) const
 
   foreach (auto const& key, keys)
     {
-    qtUiState::AbstractItem* item = this->items.value(key, 0);
+    qtUiState::AbstractItem* item = this->items.value(key, nullptr);
     if (item)
       {
       item->setValue(this->store->value(key, item->value()));
@@ -173,8 +173,8 @@ template <typename O>
 qtUiStatePrivate::StateItem<O>::StateItem(
   O* object, ReadMethod read, WriteMethod write)
   : object(object), version(0),
-    read(read), readVersioned(0),
-    write(write), writeVersioned(0)
+    read(read), readVersioned(nullptr),
+    write(write), writeVersioned(nullptr)
 {
 }
 
@@ -183,8 +183,8 @@ template <typename O>
 qtUiStatePrivate::StateItem<O>::StateItem(
   O* object, ReadVersionedMethod read, WriteVersionedMethod write, int version)
   : object(object), version(version),
-    read(0), readVersioned(read),
-    write(0), writeVersioned(write)
+    read(nullptr), readVersioned(read),
+    write(nullptr), writeVersioned(write)
 {
 }
 

@@ -17,10 +17,10 @@ class QTE_EXPORT qtDrawerWidget : public QWidget
   Q_OBJECT
 
 public:
-  qtDrawerWidget(QWidget* parent = 0);
+  qtDrawerWidget(QWidget* parent = nullptr);
   virtual ~qtDrawerWidget();
 
-  virtual qtDrawer* addDrawer(qtDrawer* nextSibling = 0);
+  virtual qtDrawer* addDrawer(qtDrawer* nextSibling = nullptr);
   virtual void clear();
 
 protected:

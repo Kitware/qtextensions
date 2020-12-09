@@ -14,7 +14,7 @@ class QTE_EXPORT qtListDelegate : public qtAbstractListDelegate
   Q_OBJECT
 
 public:
-  qtListDelegate(QObject* parent = 0);
+  qtListDelegate(QObject* parent = nullptr);
   virtual ~qtListDelegate();
 
   virtual void setModelData(QWidget* editor, QAbstractItemModel*,

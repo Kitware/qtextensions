@@ -19,7 +19,7 @@ class QTE_EXPORT qtColorButton : public QPushButton
   Q_PROPERTY(bool alphaShown READ isAlphaShown WRITE setAlphaShown)
 
 public:
-  qtColorButton(QWidget* parent = 0);
+  qtColorButton(QWidget* parent = nullptr);
   virtual ~qtColorButton();
 
   virtual QSize minimumSizeHint() const QTE_OVERRIDE;

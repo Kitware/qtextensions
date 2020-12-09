@@ -24,7 +24,7 @@ public:
   void addReceiver(qtStatusManager*) const;
 
 signals:
-  void statusMessageAvailable(qtStatusSource, QString = QString());
+  void statusMessageAvailable(qtStatusSource, QString = {});
   void progressAvailable(qtStatusSource, bool = false, qreal value = -1);
   void progressAvailable(qtStatusSource, bool, int value, int steps);
 

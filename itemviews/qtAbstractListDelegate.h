@@ -16,7 +16,7 @@ class QTE_EXPORT qtAbstractListDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  qtAbstractListDelegate(QObject* parent = 0);
+  qtAbstractListDelegate(QObject* parent = nullptr);
   virtual ~qtAbstractListDelegate();
 
   virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem&,
@@ -34,7 +34,7 @@ protected:
   virtual QWidget* createListEditor(QWidget* parent) const = 0;
   virtual void setListEditorData(QWidget* editor, const QVariant&) const = 0;
 
-  void setMapping(QStringList names, QVariantList values = QVariantList());
+  void setMapping(QStringList names, QVariantList values = {});
   QStringList valueNames() const;
   QVariant valueData(const QString&) const;
 

@@ -17,7 +17,7 @@ class qtStatusSourcePrivate;
 class QTE_EXPORT qtStatusSource
 {
 public:
-  /*implicit*/ qtStatusSource(QObject* = 0);
+  /*implicit*/ qtStatusSource(QObject* = nullptr);
   qtStatusSource(const qtStatusSource& other);
 
   ~qtStatusSource();

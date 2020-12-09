@@ -24,7 +24,7 @@ static void qtMessageHandler(
     static QThreadStorage<qtTest::StreamPointer*> ts;
     qtTest::StreamPointer* tsp = ts.localData();
 
-    if (stream || msg == 0)
+    if (stream || msg == nullptr)
     {
         if (tsp)
             (*tsp) = stream;
@@ -155,7 +155,7 @@ uint qtTest::pushMessageStream(qtTest::StreamPointer stream)
     QTE_D();
 
     // Register new stream with handler
-    qtMessageHandler(QtSystemMsg, 0, stream);
+    qtMessageHandler(QtSystemMsg, nullptr, stream);
 
     // Add stream to stack
     uint token = static_cast<uint>(d->streamStack.count());
@@ -176,7 +176,7 @@ void qtTest::popMessageStream(uint token)
     StreamPointer stream;
     if (d->streamStack.count())
         stream = d->streamStack.top();
-    qtMessageHandler(QtSystemMsg, 0, stream);
+    qtMessageHandler(QtSystemMsg, nullptr, stream);
 }
 
 //-----------------------------------------------------------------------------

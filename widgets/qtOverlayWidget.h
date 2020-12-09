@@ -14,7 +14,7 @@ class QTE_EXPORT qtOverlayWidget : public QStackedWidget
   Q_OBJECT
 
 public:
-  qtOverlayWidget(QWidget* parent = 0);
+  qtOverlayWidget(QWidget* parent = nullptr);
   virtual ~qtOverlayWidget();
 
 private:
