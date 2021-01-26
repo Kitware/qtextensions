@@ -79,6 +79,14 @@ namespace qtUtil
     QTE_EXPORT void setApplicationIcon(
         QString const& name, QMainWindow* = nullptr);
 
+    /// Set application icon theme.
+    ///
+    /// This function changes the name of the application icon theme, which is
+    /// typically done when the application supplies its own theme. Unlike
+    /// QIcon::setThemeName, this function also preserves the existing (system)
+    /// theme as a fallback, when possible (Qt 5.12 or later).
+    QTE_EXPORT void setIconTheme(QString const& themeName);
+
     QTE_EXPORT void resizeColumnsToContents(
         QTreeWidget*, bool includeCollapsedItems = true);
 

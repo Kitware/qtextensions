@@ -15,6 +15,10 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItemIterator>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+#include <QProcess>
+#endif
+
 #include <algorithm>
 
 namespace qtUtil
@@ -108,6 +112,44 @@ void setApplicationIcon(QString const& name, QMainWindow* mainWindow)
     qApp->setWindowIcon(icon);
     if (mainWindow)
         mainWindow->setWindowIcon(icon);
+}
+
+//-----------------------------------------------------------------------------
+void setIconTheme(QString const& themeName)
+{
+    auto const& originalTheme = QIcon::themeName();
+    QIcon::setThemeName(themeName);
+
+  // Set fallback theme
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+    if (!originalTheme.isEmpty())
+    {
+        QIcon::setFallbackThemeName(originalTheme);
+    }
+    else
+    {
+        // QIcon::themeName appears to have a bug that causes it to always
+        // return an empty string; this is a grotesque work-around to get the
+        // theme name
+        QProcess p{qApp};
+        p.start(
+            QStringLiteral("gsettings"),
+            {
+                QStringLiteral("get"),
+                QStringLiteral("org.gnome.desktop.interface"),
+                QStringLiteral("icon-theme")
+            });
+        if (p.waitForFinished())
+        {
+            auto const& output =
+                QString::fromLocal8Bit(p.readAllStandardOutput()).trimmed();
+            auto const re = QRegularExpression{QStringLiteral("'([-\\w]+)'")};
+            auto const m = re.match(output);
+            if (m.isValid())
+                QIcon::setFallbackThemeName(m.captured(1));
+        }
+    }
+#endif
 }
 
 //-----------------------------------------------------------------------------
