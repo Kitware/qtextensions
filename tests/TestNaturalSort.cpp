@@ -16,8 +16,9 @@ using namespace qtNaturalSort;
 static auto const& special5 = QString::fromUtf8(u8"\xf0\x9d\x9f\xbb");
 
 //-----------------------------------------------------------------------------
-struct ExpectedStringGroup
+class ExpectedStringGroup
 {
+public:
     ExpectedStringGroup() = default;
     ExpectedStringGroup(ExpectedStringGroup const&) = default;
 
@@ -38,13 +39,16 @@ struct ExpectedStringGroup
                significantDigits == other.significantDigits;
     }
 
-    QString const characters;
-    int const leadingZeros = 0;
-    int const significantDigits = 0;
+protected:
+    friend QDebug& operator<<(QDebug&, ExpectedStringGroup const&);
+
+    QString characters;
+    int leadingZeros = 0;
+    int significantDigits = 0;
 };
 
 //-----------------------------------------------------------------------------
-QDebug& operator<<(QDebug& dbg, ExpectedStringGroup g)
+QDebug& operator<<(QDebug& dbg, ExpectedStringGroup const& g)
 {
   dbg << '{' << g.characters;
   if (g.significantDigits || g.leadingZeros)
