@@ -27,7 +27,9 @@ void qtColorScheme::load(QPalette::ColorGroup group, const QString& groupName,
 {
   this->load(group, groupName, ARGS(Base), settings);
   this->load(group, groupName, ARGS(Text), settings);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
   this->load(group, groupName, ARGS(PlaceholderText), settings);
+#endif
   this->load(group, groupName, ARGS(AlternateBase), settings);
   this->load(group, groupName, ARGS(Window), settings);
   this->load(group, groupName, ARGS(WindowText), settings);
@@ -73,7 +75,9 @@ void qtColorScheme::save(QPalette::ColorGroup group, const QString& groupName,
 {
   this->save(group, groupName, ARGS(Base), settings);
   this->save(group, groupName, ARGS(Text), settings);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
   this->save(group, groupName, ARGS(PlaceholderText), settings);
+#endif
   this->save(group, groupName, ARGS(AlternateBase), settings);
   this->save(group, groupName, ARGS(Window), settings);
   this->save(group, groupName, ARGS(WindowText), settings);

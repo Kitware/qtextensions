@@ -50,7 +50,11 @@ QList<QDomElement> findElements(
 QList<QDomElement> findElements(const QDomNode& root,
                                 const QString& selector)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
   const QStringList selectors = selector.split(' ', Qt::SkipEmptyParts);
+#else
+  const QStringList selectors = selector.split(' ', QString::SkipEmptyParts);
+#endif
   QList<QDomElement> result;
   return findElements(result, root, selectors);
 }
