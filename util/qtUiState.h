@@ -14,6 +14,7 @@ class QGroupBox;
 class QHeaderView;
 class QLineEdit;
 class QMainWindow;
+class QPlainTextEdit;
 class QSettings;
 class QSpinBox;
 class QSplitter;
@@ -150,6 +151,8 @@ public:
 
   /// Define mapping of a QLineEdit's text property.
   void mapText(const QString& key, QLineEdit*);
+  /// Define mapping of a QLineEdit's text property.
+  void mapText(const QString& key, QPlainTextEdit*);
 
   /// Define mapping of a QSpinBox's value property.
   void mapValue(const QString& key, QSpinBox*);
