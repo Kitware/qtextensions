@@ -14,6 +14,7 @@
 #include <QHeaderView>
 #include <QLineEdit>
 #include <QMainWindow>
+#include <QPlainTextEdit>
 #include <QRegExp>
 #include <QSettings>
 #include <QSpinBox>
@@ -354,6 +355,16 @@ void qtUiState::mapText(const QString& key, QLineEdit* widget)
   qtUiState::AbstractItem* item =
     new qtUiState::Item<QString, QLineEdit>(
     widget, &QLineEdit::text, &QLineEdit::setText);
+  d->map(key, item);
+}
+
+//-----------------------------------------------------------------------------
+void qtUiState::mapText(const QString& key, QPlainTextEdit* widget)
+{
+  QTE_D(qtUiState);
+  qtUiState::AbstractItem* item =
+    new qtUiState::Item<QString, QPlainTextEdit>(
+    widget, &QPlainTextEdit::toPlainText, &QPlainTextEdit::setPlainText);
   d->map(key, item);
 }
 
