@@ -674,6 +674,36 @@
 #  endif
 #endif
 
+/// Ensure method is invoked on object's thread.
+///
+/// This macro provides a convenient shorthand for reissuing a call on the
+/// target object's thread. This is typically used to write "thread safe"
+/// methods that can be called from any thread, but will always execute on the
+/// thread which owns the object. (This requires of course that an event loop
+/// is executing on said thread.)
+///
+/// If the current execution thread is not the object's owning thread, this
+/// macro invoked \p func with the specified arguments and returns. Otherwise
+/// it does nothing. The argument list is optional and may be omitted for
+/// methods which do not take arguments.
+///
+/// \par Example:
+/// \code{.cpp}
+/// void SomeObject::someMethod(Arg1 arg1, Arg2 arg2, ...)
+/// {
+///     QTE_THREAD_INVOKE(someMethod, arg1, arg2, ...);
+///
+///     // ...implementation of someMethod...
+/// }
+/// \endcode
+#define QTE_THREAD_INVOKE(func, ...) \
+    do if (QThread::currentThread() != this->thread()) \
+    { \
+        QMetaObject::invokeMethod( \
+            this, [=]{ func(__VA_ARGS__); }); \
+        return; \
+    } while (0)
+
 /// Shorthand to register a metatype with %Qt.
 ///
 /// This macro provides a convenient shorthand to register a %Qt metatype
